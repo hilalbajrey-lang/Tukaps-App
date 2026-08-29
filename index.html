@@ -14,7 +14,7 @@
               50: '#fff7ed',
               100: '#ffedd5',
               200: '#fed7aa',
-              500: '#f97316', // Orange Khas Tukaps
+              500: '#f97316',
               600: '#ea580c',
               700: '#c2410c'
             }
@@ -49,15 +49,21 @@
   <!-- TOP HEADER -->
   <header class="glass-nav sticky top-0 z-40 border-b border-stone-200/80 px-4 lg:px-8 py-3 flex items-center justify-between">
     <div class="flex items-center space-x-3">
-      <!-- LOGO TUKAPS -->
-      <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white shadow-md font-black text-lg tracking-tighter">
-        TP
+      <!-- OFFICIAL TUKAPS LOGO EMBEDDED -->
+      <div class="w-12 h-12 rounded-2xl overflow-hidden shadow-md flex items-center justify-center bg-[#c2410c] border border-orange-400 flex-shrink-0">
+        <svg viewBox="0 0 500 500" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <rect width="500" height="500" fill="#c2410c"/>
+          <path d="M120,200 Q150,160 210,180 M240,195 Q290,160 360,190 M140,200 L160,260 Q180,280 220,270 L230,205 M250,200 L270,265 Q300,285 340,265 L350,190" stroke="#fed7aa" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M120,210 C90,210 90,250 120,250 M360,205 C390,205 390,245 360,245" stroke="#fed7aa" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <text x="250" y="360" font-family="sans-serif" font-weight="bold" font-size="64" fill="#ffffff" text-anchor="middle" letter-spacing="2">Tukaps</text>
+          <text x="250" y="420" font-family="sans-serif" font-weight="bold" font-size="20" fill="#fed7aa" text-anchor="middle" letter-spacing="4">ONE CUP ISN'T ENOUGH</text>
+        </svg>
       </div>
       <div>
         <div class="flex items-center space-x-2">
           <h1 class="text-base font-black tracking-tight text-stone-900">TUKAPS COFFEE</h1>
           <span class="bg-orange-100 text-orange-700 border border-orange-200 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            Official POS & HPP
+            POS & HPP Studio
           </span>
         </div>
         <p class="text-[11px] text-stone-500 font-medium">One Cup Isn't Enough — Professional Coffee System</p>
@@ -89,7 +95,7 @@
     </div>
 
     <div class="flex items-center space-x-2">
-      <button onclick="resetToDefaultData()" class="px-3 py-2 rounded-xl bg-stone-200/70 text-stone-700 hover:bg-stone-300 transition text-xs font-bold flex items-center space-x-1" title="Reset Sesuai Excel">
+      <button onclick="resetToDefaultData()" class="px-3 py-2 rounded-xl bg-orange-100 text-orange-700 hover:bg-orange-200 transition text-xs font-bold flex items-center space-x-1" title="Reset Sesuai Excel">
         <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Reset Excel</span>
       </button>
@@ -370,7 +376,7 @@
   </footer>
 
   <script>
-    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete_v2';
+    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete_v3';
     let selectedPosCategory = "All";
     let cart = [];
     let paymentMethod = "Tunai";
@@ -441,7 +447,9 @@
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          if (parsed && parsed.menu && parsed.menu.length > 0) return parsed;
+          if (parsed && parsed.menu && parsed.menu.length > 0 && parsed.bahan && parsed.bahan.length > 0) {
+            return parsed;
+          }
         } catch(e) {}
       }
       saveStore(SEED_DATA);
@@ -454,7 +462,7 @@
     }
 
     function resetToDefaultData() {
-      if (confirm('Reset seluruh data master menu, bahan, dan resep sesuai Excel?')) {
+      if (confirm('Reset seluruh data master menu, bahan, kemasan, dan resep sesuai Excel?')) {
         localStorage.removeItem(STORAGE_KEY);
         store = JSON.parse(JSON.stringify(SEED_DATA));
         saveStore(store);
@@ -691,7 +699,16 @@
       if (!paper) return;
 
       paper.innerHTML = `
-        <div style="text-align:center; font-weight:bold; font-size:15px; margin-bottom:2px;">☕ TUKAPS COFFEE</div>
+        <div style="text-align:center; margin-bottom:6px;">
+          <svg viewBox="0 0 500 500" style="width:40px; height:40px; margin:0 auto; display:block;" xmlns="http://www.w3.org/2000/svg">
+            <rect width="500" height="500" fill="#c2410c"/>
+            <path d="M120,200 Q150,160 210,180 M240,195 Q290,160 360,190 M140,200 L160,260 Q180,280 220,270 L230,205 M250,200 L270,265 Q300,285 340,265 L350,190" stroke="#fed7aa" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M120,210 C90,210 90,250 120,250 M360,205 C390,205 390,245 360,245" stroke="#fed7aa" stroke-width="10" fill="none" stroke-linecap="round"/>
+            <text x="250" y="360" font-family="sans-serif" font-weight="bold" font-size="64" fill="#ffffff" text-anchor="middle" letter-spacing="2">Tukaps</text>
+            <text x="250" y="420" font-family="sans-serif" font-weight="bold" font-size="20" fill="#fed7aa" text-anchor="middle" letter-spacing="4">ONE CUP ISN'T ENOUGH</text>
+          </svg>
+        </div>
+        <div style="text-align:center; font-weight:bold; font-size:15px; margin-bottom:2px;">TUKAPS COFFEE</div>
         <div style="text-align:center; font-size:10px; margin-bottom:8px;">One Cup Isn't Enough</div>
         <div style="border-top:1px dashed #000; border-bottom:1px dashed #000; padding:4px 0; margin-bottom:8px; font-size:10px;">
           <div>ID: ${tx.id}</div>
