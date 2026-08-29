@@ -11,12 +11,12 @@
         extend: {
           colors: {
             tukaps: {
-              50: '#fcf6f0',
-              100: '#f7ebd9',
-              200: '#edd5b3',
-              500: '#8c4a32',
-              600: '#733a26',
-              700: '#592c1c'
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              500: '#f97316', // Orange Khas Tukaps
+              600: '#ea580c',
+              700: '#c2410c'
             }
           },
           fontFamily: {
@@ -30,19 +30,17 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    body { background-color: #f6f3ef; color: #2c221e; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
-    .glass-nav { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-    .coffee-card { background: #ffffff; border: 1px solid #e6ded7; box-shadow: 0 4px 20px -4px rgba(140, 74, 50, 0.06); }
-    .coffee-input { background: #faf7f5; border: 1px solid #e6ded7; transition: all 0.2s ease; }
-    .coffee-input:focus { background: #ffffff; border-color: #8c4a32; box-shadow: 0 0 0 3px rgba(140, 74, 50, 0.12); outline: none; }
-    .btn-coffee { background: linear-gradient(135deg, #8c4a32 0%, #733a26 100%); color: #ffffff; box-shadow: 0 4px 12px rgba(140, 74, 50, 0.25); transition: all 0.2s ease; }
-    .btn-coffee:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(140, 74, 50, 0.35); }
+    body { background-color: #fafaf9; color: #292524; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    .coffee-card { background: #ffffff; border: 1px solid #f2ede9; box-shadow: 0 4px 20px -4px rgba(249, 115, 22, 0.08); }
+    .coffee-input { background: #fafaf9; border: 1px solid #e7e5e4; transition: all 0.2s ease; }
+    .coffee-input:focus { background: #ffffff; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); outline: none; }
+    .btn-coffee { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: #ffffff; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3); transition: all 0.2s ease; }
+    .btn-coffee:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4); }
     .tab-btn { padding: 8px 18px; border-radius: 12px; font-size: 13px; font-weight: 700; transition: all 0.2s ease; }
-    .tab-btn.active { background: #8c4a32; color: #ffffff; box-shadow: 0 3px 10px rgba(140, 74, 50, 0.25); }
-    .tab-btn:not(.active) { background: #efeae4; color: #733a26; }
-    .tab-btn:not(.active):hover { background: #e6ded7; }
-    
-    /* 80mm Receipt Preview Box */
+    .tab-btn.active { background: #f97316; color: #ffffff; box-shadow: 0 3px 10px rgba(249, 115, 22, 0.3); }
+    .tab-btn:not(.active) { background: #ffedd5; color: #c2410c; }
+    .tab-btn:not(.active):hover { background: #fed7aa; }
     .receipt-paper { width: 300px; background: #fff; padding: 16px; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin: 0 auto; }
   </style>
 </head>
@@ -51,17 +49,18 @@
   <!-- TOP HEADER -->
   <header class="glass-nav sticky top-0 z-40 border-b border-stone-200/80 px-4 lg:px-8 py-3 flex items-center justify-between">
     <div class="flex items-center space-x-3">
-      <div class="w-11 h-11 rounded-2xl bg-tukaps-50 border border-tukaps-200 flex items-center justify-center text-tukaps-500 shadow-sm">
-        <i data-lucide="coffee" class="w-6 h-6"></i>
+      <!-- LOGO TUKAPS -->
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white shadow-md font-black text-lg tracking-tighter">
+        TP
       </div>
       <div>
         <div class="flex items-center space-x-2">
           <h1 class="text-base font-black tracking-tight text-stone-900">TUKAPS COFFEE</h1>
-          <span class="bg-tukaps-50 text-tukaps-600 border border-tukaps-200 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            POS & HPP Pro
+          <span class="bg-orange-100 text-orange-700 border border-orange-200 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            Official POS & HPP
           </span>
         </div>
-        <p class="text-[11px] text-stone-500 font-medium">One Cup Isn't Enough — Integrated Smart Store System</p>
+        <p class="text-[11px] text-stone-500 font-medium">One Cup Isn't Enough — Professional Coffee System</p>
       </div>
     </div>
 
@@ -73,7 +72,7 @@
       </button>
       <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn flex items-center space-x-1.5">
         <i data-lucide="layout-grid" class="w-4 h-4"></i>
-        <span>Dashboard HPP</span>
+        <span>Dashboard & Menu</span>
       </button>
       <button onclick="switchTab('bahan')" id="nav-bahan" class="tab-btn flex items-center space-x-1.5">
         <i data-lucide="package-open" class="w-4 h-4"></i>
@@ -85,12 +84,12 @@
       </button>
       <button onclick="switchTab('riwayat')" id="nav-riwayat" class="tab-btn flex items-center space-x-1.5">
         <i data-lucide="receipt" class="w-4 h-4"></i>
-        <span>Riwayat Transaksi</span>
+        <span>Riwayat</span>
       </button>
     </div>
 
     <div class="flex items-center space-x-2">
-      <button onclick="resetToDefaultData()" class="px-3 py-2 rounded-xl bg-stone-200/70 text-stone-700 hover:bg-stone-300 transition text-xs font-bold flex items-center space-x-1" title="Reset Data Sesuai Excel">
+      <button onclick="resetToDefaultData()" class="px-3 py-2 rounded-xl bg-stone-200/70 text-stone-700 hover:bg-stone-300 transition text-xs font-bold flex items-center space-x-1" title="Reset Sesuai Excel">
         <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Reset Excel</span>
       </button>
@@ -104,9 +103,9 @@
   <!-- MOBILE BOTTOM / SUB NAV -->
   <div class="md:hidden bg-white border-b border-stone-200 px-4 py-2 overflow-x-auto flex space-x-2">
     <button onclick="switchTab('pos')" id="m-nav-pos" class="tab-btn active whitespace-nowrap text-xs py-2 px-3">Kasir POS</button>
-    <button onclick="switchTab('dashboard')" id="m-nav-dashboard" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Dashboard HPP</button>
-    <button onclick="switchTab('bahan')" id="m-nav-bahan" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Master Bahan</button>
-    <button onclick="switchTab('kemasan')" id="m-nav-kemasan" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Master Kemasan</button>
+    <button onclick="switchTab('dashboard')" id="m-nav-dashboard" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Menu & HPP</button>
+    <button onclick="switchTab('bahan')" id="m-nav-bahan" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Bahan</button>
+    <button onclick="switchTab('kemasan')" id="m-nav-kemasan" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Kemasan</button>
     <button onclick="switchTab('riwayat')" id="m-nav-riwayat" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Riwayat</button>
   </div>
 
@@ -115,41 +114,32 @@
 
     <!-- ================= TAB 1: KASIR POS ================= -->
     <section id="view-pos" class="view-tab grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-      
-      <!-- LEFT: MENU CATALOG & GRID (Cols 1-7) -->
       <div class="lg:col-span-7 space-y-4">
-        
-        <!-- Search & Filter Bar -->
         <div class="coffee-card p-3 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
           <div class="relative flex-1 w-full">
             <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-stone-400"></i>
-            <input type="text" id="pos-search" onkeyup="renderPosCatalog()" placeholder="Cari nama menu Tukaps..." class="coffee-input w-full rounded-xl pl-10 pr-4 py-2 text-xs font-medium text-stone-800 placeholder-stone-400">
+            <input type="text" id="pos-search" onkeyup="renderPosCatalog()" placeholder="Cari menu Tukaps..." class="coffee-input w-full rounded-xl pl-10 pr-4 py-2 text-xs font-medium text-stone-800 placeholder-stone-400">
           </div>
           <div class="flex items-center space-x-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0" id="pos-category-pills"></div>
         </div>
-
-        <!-- Product Grid -->
         <div id="pos-product-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3.5 max-h-[calc(100vh-240px)] overflow-y-auto pr-1"></div>
       </div>
 
-      <!-- RIGHT: CART & CHECKOUT PANEL (Cols 8-12) -->
       <div class="lg:col-span-5 space-y-4">
         <div class="coffee-card rounded-3xl p-5 space-y-4 shadow-sm bg-white sticky top-20">
-          
           <div class="flex items-center justify-between border-b border-stone-100 pb-3">
             <h2 class="text-sm font-black text-stone-900 uppercase tracking-wider flex items-center">
-              <i data-lucide="shopping-bag" class="w-4.5 h-4.5 mr-2 text-tukaps-500"></i> Pesanan Kasir
+              <i data-lucide="shopping-bag" class="w-4.5 h-4.5 mr-2 text-orange-500"></i> Keranjang Kasir
             </h2>
             <button onclick="clearCart()" class="text-xs text-rose-600 font-bold hover:underline flex items-center">
               <i data-lucide="trash-2" class="w-3.5 h-3.5 mr-1"></i> Kosongkan
             </button>
           </div>
 
-          <!-- Customer & Discount Inputs -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
               <label class="font-bold text-stone-700 block mb-1">Nama Customer</label>
-              <input type="text" id="customer-name" placeholder="cth: Kak Sarah" class="coffee-input w-full px-3 py-2 rounded-xl text-xs font-medium">
+              <input type="text" id="customer-name" placeholder="cth: Kak Hilal" class="coffee-input w-full px-3 py-2 rounded-xl text-xs font-medium">
             </div>
             <div>
               <label class="font-bold text-stone-700 block mb-1">Diskon Pesanan</label>
@@ -165,59 +155,45 @@
             </div>
           </div>
 
-          <!-- Cart Items Container -->
-          <div id="cart-items-container" class="max-h-56 overflow-y-auto divide-y divide-stone-100 pr-1 text-xs font-mono">
-            <!-- Rendered by JS -->
-          </div>
+          <div id="cart-items-container" class="max-h-56 overflow-y-auto divide-y divide-stone-100 pr-1 text-xs font-mono"></div>
 
-          <!-- Calculation Summary -->
           <div class="border-t border-stone-100 pt-3 space-y-1.5 text-xs">
-            <div class="flex justify-between text-stone-600">
-              <span>Subtotal</span>
-              <span id="cart-subtotal" class="font-bold font-mono">Rp 0</span>
-            </div>
-            <div class="flex justify-between text-emerald-600">
-              <span>Diskon Potongan</span>
-              <span id="cart-discount-val" class="font-bold font-mono">-Rp 0</span>
-            </div>
+            <div class="flex justify-between text-stone-600"><span>Subtotal</span><span id="cart-subtotal" class="font-bold font-mono">Rp 0</span></div>
+            <div class="flex justify-between text-emerald-600"><span>Diskon Potongan</span><span id="cart-discount-val" class="font-bold font-mono">-Rp 0</span></div>
             <div class="flex justify-between text-base font-black text-stone-900 pt-2 border-t border-dashed border-stone-200">
-              <span>TOTAL</span>
-              <span id="cart-total" class="text-tukaps-500 font-mono">Rp 0</span>
+              <span>TOTAL</span><span id="cart-total" class="text-orange-600 font-mono">Rp 0</span>
             </div>
           </div>
 
-          <!-- Payment Methods -->
           <div class="space-y-2 pt-1">
             <label class="font-bold text-stone-700 block text-xs">Metode Pembayaran</label>
             <div class="grid grid-cols-3 gap-2">
-              <button onclick="setPaymentMethod('Tunai')" id="pay-tunai" class="pay-btn py-2 rounded-xl text-xs font-bold border border-tukaps-500 bg-tukaps-50 text-tukaps-600 transition">Tunai</button>
+              <button onclick="setPaymentMethod('Tunai')" id="pay-tunai" class="pay-btn py-2 rounded-xl text-xs font-bold border border-orange-500 bg-orange-50 text-orange-600 transition">Tunai</button>
               <button onclick="setPaymentMethod('QRIS')" id="pay-qris" class="pay-btn py-2 rounded-xl text-xs font-bold border border-stone-200 bg-stone-50 text-stone-600 transition">QRIS</button>
               <button onclick="setPaymentMethod('Transfer')" id="pay-transfer" class="pay-btn py-2 rounded-xl text-xs font-bold border border-stone-200 bg-stone-50 text-stone-600 transition">Transfer</button>
             </div>
           </div>
 
-          <!-- Action Buttons -->
           <div class="space-y-2 pt-2">
             <button onclick="processCheckout()" class="btn-coffee w-full py-3 rounded-2xl font-bold text-xs flex items-center justify-center space-x-2 shadow-md">
               <i data-lucide="printer" class="w-4 h-4"></i>
-              <span>Proses Pesanan & Cetak Struk 80mm</span>
+              <span>Proses Pembayaran & Cetak Struk 80mm</span>
             </button>
           </div>
-
         </div>
       </div>
     </section>
 
-    <!-- ================= TAB 2: DASHBOARD HPP ================= -->
+    <!-- ================= TAB 2: DASHBOARD & MASTER MENU ================= -->
     <section id="view-dashboard" class="view-tab hidden space-y-4">
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="coffee-card p-4 rounded-3xl">
-          <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider">Total Menu</span>
+          <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider">Total Menu Aktif</span>
           <div id="stat-total-menu" class="text-2xl font-black text-stone-900 mt-1">0 Menu</div>
         </div>
         <div class="coffee-card p-4 rounded-3xl">
           <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider">Rata-Rata Modal HPP</span>
-          <div id="stat-avg-hpp" class="text-2xl font-black text-tukaps-500 mt-1">Rp 0</div>
+          <div id="stat-avg-hpp" class="text-2xl font-black text-orange-600 mt-1">Rp 0</div>
         </div>
         <div class="coffee-card p-4 rounded-3xl">
           <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider">Rata-Rata Harga Jual</span>
@@ -231,8 +207,8 @@
 
       <div class="coffee-card rounded-3xl overflow-hidden shadow-sm">
         <div class="px-6 py-4 border-b border-stone-100 flex items-center justify-between bg-stone-50/50">
-          <h2 class="text-xs font-black text-stone-900 uppercase tracking-wider">Kalkulasi HPP & Resep Aktif</h2>
-          <span id="badge-menu-count" class="bg-tukaps-50 text-tukaps-600 text-xs font-bold px-3 py-1 rounded-full border border-tukaps-200">0 Menu</span>
+          <h2 class="text-xs font-black text-stone-900 uppercase tracking-wider">Master Menu, Resep & Kalkulasi HPP (25 Menu Lengkap)</h2>
+          <span id="badge-menu-count" class="bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full border border-orange-200">0 Menu</span>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs">
@@ -245,8 +221,8 @@
                 <th class="py-3.5 px-4 text-right">Total HPP</th>
                 <th class="py-3.5 px-4 text-right">Harga Jual</th>
                 <th class="py-3.5 px-4 text-right">Laba Bersih</th>
-                <th class="py-3.5 px-4 text-center">Profit Margin</th>
-                <th class="py-3.5 px-6 text-center">Aksi Resep</th>
+                <th class="py-3.5 px-4 text-center">Margin</th>
+                <th class="py-3.5 px-6 text-center">Kelola Resep</th>
               </tr>
             </thead>
             <tbody id="dashboard-table-body" class="divide-y divide-stone-100 font-mono"></tbody>
@@ -261,9 +237,9 @@
         <div class="flex items-center justify-between border-b border-stone-100 pb-4">
           <div>
             <h2 class="text-sm font-black text-stone-900 uppercase tracking-wider flex items-center">
-              <i data-lucide="package-open" class="w-4.5 h-4.5 mr-2 text-tukaps-500"></i> Master Bahan Baku & Stok
+              <i data-lucide="package-open" class="w-4.5 h-4.5 mr-2 text-orange-500"></i> Master Bahan Baku & Stok
             </h2>
-            <p class="text-xs text-stone-500">Ubah harga beli di sini, seluruh HPP menu di kasir & dashboard akan otomatis ter-update!</p>
+            <p class="text-xs text-stone-500">Ubah harga di sini, HPP seluruh menu akan otomatis ter-update secara real-time.</p>
           </div>
           <button onclick="openAddBahanModal()" class="btn-coffee text-xs font-bold px-3.5 py-2 rounded-xl flex items-center space-x-1.5">
             <i data-lucide="plus" class="w-4 h-4"></i>
@@ -297,9 +273,9 @@
         <div class="flex items-center justify-between border-b border-stone-100 pb-4">
           <div>
             <h2 class="text-sm font-black text-stone-900 uppercase tracking-wider flex items-center">
-              <i data-lucide="box" class="w-4.5 h-4.5 mr-2 text-tukaps-500"></i> Master Kemasan & Packaging
+              <i data-lucide="box" class="w-4.5 h-4.5 mr-2 text-orange-500"></i> Master Kemasan & Packaging
             </h2>
-            <p class="text-xs text-stone-500">Kelola harga cup, tutup, sticker, dan botol.</p>
+            <p class="text-xs text-stone-500">Kelola harga cup, tutup, sticker, sedotan, dan botol.</p>
           </div>
           <button onclick="openAddKemasanModal()" class="btn-coffee text-xs font-bold px-3.5 py-2 rounded-xl flex items-center space-x-1.5">
             <i data-lucide="plus" class="w-4 h-4"></i>
@@ -333,9 +309,9 @@
         <div class="flex items-center justify-between border-b border-stone-100 pb-4">
           <div>
             <h2 class="text-sm font-black text-stone-900 uppercase tracking-wider flex items-center">
-              <i data-lucide="receipt" class="w-4.5 h-4.5 mr-2 text-tukaps-500"></i> Riwayat Transaksi Kasir
+              <i data-lucide="receipt" class="w-4.5 h-4.5 mr-2 text-orange-500"></i> Riwayat Transaksi Kasir
             </h2>
-            <p class="text-xs text-stone-500">Catatan penjualan harian, omzet, dan rincian transaksi.</p>
+            <p class="text-xs text-stone-500">Catatan penjualan harian dan omzet toko.</p>
           </div>
           <button onclick="clearTransactionHistory()" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-600 font-bold text-xs hover:bg-rose-100 transition">Hapus Riwayat</button>
         </div>
@@ -368,11 +344,10 @@
   <div id="receipt-modal-overlay" class="fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="coffee-card w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-4 bg-white text-center">
       <div class="flex items-center justify-between border-b border-stone-100 pb-3">
-        <h3 class="text-sm font-black text-stone-900">Struk Transaksi (80mm)</h3>
+        <h3 class="text-sm font-black text-stone-900">Struk Thermal (80mm)</h3>
         <button onclick="closeReceiptModal()" class="text-stone-400 hover:text-stone-700"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
       
-      <!-- Hidden or Preview Printable Area -->
       <div class="overflow-x-auto border border-stone-200 rounded-xl p-2 bg-stone-50">
         <div id="printable-receipt" class="receipt-paper"></div>
       </div>
@@ -390,13 +365,12 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="mt-auto text-center text-xs text-stone-400 py-6 font-medium border-t border-stone-200/60">
-    TUKAPS Coffee &copy; 2026 — One Cup Isn't Enough | All-in-One POS & HPP Studio
+    TUKAPS Coffee &copy; 2026 — One Cup Isn't Enough | Official POS & HPP Studio
   </footer>
 
   <script>
-    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete';
+    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete_v2';
     let selectedPosCategory = "All";
     let cart = [];
     let paymentMethod = "Tunai";
@@ -480,11 +454,13 @@
     }
 
     function resetToDefaultData() {
-      if (confirm('Reset seluruh data sesuai Excel asli?')) {
-        saveStore(SEED_DATA);
+      if (confirm('Reset seluruh data master menu, bahan, dan resep sesuai Excel?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        store = JSON.parse(JSON.stringify(SEED_DATA));
+        saveStore(store);
         cart = [];
         initApp();
-        alert('Data berhasil di-reset!');
+        alert('Data berhasil di-reset ke data Excel asli!');
       }
     }
 
@@ -552,7 +528,6 @@
       if (tabName === 'riwayat') renderHistoryTable();
     }
 
-    /* ================= POS LOGIC ================= */
     function renderPosCatalog() {
       const menus = getCalculatedMenus();
       const search = (document.getElementById('pos-search')?.value || '').toLowerCase();
@@ -562,7 +537,7 @@
       if (pillContainer) {
         pillContainer.innerHTML = cats.map(cat => `
           <button onclick="setPosCat('${cat}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-            selectedPosCategory === cat ? 'bg-tukaps-500 text-white shadow-sm' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+            selectedPosCategory === cat ? 'bg-orange-500 text-white shadow-sm' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
           }">${cat}</button>
         `).join('');
       }
@@ -576,20 +551,20 @@
       const grid = document.getElementById('pos-product-grid');
       if (grid) {
         grid.innerHTML = filtered.map(m => `
-          <div onclick="addToCart('${m.id}')" class="coffee-card p-3.5 rounded-2xl cursor-pointer hover:border-tukaps-500 transition group flex flex-col justify-between space-y-2">
+          <div onclick="addToCart('${m.id}')" class="coffee-card p-3.5 rounded-2xl cursor-pointer hover:border-orange-500 transition group flex flex-col justify-between space-y-2">
             <div>
               <div class="flex items-start justify-between">
                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 text-stone-600">${m.cat}</span>
                 <span class="text-[10px] font-mono font-semibold text-stone-400">${m.id}</span>
               </div>
-              <h3 class="font-extrabold text-stone-900 text-xs mt-1.5 line-clamp-2 group-hover:text-tukaps-500 transition">${m.name}</h3>
+              <h3 class="font-extrabold text-stone-900 text-xs mt-1.5 line-clamp-2 group-hover:text-orange-600 transition">${m.name}</h3>
             </div>
             <div class="flex items-end justify-between pt-2 border-t border-stone-100">
               <div>
                 <div class="text-[10px] text-stone-400">Harga Jual</div>
-                <div class="font-black text-tukaps-600 text-sm font-mono">${fmtRp(m.sellingPrice)}</div>
+                <div class="font-black text-orange-600 text-sm font-mono">${fmtRp(m.sellingPrice)}</div>
               </div>
-              <div class="w-8 h-8 rounded-xl bg-tukaps-50 text-tukaps-600 flex items-center justify-center group-hover:bg-tukaps-500 group-hover:text-white transition">
+              <div class="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition">
                 <i data-lucide="plus" class="w-4 h-4"></i>
               </div>
             </div>
@@ -617,9 +592,7 @@
       const item = cart.find(x => x.id === menuId);
       if (!item) return;
       item.qty += delta;
-      if (item.qty <= 0) {
-        cart = cart.filter(x => x.id !== menuId);
-      }
+      if (item.qty <= 0) cart = cart.filter(x => x.id !== menuId);
       renderCart();
     }
 
@@ -652,12 +625,7 @@
 
       const subtotal = cart.reduce((a, c) => a + (c.price * c.qty), 0);
       const discountInput = Number(document.getElementById('discount-select')?.value || 0);
-      let discountVal = 0;
-      if (discountInput > 0 && discountInput <= 100) {
-        discountVal = (subtotal * discountInput) / 100;
-      } else {
-        discountVal = discountInput;
-      }
+      let discountVal = discountInput <= 100 ? (subtotal * discountInput) / 100 : discountInput;
       const total = Math.max(0, subtotal - discountVal);
 
       document.getElementById('cart-subtotal').innerText = fmtRp(subtotal);
@@ -671,7 +639,7 @@
         const btn = document.getElementById(`pay-${m.toLowerCase()}`);
         if (btn) {
           if (m === method) {
-            btn.className = "pay-btn py-2 rounded-xl text-xs font-bold border border-tukaps-500 bg-tukaps-50 text-tukaps-600 transition";
+            btn.className = "pay-btn py-2 rounded-xl text-xs font-bold border border-orange-500 bg-orange-50 text-orange-600 transition";
           } else {
             btn.className = "pay-btn py-2 rounded-xl text-xs font-bold border border-stone-200 bg-stone-50 text-stone-600 transition";
           }
@@ -690,7 +658,6 @@
       const txId = "TRX" + Date.now().toString().slice(-6);
       const timeStr = new Date().toLocaleString('id-ID');
 
-      // Deduct stock automatically
       cart.forEach(item => {
         if (item.recipe) {
           Object.entries(item.recipe).forEach(([bId, qty]) => {
@@ -706,17 +673,7 @@
         }
       });
 
-      const transaction = {
-        id: txId,
-        time: timeStr,
-        customer,
-        items: [...cart],
-        subtotal,
-        discount: discountVal,
-        total,
-        paymentMethod
-      };
-
+      const transaction = { id: txId, time: timeStr, customer, items: [...cart], subtotal, discount: discountVal, total, paymentMethod };
       if (!store.history) store.history = [];
       store.history.unshift(transaction);
       saveStore();
@@ -724,7 +681,6 @@
       lastGeneratedReceipt = transaction;
       showReceiptModal(transaction);
 
-      // Reset Cart
       cart = [];
       document.getElementById('customer-name').value = '';
       renderCart();
@@ -735,7 +691,7 @@
       if (!paper) return;
 
       paper.innerHTML = `
-        <div style="text-align:center; font-weight:bold; font-size:14px; margin-bottom:4px;">TUKAPS COFFEE</div>
+        <div style="text-align:center; font-weight:bold; font-size:15px; margin-bottom:2px;">☕ TUKAPS COFFEE</div>
         <div style="text-align:center; font-size:10px; margin-bottom:8px;">One Cup Isn't Enough</div>
         <div style="border-top:1px dashed #000; border-bottom:1px dashed #000; padding:4px 0; margin-bottom:8px; font-size:10px;">
           <div>ID: ${tx.id}</div>
@@ -764,53 +720,43 @@
       document.getElementById('receipt-modal-overlay').classList.remove('hidden');
     }
 
-    function closeReceiptModal() {
-      document.getElementById('receipt-modal-overlay').classList.add('hidden');
-    }
-
-    function printThermal80mm() {
-      window.print();
-    }
+    function closeReceiptModal() { document.getElementById('receipt-modal-overlay').classList.add('hidden'); }
+    function printThermal80mm() { window.print(); }
 
     async function shareReceiptWhatsApp() {
       const paper = document.getElementById('printable-receipt');
       if (!paper) return;
-
       try {
         const canvas = await html2canvas(paper, { scale: 2 });
         const imgData = canvas.toDataURL('image/jpeg', 0.9);
-        
-        // Create download link for JPG
         const link = document.createElement('a');
         link.href = imgData;
         link.download = `Struk_Tukaps_${lastGeneratedReceipt?.id || 'POS'}.jpg`;
         link.click();
-
-        alert('Struk berhasil di-download sebagai gambar JPG! Silakan kirimkan ke WhatsApp customer.');
+        alert('Struk berhasil di-download sebagai gambar JPG!');
       } catch (e) {
         alert('Gagal menghasilkan gambar struk: ' + e.message);
       }
     }
 
-    /* ================= DASHBOARD HPP ================= */
     function renderDashboard() {
       const menus = getCalculatedMenus();
       const tbody = document.getElementById('dashboard-table-body');
       if (tbody) {
         tbody.innerHTML = menus.map(m => {
-          const marginBadge = m.marginPct >= 60 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-tukaps-50 text-tukaps-600 border-tukaps-200';
+          const marginBadge = m.marginPct >= 60 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-orange-50 text-orange-600 border-orange-200';
           return `
             <tr class="hover:bg-stone-50/80 transition">
               <td class="py-3.5 px-6 font-sans font-bold text-stone-900">${m.name}<div class="text-[10px] text-stone-400 font-mono">${m.id}</div></td>
               <td class="py-3.5 px-4 font-sans"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-stone-100 text-stone-600">${m.cat}</span></td>
               <td class="py-3.5 px-4 text-right text-stone-600">${fmtRp(m.bahanCost)}</td>
               <td class="py-3.5 px-4 text-right text-stone-600">${fmtRp(m.kemasanCost)}</td>
-              <td class="py-3.5 px-4 text-right font-bold text-tukaps-600 bg-tukaps-50/30">${fmtRp(m.totalModal)}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-orange-600 bg-orange-50/30">${fmtRp(m.totalModal)}</td>
               <td class="py-3.5 px-4 text-right font-semibold text-stone-900">${fmtRp(m.sellingPrice)}</td>
               <td class="py-3.5 px-4 text-right font-bold text-emerald-600">${fmtRp(m.laba)}</td>
               <td class="py-3.5 px-4 text-center font-sans"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${marginBadge}">${m.marginPct}%</span></td>
               <td class="py-3.5 px-6 text-center font-sans">
-                <button onclick="openEditMenuModal('${m.id}')" class="px-3 py-1.5 rounded-xl bg-tukaps-50 text-tukaps-600 hover:bg-tukaps-100 text-xs font-bold transition">Edit Resep</button>
+                <button onclick="openEditMenuModal('${m.id}')" class="px-3 py-1.5 rounded-xl bg-orange-50 text-orange-600 hover:bg-orange-100 text-xs font-bold transition">Edit Resep</button>
               </td>
             </tr>
           `;
@@ -830,7 +776,6 @@
       }
     }
 
-    /* ================= MASTER BAHAN & KEMASAN ================= */
     function renderMasterTables() {
       const bahanBody = document.getElementById('bahan-table-body');
       if (bahanBody && store.bahan) {
@@ -842,10 +787,10 @@
               <td class="py-3.5 px-4 font-sans font-bold text-stone-900">${b.name}</td>
               <td class="py-3.5 px-4 font-sans"><span class="bg-stone-100 px-2 py-0.5 rounded text-[10px] text-stone-600">${b.cat}</span></td>
               <td class="py-3.5 px-4 font-sans text-stone-500">${b.unit}</td>
-              <td class="py-3.5 px-4 text-right font-bold text-tukaps-600">${b.stock.toLocaleString('id-ID')}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-orange-600">${b.stock.toLocaleString('id-ID')}</td>
               <td class="py-3.5 px-4 text-right text-stone-700">${b.packQty.toLocaleString('id-ID')}</td>
               <td class="py-3.5 px-4 text-right text-stone-700">${fmtRp(b.buyPrice)}</td>
-              <td class="py-3.5 px-4 text-right font-bold text-tukaps-600 bg-tukaps-50/40">${fmtRp(unitPrice)}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-orange-600 bg-orange-50/40">${fmtRp(unitPrice)}</td>
               <td class="py-3.5 px-4 text-center font-sans">
                 <button onclick="openEditBahanModal('${b.id}')" class="px-2.5 py-1 rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-bold">Edit</button>
               </td>
@@ -864,10 +809,10 @@
               <td class="py-3.5 px-4 font-sans font-bold text-stone-900">${k.name}</td>
               <td class="py-3.5 px-4 font-sans"><span class="bg-stone-100 px-2 py-0.5 rounded text-[10px] text-stone-600">${k.cat}</span></td>
               <td class="py-3.5 px-4 font-sans text-stone-500">${k.unit}</td>
-              <td class="py-3.5 px-4 text-right font-bold text-tukaps-600">${k.stock.toLocaleString('id-ID')}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-orange-600">${k.stock.toLocaleString('id-ID')}</td>
               <td class="py-3.5 px-4 text-right text-stone-700">${k.packQty.toLocaleString('id-ID')}</td>
               <td class="py-3.5 px-4 text-right text-stone-700">${fmtRp(k.buyPrice)}</td>
-              <td class="py-3.5 px-4 text-right font-bold text-tukaps-600 bg-tukaps-50/40">${fmtRp(unitPrice)}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-orange-600 bg-orange-50/40">${fmtRp(unitPrice)}</td>
               <td class="py-3.5 px-4 text-center font-sans">
                 <button onclick="openEditKemasanModal('${k.id}')" class="px-2.5 py-1 rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-bold">Edit</button>
               </td>
@@ -877,59 +822,36 @@
       }
     }
 
-    /* ================= RIWAYAT TRANSAKSI ================= */
     function renderHistoryTable() {
       const tbody = document.getElementById('history-table-body');
       if (!tbody) return;
       const history = store.history || [];
-
       if (history.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-stone-400">Belum ada transaksi tercatat.</td></tr>`;
         return;
       }
-
       tbody.innerHTML = history.map(tx => `
         <tr class="hover:bg-stone-50 transition">
-          <td class="py-3.5 px-4">
-            <div class="font-bold text-stone-900">${tx.id}</div>
-            <div class="text-[10px] text-stone-400">${tx.time}</div>
-          </td>
+          <td class="py-3.5 px-4"><div class="font-bold text-stone-900">${tx.id}</div><div class="text-[10px] text-stone-400">${tx.time}</div></td>
           <td class="py-3.5 px-4 font-sans font-semibold text-stone-800">${tx.customer}</td>
-          <td class="py-3.5 px-4 font-sans text-stone-600 text-xs">
-            ${tx.items.map(i => `${i.name} (${i.qty}x)`).join(', ')}
-          </td>
-          <td class="py-3.5 px-4 text-right font-bold text-tukaps-600">${fmtRp(tx.total)}</td>
+          <td class="py-3.5 px-4 font-sans text-stone-600 text-xs">${tx.items.map(i => `${i.name} (${i.qty}x)`).join(', ')}</td>
+          <td class="py-3.5 px-4 text-right font-bold text-orange-600">${fmtRp(tx.total)}</td>
           <td class="py-3.5 px-4 font-sans"><span class="px-2 py-0.5 rounded bg-stone-100 text-stone-700 text-[10px] font-bold">${tx.paymentMethod}</span></td>
           <td class="py-3.5 px-4 text-center font-sans">
-            <button onclick='reprintReceipt(${JSON.stringify(tx)})' class="px-2.5 py-1 rounded-lg bg-tukaps-50 text-tukaps-600 hover:bg-tukaps-100 text-xs font-bold">Struk</button>
+            <button onclick='reprintReceipt(${JSON.stringify(tx)})' class="px-2.5 py-1 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 text-xs font-bold">Struk</button>
           </td>
         </tr>
       `).join('');
     }
 
-    function reprintReceipt(tx) {
-      lastGeneratedReceipt = tx;
-      showReceiptModal(tx);
-    }
+    function reprintReceipt(tx) { lastGeneratedReceipt = tx; showReceiptModal(tx); }
+    function clearTransactionHistory() { if (confirm('Hapus seluruh riwayat transaksi?')) { store.history = []; saveStore(); renderHistoryTable(); } }
 
-    function clearTransactionHistory() {
-      if (confirm('Hapus seluruh riwayat transaksi?')) {
-        store.history = [];
-        saveStore();
-        renderHistoryTable();
-      }
-    }
-
-    /* ================= MODALS: ADD/EDIT MENU, BAHAN, KEMASAN ================= */
     function closeModal() { document.getElementById('modal-overlay').classList.add('hidden'); }
     function openModalHtml(html) {
       const container = document.getElementById('modal-container');
       const overlay = document.getElementById('modal-overlay');
-      if (container && overlay) {
-        container.innerHTML = html;
-        overlay.classList.remove('hidden');
-        if (window.lucide) lucide.createIcons();
-      }
+      if (container && overlay) { container.innerHTML = html; overlay.classList.remove('hidden'); if (window.lucide) lucide.createIcons(); }
     }
 
     function openAddMenuModal() {
@@ -956,15 +878,7 @@
     function saveNewMenu(id) {
       const name = document.getElementById('nm-name').value;
       if (!name) return alert('Nama menu wajib diisi!');
-      store.menu.push({
-        id,
-        name,
-        cat: document.getElementById('nm-cat').value,
-        overhead: 0,
-        sellingPrice: Number(document.getElementById('nm-price').value),
-        recipe: { "BHN01": 30, "BHN02": 100 },
-        pkg: { "KMS01": 1, "KMS03": 1 }
-      });
+      store.menu.push({ id, name, cat: document.getElementById('nm-cat').value, overhead: 0, sellingPrice: Number(document.getElementById('nm-price').value), recipe: { "BHN01": 30, "BHN02": 100 }, pkg: { "KMS01": 1, "KMS03": 1 } });
       saveStore();
       closeModal();
       renderDashboard();
@@ -974,25 +888,13 @@
     function openEditMenuModal(menuId) {
       const m = store.menu.find(x => x.id === menuId);
       if (!m) return;
-
       const bahanInputs = store.bahan.map(b => {
         const val = (m.recipe && m.recipe[b.id]) ? m.recipe[b.id] : 0;
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-stone-100 text-xs">
-            <span class="text-stone-700">${b.name} (${b.unit})</span>
-            <input type="number" step="any" data-b-id="${b.id}" value="${val}" class="edit-b-val coffee-input w-24 px-2 py-1 rounded-lg text-right font-mono">
-          </div>
-        `;
+        return `<div class="flex items-center justify-between py-1 border-b border-stone-100 text-xs"><span class="text-stone-700">${b.name} (${b.unit})</span><input type="number" step="any" data-b-id="${b.id}" value="${val}" class="edit-b-val coffee-input w-24 px-2 py-1 rounded-lg text-right font-mono"></div>`;
       }).join('');
-
       const pkgInputs = store.kemasan.map(k => {
         const val = (m.pkg && m.pkg[k.id]) ? m.pkg[k.id] : 0;
-        return `
-          <div class="flex items-center justify-between py-1 border-b border-stone-100 text-xs">
-            <span class="text-stone-700">${k.name} (${k.unit})</span>
-            <input type="number" step="any" data-k-id="${k.id}" value="${val}" class="edit-k-val coffee-input w-24 px-2 py-1 rounded-lg text-right font-mono">
-          </div>
-        `;
+        return `<div class="flex items-center justify-between py-1 border-b border-stone-100 text-xs"><span class="text-stone-700">${k.name} (${k.unit})</span><input type="number" step="any" data-k-id="${k.id}" value="${val}" class="edit-k-val coffee-input w-24 px-2 py-1 rounded-lg text-right font-mono"></div>`;
       }).join('');
 
       openModalHtml(`
@@ -1005,14 +907,8 @@
             <div><label class="font-bold text-stone-700 block mb-1">Nama Menu</label><input type="text" id="em-name" value="${m.name}" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
             <div><label class="font-bold text-stone-700 block mb-1">Harga Jual (Rp)</label><input type="number" id="em-price" value="${m.sellingPrice}" class="coffee-input w-full px-3 py-2 rounded-xl font-bold font-mono"></div>
           </div>
-          <div>
-            <h4 class="font-bold text-stone-900 mb-1 pt-2">Takaran Bahan Baku:</h4>
-            <div class="bg-stone-50 p-2 rounded-xl border border-stone-200">${bahanInputs}</div>
-          </div>
-          <div>
-            <h4 class="font-bold text-stone-900 mb-1 pt-2">Takaran Kemasan:</h4>
-            <div class="bg-stone-50 p-2 rounded-xl border border-stone-200">${pkgInputs}</div>
-          </div>
+          <div><h4 class="font-bold text-stone-900 mb-1 pt-2">Takaran Bahan Baku:</h4><div class="bg-stone-50 p-2 rounded-xl border border-stone-200">${bahanInputs}</div></div>
+          <div><h4 class="font-bold text-stone-900 mb-1 pt-2">Takaran Kemasan:</h4><div class="bg-stone-50 p-2 rounded-xl border border-stone-200">${pkgInputs}</div></div>
         </div>
         <div class="flex items-center justify-end space-x-2 border-t border-stone-100 pt-3">
           <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold">Batal</button>
@@ -1026,21 +922,12 @@
       if (!m) return;
       m.name = document.getElementById('em-name').value;
       m.sellingPrice = Number(document.getElementById('em-price').value);
-
       const newRecipe = {};
-      document.querySelectorAll('.edit-b-val').forEach(inp => {
-        const v = Number(inp.value);
-        if (v > 0) newRecipe[inp.getAttribute('data-b-id')] = v;
-      });
+      document.querySelectorAll('.edit-b-val').forEach(inp => { const v = Number(inp.value); if (v > 0) newRecipe[inp.getAttribute('data-b-id')] = v; });
       m.recipe = newRecipe;
-
       const newPkg = {};
-      document.querySelectorAll('.edit-k-val').forEach(inp => {
-        const v = Number(inp.value);
-        if (v > 0) newPkg[inp.getAttribute('data-k-id')] = v;
-      });
+      document.querySelectorAll('.edit-k-val').forEach(inp => { const v = Number(inp.value); if (v > 0) newPkg[inp.getAttribute('data-k-id')] = v; });
       m.pkg = newPkg;
-
       saveStore();
       closeModal();
       renderDashboard();
@@ -1148,16 +1035,7 @@
     function saveNewBahan(id) {
       const name = document.getElementById('ab-name').value;
       if (!name) return alert('Nama bahan wajib diisi!');
-      store.bahan.push({
-        id,
-        name,
-        cat: document.getElementById('ab-cat').value,
-        unit: document.getElementById('ab-unit').value,
-        stock: Number(document.getElementById('ab-stock').value),
-        packQty: Number(document.getElementById('ab-pack').value),
-        buyPrice: Number(document.getElementById('ab-price').value),
-        supplier: 'Supplier Lokal'
-      });
+      store.bahan.push({ id, name, cat: document.getElementById('ab-cat').value, unit: document.getElementById('ab-unit').value, stock: Number(document.getElementById('ab-stock').value), packQty: Number(document.getElementById('ab-pack').value), buyPrice: Number(document.getElementById('ab-price').value), supplier: 'Supplier Lokal' });
       saveStore();
       closeModal();
       renderMasterTables();
@@ -1188,16 +1066,7 @@
     function saveNewKemasan(id) {
       const name = document.getElementById('ak-name').value;
       if (!name) return alert('Nama kemasan wajib diisi!');
-      store.kemasan.push({
-        id,
-        name,
-        cat: 'Cup',
-        unit: 'pcs',
-        stock: Number(document.getElementById('ak-stock').value),
-        packQty: Number(document.getElementById('ak-pack').value),
-        buyPrice: Number(document.getElementById('ak-price').value),
-        supplier: 'Supplier Lokal'
-      });
+      store.kemasan.push({ id, name, cat: 'Cup', unit: 'pcs', stock: Number(document.getElementById('ak-stock').value), packQty: Number(document.getElementById('ak-pack').value), buyPrice: Number(document.getElementById('ak-price').value), supplier: 'Supplier Lokal' });
       saveStore();
       closeModal();
       renderMasterTables();
