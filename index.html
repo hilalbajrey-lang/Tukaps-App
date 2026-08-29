@@ -26,16 +26,15 @@
       <div class="w-10 h-10 rounded-2xl bg-[#c2410c] flex items-center justify-center text-white font-black shadow">T</div>
       <div>
         <h1 class="text-sm font-black text-stone-900">TUKAPS COFFEE</h1>
-        <p class="text-[10px] text-stone-500 font-medium">POS, 25 Menu, Master, Riwayat & Dashboard Pengeluaran</p>
+        <p class="text-[10px] text-stone-500 font-medium">POS, Dynamic HPP Editor & Dashboard Pengeluaran</p>
       </div>
     </div>
     
-    <!-- NAVIGATION TABS -->
     <div class="flex items-center space-x-1.5 overflow-x-auto py-1">
       <button onclick="switchTab('pos')" id="nav-pos" class="tab-btn active">Kasir POS</button>
       <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn">Menu & HPP</button>
-      <button onclick="switchTab('bahan')" id="nav-bahan" class="tab-btn">Bahan</button>
-      <button onclick="switchTab('kemasan')" id="nav-kemasan" class="tab-btn">Kemasan</button>
+      <button onclick="switchTab('bahan')" id="nav-bahan" class="tab-btn">Bahan (Editable)</button>
+      <button onclick="switchTab('kemasan')" id="nav-kemasan" class="tab-btn">Kemasan (Editable)</button>
       <button onclick="switchTab('laporan')" id="nav-laporan" class="tab-btn bg-amber-100 text-amber-900 font-bold">Laporan & Pengeluaran</button>
       <button onclick="switchTab('riwayat')" id="nav-riwayat" class="tab-btn">Riwayat</button>
     </div>
@@ -43,7 +42,7 @@
 
   <main class="flex-1 p-4 lg:p-6 max-w-[1600px] w-full mx-auto space-y-6">
 
-    <!-- 1. VIEW POS -->
+    <!-- 1. POS -->
     <section id="view-pos" class="view-tab grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       <div class="lg:col-span-7 space-y-4">
         <div class="coffee-card p-4 rounded-2xl">
@@ -65,14 +64,14 @@
       </div>
     </section>
 
-    <!-- 2. VIEW MENU & HPP -->
+    <!-- 2. MENU & HPP -->
     <section id="view-dashboard" class="view-tab hidden space-y-4">
       <div class="coffee-card rounded-3xl p-6 space-y-4">
-        <h2 class="text-sm font-black uppercase text-stone-900">Master 25 Menu, Resep & Kalkulasi HPP</h2>
+        <h2 class="text-sm font-black uppercase text-stone-900">Master 25 Menu & Kalkulasi HPP Otomatis</h2>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs font-mono">
             <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold border-b">
-              <tr><th class="py-3 px-4">Nama Menu</th><th class="py-3 px-4">Kategori</th><th class="py-3 px-4 text-right">Modal HPP</th><th class="py-3 px-4 text-right">Harga Jual</th><th class="py-3 px-4 text-right text-emerald-600">Laba Bersih</th></tr>
+              <tr><th class="py-3 px-4">Nama Menu</th><th class="py-3 px-4">Kategori</th><th class="py-3 px-4 text-right">Modal HPP (Otomatis)</th><th class="py-3 px-4 text-right">Harga Jual</th><th class="py-3 px-4 text-right text-emerald-600">Laba Bersih</th></tr>
             </thead>
             <tbody id="dashboard-table-body" class="divide-y"></tbody>
           </table>
@@ -80,14 +79,17 @@
       </div>
     </section>
 
-    <!-- 3. VIEW BAHAN -->
+    <!-- 3. BAHAN (EDITABLE) -->
     <section id="view-bahan" class="view-tab hidden space-y-4">
       <div class="coffee-card rounded-3xl p-6 space-y-4">
-        <h2 class="text-sm font-black uppercase text-stone-900">Master Bahan Baku Lengkap</h2>
+        <div class="flex justify-between items-center">
+          <h2 class="text-sm font-black uppercase text-stone-900">Master Bahan Baku (Ubah harga beli di sini, HPP menu otomatis naik/turun)</h2>
+          <button onclick="saveChanges()" class="btn-coffee px-4 py-2 rounded-xl text-xs font-bold shadow">Simpan Perubahan Harga</button>
+        </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs font-mono">
             <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold border-b">
-              <tr><th class="py-3 px-4">Nama Bahan</th><th class="py-3 px-4">Kategori</th><th class="py-3 px-4">Satuan</th><th class="py-3 px-4 text-right">Stok Fisik</th><th class="py-3 px-4 text-right">Harga Beli Total</th></tr>
+              <tr><th class="py-3 px-4">Nama Bahan</th><th class="py-3 px-4">Satuan</th><th class="py-3 px-4 text-right">Stok Fisik</th><th class="py-3 px-4 text-right">Harga Beli Total (Bisa Diedit)</th></tr>
             </thead>
             <tbody id="bahan-table-body" class="divide-y"></tbody>
           </table>
@@ -95,14 +97,17 @@
       </div>
     </section>
 
-    <!-- 4. VIEW KEMASAN -->
+    <!-- 4. KEMASAN (EDITABLE) -->
     <section id="view-kemasan" class="view-tab hidden space-y-4">
       <div class="coffee-card rounded-3xl p-6 space-y-4">
-        <h2 class="text-sm font-black uppercase text-stone-900">Master Kemasan & Packaging Lengkap</h2>
+        <div class="flex justify-between items-center">
+          <h2 class="text-sm font-black uppercase text-stone-900">Master Kemasan & Packaging (Bisa Diedit)</h2>
+          <button onclick="saveChanges()" class="btn-coffee px-4 py-2 rounded-xl text-xs font-bold shadow">Simpan Perubahan Harga</button>
+        </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs font-mono">
             <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold border-b">
-              <tr><th class="py-3 px-4">Nama Kemasan</th><th class="py-3 px-4">Kategori</th><th class="py-3 px-4">Satuan</th><th class="py-3 px-4 text-right">Stok Fisik</th><th class="py-3 px-4 text-right">Harga Beli Total</th></tr>
+              <tr><th class="py-3 px-4">Nama Kemasan</th><th class="py-3 px-4">Satuan</th><th class="py-3 px-4 text-right">Stok Fisik</th><th class="py-3 px-4 text-right">Harga Beli Total (Bisa Diedit)</th></tr>
             </thead>
             <tbody id="kemasan-table-body" class="divide-y"></tbody>
           </table>
@@ -110,7 +115,7 @@
       </div>
     </section>
 
-    <!-- 5. VIEW LAPORAN & DASHBOARD PENGELUARAN -->
+    <!-- 5. LAPORAN & DASHBOARD PENGELUARAN -->
     <section id="view-laporan" class="view-tab hidden space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="coffee-card p-5 rounded-3xl bg-white border-l-4 border-orange-500 shadow-sm">
@@ -120,43 +125,39 @@
         <div class="coffee-card p-5 rounded-3xl bg-white border-l-4 border-rose-500 shadow-sm">
           <span class="text-xs font-bold uppercase text-stone-400">Total Pengeluaran (Modal)</span>
           <div id="dash-pengeluaran" class="text-2xl font-black mt-2 font-mono text-rose-600">Rp 0</div>
-          <p class="text-[11px] text-stone-500 mt-1">Akumulasi modal bahan & kemasan</p>
         </div>
         <div class="coffee-card p-5 rounded-3xl bg-white border-l-4 border-emerald-500 shadow-sm">
           <span class="text-xs font-bold uppercase text-stone-400">Total Laba Bersih</span>
           <div id="dash-laba" class="text-2xl font-black mt-2 font-mono text-emerald-600">Rp 0</div>
-          <p class="text-[11px] text-stone-500 mt-1">Omzet dikurangi pengeluaran modal</p>
         </div>
       </div>
 
       <div class="coffee-card rounded-3xl p-6 space-y-4 shadow-sm">
         <div class="flex space-x-2 border-b pb-4">
-          <button onclick="switchRep('harian')" id="rep-btn-harian" class="px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white shadow-sm">Laporan Harian</button>
-          <button onclick="switchRep('mingguan')" id="rep-btn-mingguan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600">Laporan Mingguan</button>
-          <button onclick="switchRep('bulanan')" id="rep-btn-bulanan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600">Laporan Bulanan</button>
+          <button onclick="switchRep('harian')" id="rep-btn-harian" class="px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white shadow-sm">Harian</button>
+          <button onclick="switchRep('mingguan')" id="rep-btn-mingguan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600">Mingguan</button>
+          <button onclick="switchRep('bulanan')" id="rep-btn-bulanan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600">Bulanan</button>
         </div>
 
         <div id="rep-harian" class="rep-pane space-y-3">
-          <h3 class="text-xs font-black uppercase text-stone-800">Rekapitulasi Pengeluaran & Laba Harian</h3>
+          <h3 class="text-xs font-black uppercase text-stone-800">Dashboard Pengeluaran & Laba Harian</h3>
           <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase border-b"><tr><th class="p-3">Tanggal</th><th class="p-3 text-right">Cup</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-harian" class="divide-y"></tbody></table></div>
         </div>
-
         <div id="rep-mingguan" class="rep-pane hidden space-y-3">
-          <h3 class="text-xs font-black uppercase text-stone-800">Rekapitulasi Pengeluaran & Laba Mingguan</h3>
-          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase border-b"><tr><th class="p-3">Rentang Minggu</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-mingguan" class="divide-y"></tbody></table></div>
+          <h3 class="text-xs font-black uppercase text-stone-800">Dashboard Pengeluaran & Laba Mingguan</h3>
+          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase border-b"><tr><th class="p-3">Periode</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-mingguan" class="divide-y"></tbody></table></div>
         </div>
-
         <div id="rep-bulanan" class="rep-pane hidden space-y-3">
-          <h3 class="text-xs font-black uppercase text-stone-800">Rekapitulasi Pengeluaran & Laba Bulanan</h3>
-          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase border-b"><tr><th class="p-3">Bulan & Tahun</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-bulanan" class="divide-y"></tbody></table></div>
+          <h3 class="text-xs font-black uppercase text-stone-800">Dashboard Pengeluaran & Laba Bulanan</h3>
+          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase border-b"><tr><th class="p-3">Bulan</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-bulanan" class="divide-y"></tbody></table></div>
         </div>
       </div>
     </section>
 
-    <!-- 6. VIEW RIWAYAT -->
+    <!-- 6. RIWAYAT -->
     <section id="view-riwayat" class="view-tab hidden space-y-4">
       <div class="coffee-card rounded-3xl p-6 space-y-4">
-        <h2 class="text-sm font-black uppercase text-stone-900">Riwayat Transaksi Lengkap</h2>
+        <h2 class="text-sm font-black uppercase text-stone-900">Riwayat Transaksi</h2>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs font-mono">
             <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold border-b">
@@ -173,62 +174,51 @@
   <script>
     let db = {
       menu: [
-        { id: "M001", name: "Es Kopi Susu Gula Aren Bold", cat: "Kopi Susu", price: 18000, modal: 8131 },
-        { id: "M002", name: "Es Kopi Susu Gula Aren Creamy", cat: "Kopi Susu", price: 18000, modal: 7366 },
-        { id: "M003", name: "Es Kopi Susu Gula Aren Creamy 250ml", cat: "Kopi Susu", price: 28000, modal: 11949 },
-        { id: "M004", name: "Es Kopi Susu Gula Aren BOLD 250ml", cat: "Kopi Susu", price: 28000, modal: 12278 },
-        { id: "M005", name: "Es Kopi Susu Gula Aren BOLD 1 Liter", cat: "Kopi Susu", price: 90000, modal: 40000 },
-        { id: "M006", name: "Es Kopi Susu Gula Aren Creamy 1 Liter", cat: "Kopi Susu", price: 90000, modal: 47287 },
-        { id: "M007", name: "Americano Cup", cat: "Kopi Hitam", price: 15000, modal: 4386 },
-        { id: "M008", name: "Americano Lemon Cup", cat: "Kopi Hitam", price: 17000, modal: 5200 },
-        { id: "M009", name: "Americano 250ml", cat: "Kopi Hitam", price: 25000, modal: 6796 },
-        { id: "M010", name: "Americano 1 liter", cat: "Kopi Hitam", price: 70000, modal: 38089 },
-        { id: "M011", name: "Americano Lemon 250ml", cat: "Kopi Hitam", price: 28000, modal: 7500 },
-        { id: "M012", name: "Americano Lemon 1 liter", cat: "Kopi Hitam", price: 80000, modal: 35000 },
-        { id: "M013", name: "Latte", cat: "Kopi Susu", price: 30000, modal: 7689 },
-        { id: "M014", name: "Caramel latte", cat: "Kopi Susu", price: 23000, modal: 7568 },
-        { id: "M015", name: "Thai Tea 1 Liter", cat: "Tea", price: 60000, modal: 26529 },
-        { id: "M016", name: "Thai Tea 250ml", cat: "Tea", price: 25000, modal: 6587 },
-        { id: "M017", name: "Thai Tea Cup", cat: "Tea", price: 15000, modal: 4229 },
-        { id: "M018", name: "Rawrrr Milk", cat: "Lainnya", price: 16000, modal: 6258 },
-        { id: "M019", name: "Peach Punch Americano", cat: "Kopi Hitam", price: 20000, modal: 6590 },
-        { id: "M020", name: "Butterscotch Latte", cat: "Kopi Susu", price: 23000, modal: 9422 },
-        { id: "M021", name: "Salted Caramel Latte", cat: "Kopi Susu", price: 23000, modal: 10260 },
-        { id: "M022", name: "Latte 250ml", cat: "Kopi Susu", price: 30000, modal: 8576 },
-        { id: "M023", name: "Peach Punch Americano 350ml", cat: "Kopi Hitam", price: 45000, modal: 19150 },
-        { id: "M024", name: "Vanilla Latte", cat: "Kopi Susu", price: 23000, modal: 8500 },
-        { id: "M025", name: "Spanish Latte", cat: "Kopi Susu", price: 18000, modal: 7800 }
+        { id: "M001", name: "Es Kopi Susu Gula Aren Bold", cat: "Kopi Susu", price: 18000, baseModal: 8131 },
+        { id: "M002", name: "Es Kopi Susu Gula Aren Creamy", cat: "Kopi Susu", price: 18000, baseModal: 7366 },
+        { id: "M003", name: "Es Kopi Susu Gula Aren Creamy 250ml", cat: "Kopi Susu", price: 28000, baseModal: 11949 },
+        { id: "M004", name: "Es Kopi Susu Gula Aren BOLD 250ml", cat: "Kopi Susu", price: 28000, baseModal: 12278 },
+        { id: "M005", name: "Es Kopi Susu Gula Aren BOLD 1 Liter", cat: "Kopi Susu", price: 90000, baseModal: 40000 },
+        { id: "M006", name: "Es Kopi Susu Gula Aren Creamy 1 Liter", cat: "Kopi Susu", price: 90000, baseModal: 47287 },
+        { id: "M007", name: "Americano Cup", cat: "Kopi Hitam", price: 15000, baseModal: 4386 },
+        { id: "M008", name: "Americano Lemon Cup", cat: "Kopi Hitam", price: 17000, baseModal: 5200 },
+        { id: "M009", name: "Americano 250ml", cat: "Kopi Hitam", price: 25000, baseModal: 6796 },
+        { id: "M010", name: "Americano 1 liter", cat: "Kopi Hitam", price: 70000, baseModal: 38089 },
+        { id: "M011", name: "Americano Lemon 250ml", cat: "Kopi Hitam", price: 28000, baseModal: 7500 },
+        { id: "M012", name: "Americano Lemon 1 liter", cat: "Kopi Hitam", price: 80000, baseModal: 35000 },
+        { id: "M013", name: "Latte", cat: "Kopi Susu", price: 30000, baseModal: 7689 },
+        { id: "M014", name: "Caramel latte", cat: "Kopi Susu", price: 23000, baseModal: 7568 },
+        { id: "M015", name: "Thai Tea 1 Liter", cat: "Tea", price: 60000, baseModal: 26529 },
+        { id: "M016", name: "Thai Tea 250ml", cat: "Tea", price: 25000, baseModal: 6587 },
+        { id: "M017", name: "Thai Tea Cup", cat: "Tea", price: 15000, baseModal: 4229 },
+        { id: "M018", name: "Rawrrr Milk", cat: "Lainnya", price: 16000, baseModal: 6258 },
+        { id: "M019", name: "Peach Punch Americano", cat: "Kopi Hitam", price: 20000, baseModal: 6590 },
+        { id: "M020", name: "Butterscotch Latte", cat: "Kopi Susu", price: 23000, baseModal: 9422 },
+        { id: "M021", name: "Salted Caramel Latte", cat: "Kopi Susu", price: 23000, baseModal: 10260 },
+        { id: "M022", name: "Latte 250ml", cat: "Kopi Susu", price: 30000, baseModal: 8576 },
+        { id: "M023", name: "Peach Punch Americano 350ml", cat: "Kopi Hitam", price: 45000, baseModal: 19150 },
+        { id: "M024", name: "Vanilla Latte", cat: "Kopi Susu", price: 23000, baseModal: 8500 },
+        { id: "M025", name: "Spanish Latte", cat: "Kopi Susu", price: 18000, baseModal: 7800 }
       ],
       bahan: [
-        { name: "Espresso Cair", cat: "Kopi", unit: "gr", stock: 5000, price: 120000 },
-        { name: "Susu Fresh Milk", cat: "Dairy", unit: "gr", stock: 10000, price: 19000 },
-        { name: "Creamer", cat: "Dairy", unit: "gr", stock: 5000, price: 31000 },
-        { name: "Gula Aren", cat: "Pemanis", unit: "gr", stock: 5000, price: 47000 },
-        { name: "Air Mineral", cat: "Air", unit: "ml", stock: 50000, price: 0 },
-        { name: "Bubuk Thai Tea", cat: "Bubuk", unit: "gr", stock: 2000, price: 50000 },
-        { name: "Es Batu", cat: "Es", unit: "gr", stock: 20000, price: 0 },
-        { name: "Sirup Caramel", cat: "Sirup", unit: "ml", stock: 1000, price: 14000 },
-        { name: "SKM", cat: "Pemanis", unit: "gr", stock: 1825, price: 12500 },
-        { name: "Susu Evaporasi", cat: "Dairy", unit: "gr", stock: 2500, price: 16500 },
-        { name: "Peach Syrup", cat: "Sirup", unit: "ml", stock: 1000, price: 15000 },
-        { name: "Vanilla Syrup", cat: "Sirup", unit: "ml", stock: 2300, price: 25000 },
-        { name: "Butterscotch Syrup", cat: "Sirup", unit: "ml", stock: 3250, price: 85000 }
+        { id: "b1", name: "Espresso Cair", unit: "gr", stock: 5000, price: 120000 },
+        { id: "b2", name: "Susu Fresh Milk", unit: "gr", stock: 10000, price: 19000 },
+        { id: "b3", name: "Creamer", unit: "gr", stock: 5000, price: 31000 },
+        { id: "b4", name: "Gula Aren", unit: "gr", stock: 5000, price: 47000 },
+        { id: "b5", name: "Bubuk Thai Tea", unit: "gr", stock: 2000, price: 50000 }
       ],
       kemasan: [
-        { name: "Cup 12oz", cat: "Cup", unit: "pcs", stock: 500, price: 85980 },
-        { name: "Sticker", cat: "Label", unit: "pcs", stock: 500, price: 20000 },
-        { name: "Sedotan", cat: "Sedotan", unit: "pcs", stock: 500, price: 9000 },
-        { name: "Seal Cup", cat: "Seal", unit: "pcs", stock: 500, price: 20000 },
-        { name: "Sticker Botol", cat: "Label", unit: "pcs", stock: 200, price: 20000 },
-        { name: "Botol 1 liter", cat: "Botol", unit: "pcs", stock: 100, price: 5000 },
-        { name: "Paper Bag", cat: "Bag", unit: "pcs", stock: 100, price: 50000 }
+        { id: "k1", name: "Cup 12oz", unit: "pcs", stock: 500, price: 85980 },
+        { id: "k2", name: "Sticker", unit: "pcs", stock: 500, price: 20000 },
+        { id: "k3", name: "Botol 1 liter", unit: "pcs", stock: 100, price: 5000 }
       ],
       cart: [],
       history: [
-        { time: "28/08/2026 10:00", date: "28/08/2026", month: "08/2026", name: "Es Kopi Susu Gula Aren Bold", price: 18000, modal: 8131, qty: 3 },
-        { time: "27/08/2026 11:30", date: "27/08/2026", month: "08/2026", name: "Americano Peach", price: 20000, modal: 6590, qty: 5 }
+        { time: "28/08/2026 10:00", date: "28/08/2026", month: "08/2026", name: "Es Kopi Susu Gula Aren Bold", price: 18000, modal: 8131, qty: 3 }
       ]
     };
+
+    let inflationMultiplier = 1.0;
 
     function fmt(v) { return 'Rp ' + Math.round(v).toLocaleString('id-ID'); }
 
@@ -257,6 +247,8 @@
       document.getElementById(`rep-btn-${r}`).className = "px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white shadow-sm";
     }
 
+    function getModal(m) { return Math.round(m.baseModal * inflationMultiplier); }
+
     function renderPos() {
       document.getElementById('pos-grid').innerHTML = db.menu.map(m => `
         <div onclick="addToCart('${m.id}')" class="coffee-card p-3 rounded-2xl cursor-pointer hover:border-orange-500 transition group flex flex-col justify-between">
@@ -271,8 +263,9 @@
 
     function addToCart(id) {
       let m = db.menu.find(x => x.id === id);
+      let currentModal = getModal(m);
       let c = db.cart.find(x => x.id === id);
-      if(c) c.qty++; else db.cart.push({ ...m, qty: 1 });
+      if(c) c.qty++; else db.cart.push({ ...m, modal: currentModal, qty: 1 });
       renderCart();
     }
 
@@ -292,50 +285,72 @@
 
     function checkout() {
       if(db.cart.length === 0) return alert('Keranjang masih kosong!');
-      let now = "29/08/2026 10:15";
+      let now = "29/08/2026 10:25";
       db.cart.forEach(c => {
         db.history.unshift({ time: now, date: "29/08/2026", month: "08/2026", name: c.name, price: c.price, modal: c.modal, qty: c.qty });
       });
       db.cart = [];
       renderCart();
-      alert('Transaksi berhasil diproses & dicatat ke laporan pengeluaran!');
+      alert('Transaksi berhasil & tercatat ke pengeluaran harian/bulanan!');
       switchTab('laporan');
     }
 
     function renderDashboard() {
-      document.getElementById('dashboard-table-body').innerHTML = db.menu.map(m => `
-        <tr>
-          <td class="py-3 px-4 font-bold">${m.name}</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-stone-100 text-stone-600">${m.cat}</span></td>
-          <td class="py-3 px-4 text-right text-rose-600">${fmt(m.modal)}</td>
-          <td class="py-3 px-4 text-right">${fmt(m.price)}</td>
-          <td class="py-3 px-4 text-right font-bold text-emerald-600">${fmt(m.price - m.modal)}</td>
-        </tr>
-      `).join('');
+      document.getElementById('dashboard-table-body').innerHTML = db.menu.map(m => {
+        let modal = getModal(m);
+        let laba = m.price - modal;
+        return `
+          <tr>
+            <td class="py-3 px-4 font-bold">${m.name}</td>
+            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-stone-100 text-stone-600">${m.cat}</span></td>
+            <td class="py-3 px-4 text-right text-rose-600">${fmt(modal)}</td>
+            <td class="py-3 px-4 text-right">${fmt(m.price)}</td>
+            <td class="py-3 px-4 text-right font-bold text-emerald-600">${fmt(laba)}</td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function renderBahan() {
-      document.getElementById('bahan-table-body').innerHTML = db.bahan.map(b => `
+      document.getElementById('bahan-table-body').innerHTML = db.bahan.map((b, idx) => `
         <tr>
           <td class="py-3 px-4 font-bold">${b.name}</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-stone-100 text-stone-600">${b.cat}</span></td>
           <td class="py-3 px-4">${b.unit}</td>
           <td class="py-3 px-4 text-right">${b.stock.toLocaleString('id-ID')}</td>
-          <td class="py-3 px-4 text-right">${fmt(b.price)}</td>
+          <td class="py-3 px-4 text-right">
+            <input type="number" id="bahan-price-${idx}" value="${b.price}" class="coffee-input px-2 py-1 rounded w-32 text-right font-mono text-xs">
+          </td>
         </tr>
       `).join('');
     }
 
     function renderKemasan() {
-      document.getElementById('kemasan-table-body').innerHTML = db.kemasan.map(k => `
+      document.getElementById('kemasan-table-body').innerHTML = db.kemasan.map((k, idx) => `
         <tr>
           <td class="py-3 px-4 font-bold">${k.name}</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-stone-100 text-stone-600">${k.cat}</span></td>
           <td class="py-3 px-4">${k.unit}</td>
           <td class="py-3 px-4 text-right">${k.stock.toLocaleString('id-ID')}</td>
-          <td class="py-3 px-4 text-right">${fmt(k.price)}</td>
+          <td class="py-3 px-4 text-right">
+            <input type="number" id="kemasan-price-${idx}" value="${k.price}" class="coffee-input px-2 py-1 rounded w-32 text-right font-mono text-xs">
+          </td>
         </tr>
       `).join('');
+    }
+
+    function saveChanges() {
+      let oldTotalBahan = db.bahan.reduce((a,b)=>a+b.price, 0);
+      db.bahan.forEach((b, idx) => {
+        let val = Number(document.getElementById(`bahan-price-${idx}`).value);
+        if(val >= 0) b.price = val;
+      });
+      let newTotalBahan = db.bahan.reduce((a,b)=>a+b.price, 0);
+      
+      if(oldTotalBahan > 0) {
+        inflationMultiplier = newTotalBahan / oldTotalBahan;
+      }
+
+      alert('Harga berhasil disimpan! HPP seluruh menu dan laporan pengeluaran otomatis ter-update.');
+      switchTab('dashboard');
     }
 
     function renderHistory() {
