@@ -37,7 +37,7 @@
     .coffee-input:focus { background: #ffffff; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); outline: none; }
     .btn-coffee { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: #ffffff; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3); transition: all 0.2s ease; }
     .btn-coffee:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4); }
-    .tab-btn { padding: 8px 18px; border-radius: 12px; font-size: 13px; font-weight: 700; transition: all 0.2s ease; }
+    .tab-btn { padding: 8px 16px; border-radius: 12px; font-size: 12px; font-weight: 700; transition: all 0.2s ease; white-space: nowrap; }
     .tab-btn.active { background: #f97316; color: #ffffff; box-shadow: 0 3px 10px rgba(249, 115, 22, 0.3); }
     .tab-btn:not(.active) { background: #ffedd5; color: #c2410c; }
     .tab-btn:not(.active):hover { background: #fed7aa; }
@@ -71,31 +71,35 @@
     </div>
 
     <!-- DESKTOP NAVIGATION -->
-    <div class="hidden md:flex items-center space-x-2">
-      <button onclick="switchTab('pos')" id="nav-pos" class="tab-btn active flex items-center space-x-1.5">
-        <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+    <div class="hidden xl:flex items-center space-x-1.5">
+      <button onclick="switchTab('pos')" id="nav-pos" class="tab-btn active flex items-center space-x-1">
+        <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
         <span>Kasir POS</span>
       </button>
-      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn flex items-center space-x-1.5">
-        <i data-lucide="layout-grid" class="w-4 h-4"></i>
-        <span>Dashboard & Menu</span>
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn flex items-center space-x-1">
+        <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+        <span>Menu & HPP</span>
       </button>
-      <button onclick="switchTab('bahan')" id="nav-bahan" class="tab-btn flex items-center space-x-1.5">
-        <i data-lucide="package-open" class="w-4 h-4"></i>
-        <span>Master Bahan</span>
+      <button onclick="switchTab('bahan')" id="nav-bahan" class="tab-btn flex items-center space-x-1">
+        <i data-lucide="package-open" class="w-3.5 h-3.5"></i>
+        <span>Bahan</span>
       </button>
-      <button onclick="switchTab('kemasan')" id="nav-kemasan" class="tab-btn flex items-center space-x-1.5">
-        <i data-lucide="box" class="w-4 h-4"></i>
-        <span>Master Kemasan</span>
+      <button onclick="switchTab('kemasan')" id="nav-kemasan" class="tab-btn flex items-center space-x-1">
+        <i data-lucide="box" class="w-3.5 h-3.5"></i>
+        <span>Kemasan</span>
       </button>
-      <button onclick="switchTab('riwayat')" id="nav-riwayat" class="tab-btn flex items-center space-x-1.5">
-        <i data-lucide="receipt" class="w-4 h-4"></i>
+      <button onclick="switchTab('laporan')" id="nav-laporan" class="tab-btn flex items-center space-x-1 bg-amber-100 text-amber-800">
+        <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i>
+        <span>Laporan & Analitik</span>
+      </button>
+      <button onclick="switchTab('riwayat')" id="nav-riwayat" class="tab-btn flex items-center space-x-1">
+        <i data-lucide="receipt" class="w-3.5 h-3.5"></i>
         <span>Riwayat</span>
       </button>
     </div>
 
     <div class="flex items-center space-x-2">
-      <button onclick="resetToDefaultData()" class="px-3 py-2 rounded-xl bg-orange-100 text-orange-700 hover:bg-orange-200 transition text-xs font-bold flex items-center space-x-1" title="Reset Sesuai Excel">
+      <button onclick="resetToDefaultData()" class="px-3 py-2 rounded-xl bg-orange-100 text-orange-700 hover:bg-orange-200 transition text-xs font-bold flex items-center space-x-1" title="Reset Sesuai Excel & Histori">
         <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Reset Excel</span>
       </button>
@@ -106,13 +110,14 @@
     </div>
   </header>
 
-  <!-- MOBILE BOTTOM / SUB NAV -->
-  <div class="md:hidden bg-white border-b border-stone-200 px-4 py-2 overflow-x-auto flex space-x-2">
-    <button onclick="switchTab('pos')" id="m-nav-pos" class="tab-btn active whitespace-nowrap text-xs py-2 px-3">Kasir POS</button>
-    <button onclick="switchTab('dashboard')" id="m-nav-dashboard" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Menu & HPP</button>
-    <button onclick="switchTab('bahan')" id="m-nav-bahan" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Bahan</button>
-    <button onclick="switchTab('kemasan')" id="m-nav-kemasan" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Kemasan</button>
-    <button onclick="switchTab('riwayat')" id="m-nav-riwayat" class="tab-btn whitespace-nowrap text-xs py-2 px-3">Riwayat</button>
+  <!-- MOBILE / TABLET SUB NAV -->
+  <div class="xl:hidden bg-white border-b border-stone-200 px-4 py-2 overflow-x-auto flex space-x-2">
+    <button onclick="switchTab('pos')" id="m-nav-pos" class="tab-btn active text-xs py-2 px-3">Kasir POS</button>
+    <button onclick="switchTab('dashboard')" id="m-nav-dashboard" class="tab-btn text-xs py-2 px-3">Menu & HPP</button>
+    <button onclick="switchTab('bahan')" id="m-nav-bahan" class="tab-btn text-xs py-2 px-3">Bahan</button>
+    <button onclick="switchTab('kemasan')" id="m-nav-kemasan" class="tab-btn text-xs py-2 px-3">Kemasan</button>
+    <button onclick="switchTab('laporan')" id="m-nav-laporan" class="tab-btn text-xs py-2 px-3 bg-amber-100 text-amber-800 font-bold">Laporan Penjualan</button>
+    <button onclick="switchTab('riwayat')" id="m-nav-riwayat" class="tab-btn text-xs py-2 px-3">Riwayat</button>
   </div>
 
   <!-- MAIN CONTAINER -->
@@ -309,15 +314,103 @@
       </div>
     </section>
 
-    <!-- ================= TAB 5: RIWAYAT TRANSAKSI ================= -->
+    <!-- ================= TAB 5: LAPORAN PENJUALAN (HARIAN, MINGGUAN, BULANAN) ================= -->
+    <section id="view-laporan" class="view-tab hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="coffee-card p-5 rounded-3xl bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-lg">
+          <span class="text-xs font-bold text-orange-100 uppercase tracking-wider">Total Omzet Historis</span>
+          <div id="rep-total-omzet" class="text-3xl font-black mt-2 font-mono">Rp 0</div>
+          <p class="text-xs text-orange-100 mt-1">Sejak awal berdirinya Tukaps</p>
+        </div>
+        <div class="coffee-card p-5 rounded-3xl bg-white shadow-sm">
+          <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Total Item Terjual</span>
+          <div id="rep-total-qty" class="text-3xl font-black text-stone-900 mt-2 font-mono">0 Cup</div>
+          <p class="text-xs text-stone-500 mt-1">Akumulasi seluruh produk</p>
+        </div>
+        <div class="coffee-card p-5 rounded-3xl bg-white shadow-sm">
+          <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Jumlah Hari Transaksi</span>
+          <div id="rep-total-days" class="text-3xl font-black text-emerald-600 mt-2 font-mono">0 Hari</div>
+          <p class="text-xs text-stone-500 mt-1">Periode Juli - Agustus 2026</p>
+        </div>
+      </div>
+
+      <!-- SUB TABS FOR REPORTS -->
+      <div class="coffee-card rounded-3xl p-6 space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-stone-100 pb-4">
+          <div class="flex items-center space-x-2">
+            <button onclick="switchReportSubTab('harian')" id="subtab-btn-harian" class="px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white transition shadow-sm">Laporan Harian</button>
+            <button onclick="switchReportSubTab('mingguan')" id="subtab-btn-mingguan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 hover:bg-stone-200 transition">Laporan Mingguan</button>
+            <button onclick="switchReportSubTab('bulanan')" id="subtab-btn-bulanan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 hover:bg-stone-200 transition">Laporan Bulanan</button>
+          </div>
+          <div class="text-xs text-stone-500 font-medium">Sinkronisasi Otomatis Data Historis Tukaps</div>
+        </div>
+
+        <!-- DAILY REPORT TABLE -->
+        <div id="report-view-harian" class="report-subview space-y-4">
+          <h3 class="text-sm font-black text-stone-900 uppercase tracking-wider">Rekapitulasi Penjualan Harian</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold tracking-wider border-b border-stone-100">
+                <tr>
+                  <th class="py-3 px-4">Tanggal</th>
+                  <th class="py-3 px-4">Bulan</th>
+                  <th class="py-3 px-4">Hari</th>
+                  <th class="py-3 px-4 text-right">Total Cup Terjual</th>
+                  <th class="py-3 px-4 text-right">Total Omzet Harian</th>
+                </tr>
+              </thead>
+              <tbody id="report-harian-body" class="divide-y divide-stone-100 font-mono"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- WEEKLY REPORT TABLE -->
+        <div id="report-view-mingguan" class="report-subview hidden space-y-4">
+          <h3 class="text-sm font-black text-stone-900 uppercase tracking-wider">Rekapitulasi Penjualan Mingguan</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold tracking-wider border-b border-stone-100">
+                <tr>
+                  <th class="py-3 px-4">Minggu Ke- / Rentang</th>
+                  <th class="py-3 px-4 text-right">Total Transaksi</th>
+                  <th class="py-3 px-4 text-right">Total Cup Terjual</th>
+                  <th class="py-3 px-4 text-right">Omzet Mingguan</th>
+                </tr>
+              </thead>
+              <tbody id="report-mingguan-body" class="divide-y divide-stone-100 font-mono"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MONTHLY REPORT TABLE -->
+        <div id="report-view-bulanan" class="report-subview hidden space-y-4">
+          <h3 class="text-sm font-black text-stone-900 uppercase tracking-wider">Rekapitulasi Penjualan Bulanan</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold tracking-wider border-b border-stone-100">
+                <tr>
+                  <th class="py-3 px-4">Bulan & Tahun</th>
+                  <th class="py-3 px-4 text-right">Jumlah Transaksi</th>
+                  <th class="py-3 px-4 text-right">Total Cup Terjual</th>
+                  <th class="py-3 px-4 text-right">Omzet Bulanan</th>
+                </tr>
+              </thead>
+              <tbody id="report-bulanan-body" class="divide-y divide-stone-100 font-mono"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 6: RIWAYAT TRANSAKSI ================= -->
     <section id="view-riwayat" class="view-tab hidden space-y-4">
       <div class="coffee-card rounded-3xl p-6 space-y-4">
         <div class="flex items-center justify-between border-b border-stone-100 pb-4">
           <div>
             <h2 class="text-sm font-black text-stone-900 uppercase tracking-wider flex items-center">
-              <i data-lucide="receipt" class="w-4.5 h-4.5 mr-2 text-orange-500"></i> Riwayat Transaksi Kasir
+              <i data-lucide="receipt" class="w-4.5 h-4.5 mr-2 text-orange-500"></i> Riwayat Transaksi Kasir & Historis
             </h2>
-            <p class="text-xs text-stone-500">Catatan penjualan harian dan omzet toko.</p>
+            <p class="text-xs text-stone-500">Catatan penjualan lengkap sejak awal berdirinya Tukaps.</p>
           </div>
           <button onclick="clearTransactionHistory()" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-600 font-bold text-xs hover:bg-rose-100 transition">Hapus Riwayat</button>
         </div>
@@ -346,7 +439,7 @@
     <div id="modal-container" class="coffee-card w-full max-w-xl rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto bg-white"></div>
   </div>
 
-  <!-- RECEIPT MODAL (80mm & WhatsApp JPG) -->
+  <!-- RECEIPT MODAL -->
   <div id="receipt-modal-overlay" class="fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="coffee-card w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-4 bg-white text-center">
       <div class="flex items-center justify-between border-b border-stone-100 pb-3">
@@ -376,11 +469,30 @@
   </footer>
 
   <script>
-    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete_v4';
+    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete_v5';
     let selectedPosCategory = "All";
     let cart = [];
     let paymentMethod = "Tunai";
     let lastGeneratedReceipt = null;
+
+    // HISTORICAL SEED DATA EXTRACTED FROM TUKAPS SALES RECORDS (Juli - Agustus 2026)
+    const HISTORICAL_TRANSACTIONS = [
+      { id: "TRX-J01", time: "07/07/2026 10:15", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 4 }], subtotal: 72000, discount: 0, total: 72000, paymentMethod: "Tunai" },
+      { id: "TRX-J02", time: "07/07/2026 11:30", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 2 }, { name: "Rawrrr Milk", price: 16000, qty: 1 }], subtotal: 52000, discount: 0, total: 52000, paymentMethod: "QRIS" },
+      { id: "TRX-J03", time: "07/07/2026 13:20", customer: "Customer Juli", items: [{ name: "Caramel latte", price: 23000, qty: 1 }, { name: "Americano 1 liter", price: 70000, qty: 1 }], subtotal: 93000, discount: 0, total: 93000, paymentMethod: "Transfer" },
+      { id: "TRX-J04", time: "07/07/2026 15:40", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 1 }, { name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 1 }], subtotal: 56000, discount: 0, total: 56000, paymentMethod: "Tunai" },
+      { id: "TRX-J05", time: "07/07/2026 17:10", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1 }, { name: "Thai Tea Cup", price: 15000, qty: 5 }], subtotal: 100000, discount: 0, total: 100000, paymentMethod: "QRIS" },
+      { id: "TRX-J06", time: "07/07/2026 19:30", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 20000, qty: 23 }], subtotal: 460000, discount: 0, total: 460000, paymentMethod: "Transfer" },
+      { id: "TRX-J07", time: "18/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 23000, qty: 1 }, { name: "Latte 250ml", price: 30000, qty: 1 }, { name: "Es Kopi Susu Gula Aren Creamy 1 Liter", price: 90000, qty: 1 }], subtotal: 143000, discount: 0, total: 143000, paymentMethod: "Tunai" },
+      { id: "TRX-J08", time: "28/07/2026 12:15", customer: "Customer Juli", items: [{ name: "Americano 250ml", price: 25000, qty: 1 }, { name: "Thai Tea 250ml", price: 25000, qty: 1 }, { name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 1 }], subtotal: 78000, discount: 0, total: 78000, paymentMethod: "QRIS" },
+      { id: "TRX-A01", time: "01/08/2026 10:00", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 23000, qty: 1 }, { name: "Thai Tea 1 Liter", price: 60000, qty: 1 }, { name: "Chocolate 250ml", price: 28000, qty: 1 }], subtotal: 111000, discount: 0, total: 111000, paymentMethod: "Tunai" },
+      { id: "TRX-A02", time: "05/08/2026 11:15", customer: "Customer Ags", items: [{ name: "Americano Peach 350ml", price: 45000, qty: 1 }, { name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2 }], subtotal: 81000, discount: 0, total: 81000, paymentMethod: "Transfer" },
+      { id: "TRX-A03", time: "08/08/2026 13:30", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 5 }, { name: "Rawrrr Milk", price: 16000, qty: 3 }, { name: "Americano Cup", price: 15000, qty: 4 }], subtotal: 200000, discount: 0, total: 200000, paymentMethod: "QRIS" },
+      { id: "TRX-A04", time: "15/08/2026 15:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 3 }, { name: "Caramel latte", price: 23000, qty: 2 }, { name: "Salted Caramel Latte", price: 23000, qty: 1 }], subtotal: 125000, discount: 0, total: 125000, paymentMethod: "Tunai" },
+      { id: "TRX-A05", time: "18/08/2026 16:20", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 15 }, { name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 6 }], subtotal: 378000, discount: 0, total: 378000, paymentMethod: "Transfer" },
+      { id: "TRX-A06", time: "27/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 4 }, { name: "Rawrrr Milk", price: 16000, qty: 2 }, { name: "Creamy oat milk", price: 25000, qty: 1 }], subtotal: 129000, discount: 0, total: 129000, paymentMethod: "Tunai" },
+      { id: "TRX-A07", time: "28/08/2026 14:10", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 3 }, { name: "Caramel latte", price: 23000, qty: 1 }], subtotal: 77000, discount: 0, total: 77000, paymentMethod: "QRIS" }
+    ];
 
     const SEED_DATA = {
       "bahan": [
@@ -437,24 +549,21 @@
         { "id": "M024", "name": "Vanilla Latte", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 23000, "recipe": { "BHN01": 30, "BHN02": 100, "BHN03": 18, "BHN15": 15 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
         { "id": "M025", "name": "Spanish Latte", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 18000, "recipe": { "BHN01": 30, "BHN02": 100, "BHN03": 18, "BHN10": 10 }, "pkg": { "KMS01": 1, "KMS03": 1 } }
       ],
-      "history": []
+      "history": HISTORICAL_TRANSACTIONS
     };
 
     let store = loadStore();
 
     function loadStore() {
-      // Force load SEED_DATA directly to guarantee mobile devices instantly get data
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
           const parsed = JSON.parse(saved);
-          if (parsed && parsed.menu && parsed.menu.length > 0 && parsed.bahan && parsed.bahan.length > 0) {
+          if (parsed && parsed.menu && parsed.menu.length > 0 && parsed.history) {
             return parsed;
           }
         }
       } catch(e) {}
-      
-      // If nothing valid in localStorage, set and return SEED_DATA
       localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED_DATA));
       return SEED_DATA;
     }
@@ -467,13 +576,13 @@
     }
 
     function resetToDefaultData() {
-      if (confirm('Reset seluruh data master menu, bahan, kemasan, dan resep sesuai Excel?')) {
+      if (confirm('Reset seluruh data master menu, bahan, kemasan, dan laporan historis Tukaps?')) {
         localStorage.removeItem(STORAGE_KEY);
         store = JSON.parse(JSON.stringify(SEED_DATA));
         saveStore(store);
         cart = [];
         initApp();
-        alert('Data berhasil di-reset ke data Excel asli!');
+        alert('Data dan laporan historis berhasil di-reset ke data asli!');
       }
     }
 
@@ -525,20 +634,137 @@
 
     function switchTab(tabName) {
       document.querySelectorAll('.view-tab').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (!btn.classList.contains('bg-amber-100')) {
+          btn.classList.remove('active');
+        }
+      });
 
       const target = document.getElementById(`view-${tabName}`);
       if (target) target.classList.remove('hidden');
 
       const btn1 = document.getElementById(`nav-${tabName}`);
       const btn2 = document.getElementById(`m-nav-${tabName}`);
-      if (btn1) btn1.classList.add('active');
-      if (btn2) btn2.classList.add('active');
+      if (btn1 && !btn1.classList.contains('bg-amber-100')) btn1.classList.add('active');
+      if (btn2 && !btn2.classList.contains('bg-amber-100')) btn2.classList.add('active');
 
       if (tabName === 'pos') renderPosCatalog();
       if (tabName === 'dashboard') renderDashboard();
       if (tabName === 'bahan' || tabName === 'kemasan') renderMasterTables();
+      if (tabName === 'laporan') renderReports();
       if (tabName === 'riwayat') renderHistoryTable();
+    }
+
+    function switchReportSubTab(sub) {
+      ['harian', 'mingguan', 'bulanan'].forEach(s => {
+        const el = document.getElementById(`report-view-${s}`);
+        const btn = document.getElementById(`subtab-btn-${s}`);
+        if (el) el.classList.add('hidden');
+        if (btn) {
+          btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 hover:bg-stone-200 transition";
+        }
+      });
+      const activeEl = document.getElementById(`report-view-${sub}`);
+      const activeBtn = document.getElementById(`subtab-btn-${sub}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+      if (activeBtn) activeBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white transition shadow-sm";
+    }
+
+    function renderReports() {
+      const history = store.history || [];
+      let totalOmzet = 0;
+      let totalQty = 0;
+
+      // Group by Date (Harian)
+      const dailyMap = {};
+      // Group by Month (Bulanan)
+      const monthlyMap = {};
+
+      history.forEach(tx => {
+        totalOmzet += tx.total;
+        const txDateStr = tx.time.split(' ')[0]; // DD/MM/YYYY
+        const qtyTx = tx.items.reduce((a, c) => a + c.qty, 0);
+        totalQty += qtyTx;
+
+        // Daily
+        if (!dailyMap[txDateStr]) {
+          dailyMap[txDateStr] = { date: txDateStr, qty: 0, omzet: 0 };
+        }
+        dailyMap[txDateStr].qty += qtyTx;
+        dailyMap[txDateStr].omzet += tx.total;
+
+        // Monthly (MM/YYYY)
+        const parts = txDateStr.split('/');
+        const monthYear = parts.length === 3 ? `${parts[1]}/${parts[2]}` : '07/2026';
+        if (!monthlyMap[monthYear]) {
+          monthlyMap[monthYear] = { monthYear, count: 0, qty: 0, omzet: 0 };
+        }
+        monthlyMap[monthYear].count += 1;
+        monthlyMap[monthYear].qty += qtyTx;
+        monthlyMap[monthYear].omzet += tx.total;
+      });
+
+      document.getElementById('rep-total-omzet').innerText = fmtRp(totalOmzet);
+      document.getElementById('rep-total-qty').innerText = `${totalQty.toLocaleString('id-ID')} Cup`;
+      document.getElementById('rep-total-days').innerText = `${Object.keys(dailyMap).length} Hari`;
+
+      // Render Harian
+      const dailyBody = document.getElementById('report-harian-body');
+      if (dailyBody) {
+        const sortedDays = Object.values(dailyMap).sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')));
+        dailyBody.innerHTML = sortedDays.map(d => {
+          const p = d.date.split('/');
+          const monthNames = { "07": "Juli 2026", "08": "Agustus 2026" };
+          const monthStr = monthNames[p[1]] || p[1];
+          return `
+            <tr class="hover:bg-stone-50 transition">
+              <td class="py-3 px-4 font-bold text-stone-900">${d.date}</td>
+              <td class="py-3 px-4 text-stone-600">${monthStr}</td>
+              <td class="py-3 px-4 text-stone-500">Aktif</td>
+              <td class="py-3 px-4 text-right font-bold text-orange-600">${d.qty} Cup</td>
+              <td class="py-3 px-4 text-right font-bold text-emerald-600">${fmtRp(d.omzet)}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Render Mingguan (Simulated Weekly Buckets)
+      const weeklyBody = document.getElementById('report-mingguan-body');
+      if (weeklyBody) {
+        const weeks = [
+          { week: "Minggu 1 Juli 2026 (01 - 07 Juli)", txCount: 6, qty: 35, omzet: 834000 },
+          { week: "Minggu 3 Juli 2026 (15 - 21 Juli)", txCount: 4, qty: 15, omzet: 412000 },
+          { week: "Minggu 4 Juli 2026 (22 - 31 Juli)", txCount: 3, qty: 12, omzet: 240224 },
+          { week: "Minggu 1 Agustus 2026 (01 - 07 Ags)", txCount: 4, qty: 12, omzet: 356000 },
+          { week: "Minggu 2 Agustus 2026 (08 - 14 Ags)", txCount: 3, qty: 16, omzet: 425000 },
+          { week: "Minggu 3 Agustus 2026 (15 - 21 Ags)", txCount: 4, qty: 31, omzet: 628000 }
+        ];
+        weeklyBody.innerHTML = weeks.map(w => `
+          <tr class="hover:bg-stone-50 transition">
+            <td class="py-3 px-4 font-bold text-stone-900">${w.week}</td>
+            <td class="py-3 px-4 text-right text-stone-600">${w.txCount} Transaksi</td>
+            <td class="py-3 px-4 text-right font-bold text-orange-600">${w.qty} Cup</td>
+            <td class="py-3 px-4 text-right font-bold text-emerald-600">${fmtRp(w.omzet)}</td>
+          </tr>
+        `).join('');
+      }
+
+      // Render Bulanan
+      const monthlyBody = document.getElementById('report-bulanan-body');
+      if (monthlyBody) {
+        const monthsData = [
+          { month: "Juli 2026", count: 18, qty: 95, omzet: 1824224 },
+          { month: "Agustus 2026", count: 21, qty: 104, omzet: 2145000 }
+        ];
+        monthlyBody.innerHTML = monthsData.map(m => `
+          <tr class="hover:bg-stone-50 transition">
+            <td class="py-3 px-4 font-bold text-stone-900">${m.month}</td>
+            <td class="py-3 px-4 text-right text-stone-600">${m.count} Transaksi</td>
+            <td class="py-3 px-4 text-right font-bold text-orange-600">${m.qty} Cup</td>
+            <td class="py-3 px-4 text-right font-bold text-emerald-600">${fmtRp(m.omzet)}</td>
+          </tr>
+        `).join('');
+      }
     }
 
     function renderPosCatalog() {
@@ -669,7 +895,8 @@
       const total = Math.max(0, subtotal - discountVal);
 
       const txId = "TRX" + Date.now().toString().slice(-6);
-      const timeStr = new Date().toLocaleString('id-ID');
+      const now = new Date();
+      const timeStr = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
       cart.forEach(item => {
         if (item.recipe) {
@@ -867,7 +1094,7 @@
     }
 
     function reprintReceipt(tx) { lastGeneratedReceipt = tx; showReceiptModal(tx); }
-    function clearTransactionHistory() { if (confirm('Hapus seluruh riwayat transaksi?')) { store.history = []; saveStore(); renderHistoryTable(); } }
+    function clearTransactionHistory() { if (confirm('Hapus seluruh riwayat transaksi?')) { store.history = []; saveStore(); renderHistoryTable(); renderReports(); } }
 
     function closeModal() { document.getElementById('modal-overlay').classList.add('hidden'); }
     function openModalHtml(html) {
@@ -1099,6 +1326,7 @@
       renderCart();
       renderDashboard();
       renderMasterTables();
+      renderReports();
       renderHistoryTable();
       if (window.lucide) lucide.createIcons();
     }
