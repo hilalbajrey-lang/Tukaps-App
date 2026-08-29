@@ -3,218 +3,216 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TUKAPS COFFEE — POS & HPP Management Studio</title>
+  <title>TUKAPS COFFEE — POS, HPP & Dashboard Pengeluaran</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            tukaps: { 50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 500: '#f97316', 600: '#ea580c', 700: '#c2410c' }
-          },
-          fontFamily: { sans: ['-apple-system', 'BlinkMacSystemFont', '"Plus Jakarta Sans"', 'sans-serif'] }
-        }
-      }
-    }
-  </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     body { background-color: #fafaf9; color: #292524; font-family: 'Plus Jakarta Sans', sans-serif; }
-    .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); }
     .coffee-card { background: #ffffff; border: 1px solid #f2ede9; box-shadow: 0 4px 20px -4px rgba(249, 115, 22, 0.08); }
-    .coffee-input { background: #fafaf9; border: 1px solid #e7e5e4; transition: all 0.2s ease; }
-    .coffee-input:focus { background: #ffffff; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); outline: none; }
-    .btn-coffee { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: #ffffff; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3); }
-    .tab-btn { padding: 8px 16px; border-radius: 12px; font-size: 12px; font-weight: 700; transition: all 0.2s ease; white-space: nowrap; }
-    .tab-btn.active { background: #f97316; color: #ffffff; box-shadow: 0 3px 10px rgba(249, 115, 22, 0.3); }
+    .coffee-input { background: #fafaf9; border: 1px solid #e7e5e4; }
+    .coffee-input:focus { background: #ffffff; border-color: #f97316; outline: none; }
+    .btn-coffee { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: #ffffff; }
+    .tab-btn { padding: 8px 16px; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .tab-btn.active { background: #f97316; color: #ffffff; }
     .tab-btn:not(.active) { background: #ffedd5; color: #c2410c; }
-    .receipt-paper { width: 300px; background: #fff; padding: 16px; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin: 0 auto; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col pb-16">
 
-  <!-- TOP HEADER -->
-  <header class="glass-nav sticky top-0 z-40 border-b border-stone-200 px-4 lg:px-8 py-3 flex items-center justify-between">
+  <!-- HEADER -->
+  <header class="bg-white border-b px-6 py-3 flex items-center justify-between sticky top-0 z-40">
     <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 rounded-2xl bg-[#c2410c] flex items-center justify-center text-white font-black text-lg">T</div>
+      <div class="w-10 h-10 rounded-2xl bg-[#c2410c] flex items-center justify-center text-white font-black">T</div>
       <div>
-        <h1 class="text-base font-black tracking-tight text-stone-900">TUKAPS COFFEE</h1>
-        <p class="text-[11px] text-stone-500 font-medium">POS, HPP & Dashboard Pengeluaran</p>
+        <h1 class="text-sm font-black text-stone-900">TUKAPS COFFEE</h1>
+        <p class="text-[11px] text-stone-500">POS & Dashboard Pengeluaran</p>
       </div>
     </div>
-    <div class="hidden xl:flex items-center space-x-1.5">
+    <div class="flex space-x-2">
       <button onclick="switchTab('pos')" id="nav-pos" class="tab-btn active">Kasir POS</button>
-      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn">Menu & HPP</button>
-      <button onclick="switchTab('bahan')" id="nav-bahan" class="tab-btn">Bahan</button>
-      <button onclick="switchTab('kemasan')" id="nav-kemasan" class="tab-btn">Kemasan</button>
-      <button onclick="switchTab('laporan')" id="nav-laporan" class="tab-btn bg-amber-100 text-amber-900">Laporan & Pengeluaran</button>
-      <button onclick="switchTab('riwayat')" id="nav-riwayat" class="tab-btn">Riwayat</button>
+      <button onclick="switchTab('laporan')" id="nav-laporan" class="tab-btn bg-amber-100 text-amber-900">Laporan & Dashboard Pengeluaran</button>
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
-  <main class="flex-1 p-4 lg:p-6 max-w-[1700px] w-full mx-auto space-y-6">
+  <main class="flex-1 p-6 max-w-[1400px] w-full mx-auto space-y-6">
 
     <!-- TAB 1: POS -->
-    <section id="view-pos" class="view-tab grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <section id="view-pos" class="view-tab grid grid-cols-1 lg:grid-cols-12 gap-6">
       <div class="lg:col-span-7 space-y-4">
-        <div class="coffee-card p-3 rounded-2xl flex items-center justify-between">
-          <input type="text" id="pos-search" onkeyup="renderPosCatalog()" placeholder="Cari menu Tukaps..." class="coffee-input w-full rounded-xl px-4 py-2 text-xs font-medium">
+        <div class="coffee-card p-4 rounded-2xl">
+          <h2 class="text-xs font-black uppercase text-stone-700 mb-3">Katalog Menu Tukaps</h2>
+          <div id="pos-grid" class="grid grid-cols-2 gap-3"></div>
         </div>
-        <div id="pos-product-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3.5 max-h-[calc(100vh-220px)] overflow-y-auto pr-1"></div>
       </div>
-      <div class="lg:col-span-5 space-y-4">
-        <div class="coffee-card rounded-3xl p-5 space-y-4 bg-white sticky top-20">
-          <h2 class="text-sm font-black text-stone-900 uppercase">Keranjang Kasir</h2>
-          <div id="cart-items-container" class="max-h-56 overflow-y-auto divide-y divide-stone-100 text-xs font-mono"></div>
+      <div class="lg:col-span-5">
+        <div class="coffee-card p-5 rounded-3xl space-y-4 bg-white sticky top-20">
+          <h2 class="text-xs font-black uppercase">Keranjang Kasir</h2>
+          <div id="cart-list" class="divide-y text-xs font-mono max-h-48 overflow-y-auto"></div>
           <div class="border-t pt-3 space-y-1 text-xs">
-            <div class="flex justify-between text-stone-600"><span>Subtotal</span><span id="cart-subtotal" class="font-bold font-mono">Rp 0</span></div>
-            <div class="flex justify-between text-base font-black text-stone-900 pt-2 border-t"><span>TOTAL</span><span id="cart-total" class="text-orange-600 font-mono">Rp 0</span></div>
+            <div class="flex justify-between"><span>Subtotal:</span><span id="cart-sub" class="font-bold">Rp 0</span></div>
+            <div class="flex justify-between text-rose-600"><span>Estimasi Pengeluaran (Modal):</span><span id="cart-exp" class="font-bold">Rp 0</span></div>
+            <div class="flex justify-between text-sm font-black pt-2 border-t"><span>TOTAL:</span><span id="cart-tot" class="text-orange-600">Rp 0</span></div>
           </div>
-          <button onclick="processCheckout()" class="btn-coffee w-full py-3 rounded-2xl font-bold text-xs">Proses Pembayaran & Cetak Struk</button>
+          <button onclick="checkout()" class="btn-coffee w-full py-3 rounded-2xl font-bold text-xs">Proses Transaksi</button>
         </div>
       </div>
     </section>
 
-    <!-- TAB 2: MENU & HPP -->
-    <section id="view-dashboard" class="view-tab hidden space-y-4">
-      <div class="coffee-card rounded-3xl overflow-hidden">
-        <div class="px-6 py-4 border-b bg-stone-50"><h2 class="text-xs font-black uppercase">Master Menu & Kalkulasi HPP</h2></div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs font-mono">
-            <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold border-b">
-              <tr><th class="py-3 px-6">Nama Menu</th><th class="py-3 px-4 text-right">Modal (HPP)</th><th class="py-3 px-4 text-right">Harga Jual</th><th class="py-3 px-4 text-right">Laba Bersih</th></tr>
-            </thead>
-            <tbody id="dashboard-table-body" class="divide-y divide-stone-100"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3 & 4: BAHAN & KEMASAN -->
-    <section id="view-bahan" class="view-tab hidden"><div class="coffee-card rounded-3xl p-6"><h2 class="text-sm font-black mb-4">Master Bahan Baku</h2><div id="bahan-table-body"></div></div></section>
-    <section id="view-kemasan" class="view-tab hidden"><div class="coffee-card rounded-3xl p-6"><h2 class="text-sm font-black mb-4">Master Kemasan</h2><div id="kemasan-table-body"></div></div></section>
-
-    <!-- TAB 5: LAPORAN & DASHBOARD PENGELUARAN -->
+    <!-- TAB 2: LAPORAN & DASHBOARD PENGELUARAN -->
     <section id="view-laporan" class="view-tab hidden space-y-6">
+      
+      <!-- KARTU DASHBOARD PENGELUARAN & LABA -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="coffee-card p-5 rounded-3xl bg-gradient-to-br from-orange-500 to-amber-600 text-white">
-          <span class="text-xs font-bold uppercase text-orange-100">Total Omzet</span>
-          <div id="rep-total-omzet" class="text-2xl font-black mt-2 font-mono">Rp 0</div>
+        <div class="coffee-card p-5 rounded-3xl bg-white border-l-4 border-orange-500">
+          <span class="text-xs font-bold uppercase text-stone-400">Total Omzet Pendapatan</span>
+          <div id="dash-omzet" class="text-2xl font-black mt-2 font-mono text-stone-900">Rp 0</div>
         </div>
-        <div class="coffee-card p-5 rounded-3xl bg-white">
+        <div class="coffee-card p-5 rounded-3xl bg-white border-l-4 border-rose-500">
           <span class="text-xs font-bold uppercase text-stone-400">Total Pengeluaran (Modal)</span>
-          <div id="rep-total-expense" class="text-2xl font-black mt-2 font-mono text-rose-600">Rp 0</div>
+          <div id="dash-pengeluaran" class="text-2xl font-black mt-2 font-mono text-rose-600">Rp 0</div>
+          <p class="text-[11px] text-stone-500 mt-1">Akumulasi HPP Bahan & Kemasan</p>
         </div>
-        <div class="coffee-card p-5 rounded-3xl bg-white">
+        <div class="coffee-card p-5 rounded-3xl bg-white border-l-4 border-emerald-500">
           <span class="text-xs font-bold uppercase text-stone-400">Total Laba Bersih</span>
-          <div id="rep-total-profit" class="text-2xl font-black mt-2 font-mono text-emerald-600">Rp 0</div>
+          <div id="dash-laba" class="text-2xl font-black mt-2 font-mono text-emerald-600">Rp 0</div>
+          <p class="text-[11px] text-stone-500 mt-1">Omzet dikurangi Pengeluaran</p>
         </div>
       </div>
 
-      <div class="coffee-card rounded-3xl p-6 space-y-6">
+      <!-- TABEL LAPORAN HARIAN, MINGGUAN, BULANAN -->
+      <div class="coffee-card rounded-3xl p-6 space-y-4">
         <div class="flex space-x-2 border-b pb-4">
-          <button onclick="switchReportSubTab('harian')" id="subtab-btn-harian" class="px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white">Laporan Harian</button>
-          <button onclick="switchReportSubTab('mingguan')" id="subtab-btn-mingguan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600">Laporan Mingguan</button>
-          <button onclick="switchReportSubTab('bulanan')" id="subtab-btn-bulanan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600">Laporan Bulanan</button>
+          <button onclick="switchRep('harian')" id="rep-btn-harian" class="px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white">Harian</button>
+          <button onclick="switchRep('mingguan')" id="rep-btn-mingguan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600">Mingguan</button>
+          <button onclick="switchRep('bulanan')" id="rep-btn-bulanan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600">Bulanan</button>
         </div>
 
-        <!-- HARIAN -->
-        <div id="report-view-harian" class="report-subview space-y-4">
-          <h3 class="text-sm font-black uppercase">Rekapitulasi Harian (Omzet, Pengeluaran & Laba)</h3>
-          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase"><tr><th class="py-3 px-4">Tanggal</th><th class="py-3 px-4 text-right">Cup</th><th class="py-3 px-4 text-right">Omzet</th><th class="py-3 px-4 text-right text-rose-600">Pengeluaran</th><th class="py-3 px-4 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="report-harian-body" class="divide-y"></tbody></table></div>
+        <div id="rep-harian" class="rep-pane space-y-2">
+          <h3 class="text-xs font-black uppercase text-stone-700">Dashboard Pengeluaran & Laba Harian</h3>
+          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase"><tr><th class="p-3">Tanggal</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-harian" class="divide-y"></tbody></table></div>
         </div>
 
-        <!-- MINGGUAN -->
-        <div id="report-view-mingguan" class="report-subview hidden space-y-4">
-          <h3 class="text-sm font-black uppercase">Rekapitulasi Mingguan (Omzet, Pengeluaran & Laba)</h3>
-          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase"><tr><th class="py-3 px-4">Rentang Minggu</th><th class="py-3 px-4 text-right">Omzet</th><th class="py-3 px-4 text-right text-rose-600">Pengeluaran</th><th class="py-3 px-4 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="report-mingguan-body" class="divide-y"></tbody></table></div>
+        <div id="rep-mingguan" class="rep-pane hidden space-y-2">
+          <h3 class="text-xs font-black uppercase text-stone-700">Dashboard Pengeluaran & Laba Mingguan</h3>
+          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase"><tr><th class="p-3">Periode Minggu</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-mingguan" class="divide-y"></tbody></table></div>
         </div>
 
-        <!-- BULANAN -->
-        <div id="report-view-bulanan" class="report-subview hidden space-y-4">
-          <h3 class="text-sm font-black uppercase">Rekapitulasi Bulanan (Omzet, Pengeluaran & Laba)</h3>
-          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase"><tr><th class="py-3 px-4">Bulan & Tahun</th><th class="py-3 px-4 text-right">Omzet</th><th class="py-3 px-4 text-right text-rose-600">Pengeluaran</th><th class="py-3 px-4 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="report-bulanan-body" class="divide-y"></tbody></table></div>
+        <div id="rep-bulanan" class="rep-pane hidden space-y-2">
+          <h3 class="text-xs font-black uppercase text-stone-700">Dashboard Pengeluaran & Laba Bulanan</h3>
+          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase"><tr><th class="p-3">Bulan</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-bulanan" class="divide-y"></tbody></table></div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 6: RIWAYAT -->
-    <section id="view-riwayat" class="view-tab hidden"><div class="coffee-card rounded-3xl p-6"><h2 class="text-sm font-black mb-4">Riwayat Transaksi</h2><div id="history-table-body"></div></div></section>
   </main>
 
   <script>
-    const STORE_KEY = 'tukaps_complete_v2026';
-    let store = {
-      menu: [{ id: "M001", name: "Es Kopi Susu Gula Aren Bold", cat: "Kopi", sellingPrice: 18000, recipe: { "BHN01": 35 }, pkg: { "KMS01": 1 } }],
-      bahan: [{ id: "BHN01", name: "Espresso", unit: "gr", stock: 5000, packQty: 1000, buyPrice: 100000 }],
-      kemasan: [{ id: "KMS01", name: "Cup 12oz", unit: "pcs", stock: 500, packQty: 100, buyPrice: 20000 }],
+    let db = {
+      menu: [
+        { id: "M1", name: "Es Kopi Susu Gula Aren Bold", price: 18000, modal: 7500 },
+        { id: "M2", name: "Es Kopi Susu Gula Aren Creamy", price: 18000, modal: 7300 },
+        { id: "M3", name: "Americano Peach", price: 20000, modal: 6500 }
+      ],
+      cart: [],
       history: [
-        { id: "TRX-01", time: "28/08/2026 10:00", customer: "Hilal", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 3, modal: 5500 }], total: 54000 }
+        { date: "28/08/2026", month: "08/2026", name: "Es Kopi Susu Gula Aren Bold", price: 18000, modal: 7500, qty: 3 },
+        { date: "27/08/2026", month: "08/2026", name: "Americano Peach", price: 20000, modal: 6500, qty: 5 }
       ]
     };
 
-    function fmtRp(v) { return 'Rp ' + Math.round(v || 0).toLocaleString('id-ID'); }
+    function fmt(v) { return 'Rp ' + Math.round(v).toLocaleString('id-ID'); }
+
     function switchTab(t) {
       document.querySelectorAll('.view-tab').forEach(e => e.classList.add('hidden'));
       document.getElementById(`view-${t}`).classList.remove('hidden');
       if(t === 'laporan') renderReports();
-      if(t === 'dashboard') renderDashboard();
     }
-    function switchReportSubTab(sub) {
-      ['harian', 'mingguan', 'bulanan'].forEach(s => {
-        document.getElementById(`report-view-${s}`).classList.add('hidden');
-        document.getElementById(`subtab-btn-${s}`).className = "px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600";
+
+    function switchRep(r) {
+      ['harian', 'mingguan', 'bulanan'].forEach(x => {
+        document.getElementById(`rep-${x}`).classList.add('hidden');
+        document.getElementById(`rep-btn-${x}`).className = "px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600";
       });
-      document.getElementById(`report-view-${sub}`).classList.remove('hidden');
-      document.getElementById(`subtab-btn-${sub}`).className = "px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white";
+      document.getElementById(`rep-${r}`).classList.remove('hidden');
+      document.getElementById(`rep-btn-${r}`).className = "px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white";
+    }
+
+    function renderPos() {
+      document.getElementById('pos-grid').innerHTML = db.menu.map(m => `
+        <div onclick="addToCart('${m.id}')" class="coffee-card p-3 rounded-xl cursor-pointer hover:border-orange-500">
+          <div class="font-bold text-xs text-stone-900">${m.name}</div>
+          <div class="text-orange-600 font-bold text-xs mt-1">${fmt(m.price)}</div>
+        </div>
+      `).join('');
+    }
+
+    function addToCart(id) {
+      let m = db.menu.find(x => x.id === id);
+      let c = db.cart.find(x => x.id === id);
+      if(c) c.qty++; else db.cart.push({ ...m, qty: 1 });
+      renderCart();
+    }
+
+    function renderCart() {
+      document.getElementById('cart-list').innerHTML = db.cart.map(c => `
+        <div class="py-2 flex justify-between items-center">
+          <div><div>${c.name}</div><div class="text-stone-400">x${c.qty}</div></div>
+          <div class="font-bold">${fmt(c.price * c.qty)}</div>
+        </div>
+      `).join('');
+      let sub = db.cart.reduce((a,c) => a + (c.price * c.qty), 0);
+      let exp = db.cart.reduce((a,c) => a + (c.modal * c.qty), 0);
+      document.getElementById('cart-sub').innerText = fmt(sub);
+      document.getElementById('cart-exp').innerText = fmt(exp);
+      document.getElementById('cart-tot').innerText = fmt(sub);
+    }
+
+    function checkout() {
+      if(db.cart.length === 0) return alert('Keranjang kosong!');
+      let today = "29/08/2026";
+      db.cart.forEach(c => {
+        db.history.push({ date: today, month: "08/2026", name: c.name, price: c.price, modal: c.modal, qty: c.qty });
+      });
+      db.cart = [];
+      renderCart();
+      alert('Transaksi berhasil disimpan ke Dashboard Pengeluaran & Laporan!');
+      switchTab('laporan');
     }
 
     function renderReports() {
-      let totOmzet = 0, totExpense = 0, totProfit = 0;
-      let daily = {}, monthly = {};
+      let totOmzet = 0, totExp = 0, harianMap = {}, bulanMap = {};
 
-      store.history.forEach(tx => {
-        let expense = tx.items.reduce((a, i) => a + ((i.modal || 5000) * i.qty), 0);
-        let profit = tx.total - expense;
-        totOmzet += tx.total; totExpense += expense; totProfit += profit;
+      db.history.forEach(h => {
+        let o = h.price * h.qty;
+        let e = h.modal * h.qty;
+        totOmzet += o; totExp += e;
 
-        let date = tx.time.split(' ')[0];
-        if(!daily[date]) daily[date] = { date, qty: 0, omzet: 0, expense: 0, profit: 0 };
-        daily[date].qty += tx.items.reduce((a,i)=>a+i.qty,0);
-        daily[date].omzet += tx.total; daily[date].expense += expense; daily[date].profit += profit;
+        if(!harianMap[h.date]) harianMap[h.date] = { o: 0, e: 0 };
+        harianMap[h.date].o += o; harianMap[h.date].e += e;
 
-        let month = date.slice(3);
-        if(!monthly[month]) monthly[month] = { month, omzet: 0, expense: 0, profit: 0 };
-        monthly[month].omzet += tx.total; monthly[month].expense += expense; monthly[month].profit += profit;
+        if(!bulanMap[h.month]) bulanMap[h.month] = { o: 0, e: 0 };
+        bulanMap[h.month].o += o; bulanMap[h.month].e += e;
       });
 
-      document.getElementById('rep-total-omzet').innerText = fmtRp(totOmzet);
-      document.getElementById('rep-total-expense').innerText = fmtRp(totExpense);
-      document.getElementById('rep-total-profit').innerText = fmtRp(totProfit);
+      document.getElementById('dash-omzet').innerText = fmt(totOmzet);
+      document.getElementById('dash-pengeluaran').innerText = fmt(totExp);
+      document.getElementById('dash-laba').innerText = fmt(totOmzet - totExp);
 
-      document.getElementById('report-harian-body').innerHTML = Object.values(daily).map(d => `
-        <tr><td class="py-3 px-4 font-bold">${d.date}</td><td class="text-right text-orange-600">${d.qty}</td><td class="text-right">${fmtRp(d.omzet)}</td><td class="text-right text-rose-600">${fmtRp(d.expense)}</td><td class="text-right text-emerald-600 font-bold">${fmtRp(d.profit)}</td></tr>
+      document.getElementById('tbl-harian').innerHTML = Object.entries(harianMap).map(([d, v]) => `
+        <tr><td class="p-3 font-bold">${d}</td><td class="p-3 text-right">${fmt(v.o)}</td><td class="p-3 text-right text-rose-600 font-bold">${fmt(v.e)}</td><td class="p-3 text-right text-emerald-600 font-bold">${fmt(v.o - v.e)}</td></tr>
       `).join('');
 
-      document.getElementById('report-mingguan-body').innerHTML = `
-        <tr><td class="py-3 px-4 font-bold">Minggu Terakhir (Agustus 2026)</td><td class="text-right">${fmtRp(totOmzet)}</td><td class="text-right text-rose-600">${fmtRp(totExpense)}</td><td class="text-right text-emerald-600 font-bold">${fmtRp(totProfit)}</td></tr>
+      document.getElementById('tbl-mingguan').innerHTML = `
+        <tr><td class="p-3 font-bold">Minggu Terakhir (Agustus 2026)</td><td class="p-3 text-right">${fmt(totOmzet)}</td><td class="p-3 text-right text-rose-600 font-bold">${fmt(totExp)}</td><td class="p-3 text-right text-emerald-600 font-bold">${fmt(totOmzet - totExp)}</td></tr>
       `;
 
-      document.getElementById('report-bulanan-body').innerHTML = Object.values(monthly).map(m => `
-        <tr><td class="py-3 px-4 font-bold">${m.month}</td><td class="text-right">${fmtRp(m.omzet)}</td><td class="text-right text-rose-600">${fmtRp(m.expense)}</td><td class="text-right text-emerald-600 font-bold">${fmtRp(m.profit)}</td></tr>
+      document.getElementById('tbl-bulanan').innerHTML = Object.entries(bulanMap).map(([m, v]) => `
+        <tr><td class="p-3 font-bold">${m}</td><td class="p-3 text-right">${fmt(v.o)}</td><td class="p-3 text-right text-rose-600 font-bold">${fmt(v.e)}</td><td class="p-3 text-right text-emerald-600 font-bold">${fmt(v.o - v.e)}</td></tr>
       `).join('');
     }
 
-    function renderDashboard() {
-      document.getElementById('dashboard-table-body').innerHTML = store.menu.map(m => `
-        <tr><td class="py-3 px-6 font-bold">${m.name}</td><td class="text-right text-rose-600">Rp 5.500</td><td class="text-right">${fmtRp(m.sellingPrice)}</td><td class="text-right text-emerald-600 font-bold">${fmtRp(m.sellingPrice - 5500)}</td></tr>
-      `).join('');
-    }
-
-    document.addEventListener('DOMContentLoaded', () => { renderReports(); renderDashboard(); });
+    document.addEventListener('DOMContentLoaded', () => { renderPos(); renderReports(); });
   </script>
 </body>
 </html>
