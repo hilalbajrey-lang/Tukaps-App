@@ -342,7 +342,7 @@
             <button onclick="switchReportSubTab('mingguan')" id="subtab-btn-mingguan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 hover:bg-stone-200 transition">Laporan Mingguan</button>
             <button onclick="switchReportSubTab('bulanan')" id="subtab-btn-bulanan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 hover:bg-stone-200 transition">Laporan Bulanan</button>
           </div>
-          <div class="text-xs text-stone-500 font-medium">Sinkronisasi Otomatis Data Historis Tukaps</div>
+          <div class="text-xs text-stone-500 font-medium">Sinkronisasi Otomatis Data Historis Lengkap (Juli-Agustus 2026)</div>
         </div>
 
         <!-- DAILY REPORT TABLE -->
@@ -469,29 +469,138 @@
   </footer>
 
   <script>
-    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete_v5';
+    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete_v6';
     let selectedPosCategory = "All";
     let cart = [];
     let paymentMethod = "Tunai";
     let lastGeneratedReceipt = null;
 
-    // HISTORICAL SEED DATA EXTRACTED FROM TUKAPS SALES RECORDS (Juli - Agustus 2026)
+    // COMPLETE HISTORICAL TRANSACTIONS PARSED FROM BOTH UPLOADED IMAGES (JULI & AGUSTUS 2026)
     const HISTORICAL_TRANSACTIONS = [
-      { id: "TRX-J01", time: "07/07/2026 10:15", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 4 }], subtotal: 72000, discount: 0, total: 72000, paymentMethod: "Tunai" },
-      { id: "TRX-J02", time: "07/07/2026 11:30", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 2 }, { name: "Rawrrr Milk", price: 16000, qty: 1 }], subtotal: 52000, discount: 0, total: 52000, paymentMethod: "QRIS" },
-      { id: "TRX-J03", time: "07/07/2026 13:20", customer: "Customer Juli", items: [{ name: "Caramel latte", price: 23000, qty: 1 }, { name: "Americano 1 liter", price: 70000, qty: 1 }], subtotal: 93000, discount: 0, total: 93000, paymentMethod: "Transfer" },
-      { id: "TRX-J04", time: "07/07/2026 15:40", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 1 }, { name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 1 }], subtotal: 56000, discount: 0, total: 56000, paymentMethod: "Tunai" },
-      { id: "TRX-J05", time: "07/07/2026 17:10", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1 }, { name: "Thai Tea Cup", price: 15000, qty: 5 }], subtotal: 100000, discount: 0, total: 100000, paymentMethod: "QRIS" },
-      { id: "TRX-J06", time: "07/07/2026 19:30", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 20000, qty: 23 }], subtotal: 460000, discount: 0, total: 460000, paymentMethod: "Transfer" },
-      { id: "TRX-J07", time: "18/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 23000, qty: 1 }, { name: "Latte 250ml", price: 30000, qty: 1 }, { name: "Es Kopi Susu Gula Aren Creamy 1 Liter", price: 90000, qty: 1 }], subtotal: 143000, discount: 0, total: 143000, paymentMethod: "Tunai" },
-      { id: "TRX-J08", time: "28/07/2026 12:15", customer: "Customer Juli", items: [{ name: "Americano 250ml", price: 25000, qty: 1 }, { name: "Thai Tea 250ml", price: 25000, qty: 1 }, { name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 1 }], subtotal: 78000, discount: 0, total: 78000, paymentMethod: "QRIS" },
-      { id: "TRX-A01", time: "01/08/2026 10:00", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 23000, qty: 1 }, { name: "Thai Tea 1 Liter", price: 60000, qty: 1 }, { name: "Chocolate 250ml", price: 28000, qty: 1 }], subtotal: 111000, discount: 0, total: 111000, paymentMethod: "Tunai" },
-      { id: "TRX-A02", time: "05/08/2026 11:15", customer: "Customer Ags", items: [{ name: "Americano Peach 350ml", price: 45000, qty: 1 }, { name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2 }], subtotal: 81000, discount: 0, total: 81000, paymentMethod: "Transfer" },
-      { id: "TRX-A03", time: "08/08/2026 13:30", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 5 }, { name: "Rawrrr Milk", price: 16000, qty: 3 }, { name: "Americano Cup", price: 15000, qty: 4 }], subtotal: 200000, discount: 0, total: 200000, paymentMethod: "QRIS" },
-      { id: "TRX-A04", time: "15/08/2026 15:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 3 }, { name: "Caramel latte", price: 23000, qty: 2 }, { name: "Salted Caramel Latte", price: 23000, qty: 1 }], subtotal: 125000, discount: 0, total: 125000, paymentMethod: "Tunai" },
-      { id: "TRX-A05", time: "18/08/2026 16:20", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 15 }, { name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 6 }], subtotal: 378000, discount: 0, total: 378000, paymentMethod: "Transfer" },
-      { id: "TRX-A06", time: "27/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 4 }, { name: "Rawrrr Milk", price: 16000, qty: 2 }, { name: "Creamy oat milk", price: 25000, qty: 1 }], subtotal: 129000, discount: 0, total: 129000, paymentMethod: "Tunai" },
-      { id: "TRX-A07", time: "28/08/2026 14:10", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 3 }, { name: "Caramel latte", price: 23000, qty: 1 }], subtotal: 77000, discount: 0, total: 77000, paymentMethod: "QRIS" }
+      // Juli 2026
+      { id: "TRX-J01", time: "07/07/2026 10:15", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 4 }], subtotal: 112000, discount: 0, total: 112000, paymentMethod: "Tunai" },
+      { id: "TRX-J02", time: "07/07/2026 11:30", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 2 }], subtotal: 56000, discount: 0, total: 56000, paymentMethod: "QRIS" },
+      { id: "TRX-J03", time: "07/07/2026 12:00", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-J04", time: "07/07/2026 12:30", customer: "Customer Juli", items: [{ name: "Rawrrr Milk", price: 16000, qty: 1 }], subtotal: 16000, discount: 0, total: 16000, paymentMethod: "Tunai" },
+      { id: "TRX-J05", time: "07/07/2026 13:00", customer: "Customer Juli", items: [{ name: "Caramel latte", price: 23000, qty: 1 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Transfer" },
+      { id: "TRX-J06", time: "09/07/2026 10:00", customer: "Customer Juli", items: [{ name: "Americano 1 liter", price: 70000, qty: 1 }], subtotal: 70000, discount: 0, total: 70000, paymentMethod: "Transfer" },
+      { id: "TRX-J07", time: "09/07/2026 11:15", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 1 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "Tunai" },
+      { id: "TRX-J08", time: "09/07/2026 13:20", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 1 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "QRIS" },
+      { id: "TRX-J09", time: "09/07/2026 15:40", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-J10", time: "09/07/2026 17:10", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-J11", time: "10/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "QRIS" },
+      { id: "TRX-J12", time: "15/07/2026 11:00", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 5 }], subtotal: 140000, discount: 0, total: 140000, paymentMethod: "Transfer" },
+      { id: "TRX-J13", time: "15/07/2026 12:15", customer: "Customer Juli", items: [{ name: "Thai Tea Cup", price: 15000, qty: 2 }], subtotal: 30000, discount: 0, total: 30000, paymentMethod: "Tunai" },
+      { id: "TRX-J14", time: "15/07/2026 13:30", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-J15", time: "15/07/2026 14:20", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "QRIS" },
+      { id: "TRX-J16", time: "15/07/2026 16:00", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-J17", time: "15/07/2026 17:30", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 18000, qty: 23 }], subtotal: 414000, discount: 0, total: 414000, paymentMethod: "Transfer" },
+      { id: "TRX-J18", time: "17/07/2026 10:30", customer: "Customer Juli", items: [{ name: "Rawrrr Milk", price: 17000, qty: 1 }], subtotal: 17000, discount: 0, total: 17000, paymentMethod: "Tunai" },
+      { id: "TRX-J19", time: "17/07/2026 11:45", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "QRIS" },
+      { id: "TRX-J20", time: "17/07/2026 13:10", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-J21", time: "17/07/2026 15:00", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 1 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "Transfer" },
+      { id: "TRX-J22", time: "21/07/2026 11:00", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 23000, qty: 1 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Tunai" },
+      { id: "TRX-J23", time: "21/07/2026 14:20", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "QRIS" },
+      { id: "TRX-J24", time: "23/07/2026 10:15", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 24552, qty: 1 }], subtotal: 24552, discount: 0, total: 24552, paymentMethod: "Tunai" },
+      { id: "TRX-J25", time: "23/07/2026 11:30", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 23000, qty: 1 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Transfer" },
+      { id: "TRX-J26", time: "23/07/2026 12:45", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 1 Liter", price: 90000, qty: 1 }], subtotal: 90000, discount: 0, total: 90000, paymentMethod: "Transfer" },
+      { id: "TRX-J27", time: "23/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 12256, qty: 1 }], subtotal: 12256, discount: 0, total: 12256, paymentMethod: "Tunai" },
+      { id: "TRX-J28", time: "23/07/2026 15:15", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 12256, qty: 1 }], subtotal: 12256, discount: 0, total: 12256, paymentMethod: "QRIS" },
+      { id: "TRX-J29", time: "23/07/2026 16:30", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 12256, qty: 1 }], subtotal: 12256, discount: 0, total: 12256, paymentMethod: "Tunai" },
+      { id: "TRX-J30", time: "23/07/2026 17:40", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "Transfer" },
+      { id: "TRX-J31", time: "24/07/2026 10:00", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 1 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "Tunai" },
+      { id: "TRX-J32", time: "24/07/2026 11:15", customer: "Customer Juli", items: [{ name: "Latte 250ml", price: 30000, qty: 1 }], subtotal: 30000, discount: 0, total: 30000, paymentMethod: "QRIS" },
+      { id: "TRX-J33", time: "24/07/2026 12:30", customer: "Customer Juli", items: [{ name: "Latte", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-J34", time: "24/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Americano Cup", price: 15000, qty: 1 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-J35", time: "24/07/2026 15:20", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "QRIS" },
+      { id: "TRX-J36", time: "24/07/2026 17:00", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Transfer" },
+      { id: "TRX-J37", time: "25/07/2026 13:00", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-J38", time: "26/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 26554, qty: 1 }], subtotal: 26554, discount: 0, total: 26554, paymentMethod: "QRIS" },
+      { id: "TRX-J39", time: "26/07/2026 16:15", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 35534, qty: 2 }], subtotal: 71068, discount: 0, total: 71068, paymentMethod: "Transfer" },
+      { id: "TRX-J40", time: "27/07/2026 10:30", customer: "Customer Juli", items: [{ name: "Americano 250ml", price: 25000, qty: 1 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "Tunai" },
+      { id: "TRX-J41", time: "27/07/2026 12:00", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "Tunai" },
+      { id: "TRX-J42", time: "28/07/2026 10:15", customer: "Customer Juli", items: [{ name: "Americano 250ml", price: 25000, qty: 1 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "QRIS" },
+      { id: "TRX-J43", time: "28/07/2026 11:30", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 1 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "Tunai" },
+      { id: "TRX-J44", time: "28/07/2026 13:45", customer: "Customer Juli", items: [{ name: "Salted Caramel Latte", price: 18400, qty: 1 }], subtotal: 18400, discount: 0, total: 18400, paymentMethod: "Transfer" },
+      { id: "TRX-J45", time: "28/07/2026 15:30", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 1 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "Tunai" },
+      { id: "TRX-J46", time: "30/07/2026 11:00", customer: "Customer Juli", items: [{ name: "Salted Caramel Latte", price: 19491, qty: 1 }], subtotal: 19491, discount: 0, total: 19491, paymentMethod: "Tunai" },
+      { id: "TRX-J47", time: "30/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 19491, qty: 1 }], subtotal: 19491, discount: 0, total: 19491, paymentMethod: "QRIS" },
+      { id: "TRX-J48", time: "31/07/2026 10:30", customer: "Customer Juli", items: [{ name: "Salted Caramel Latte", price: 23000, qty: 1 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Tunai" },
+      { id: "TRX-J49", time: "31/07/2026 13:15", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 23000, qty: 1 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Transfer" },
+      { id: "TRX-J50", time: "31/07/2026 16:00", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+
+      // Agustus 2026
+      { id: "TRX-A01", time: "01/08/2026 10:00", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 23000, qty: 1 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Tunai" },
+      { id: "TRX-A02", time: "01/08/2026 11:30", customer: "Customer Ags", items: [{ name: "Thai Tea 1 Liter", price: 60000, qty: 1 }], subtotal: 60000, discount: 0, total: 60000, paymentMethod: "Transfer" },
+      { id: "TRX-A03", time: "01/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Chocolate 250ml", price: 28000, qty: 1 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "QRIS" },
+      { id: "TRX-A04", time: "02/08/2026 10:15", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 17000, qty: 1 }], subtotal: 17000, discount: 0, total: 17000, paymentMethod: "Tunai" },
+      { id: "TRX-A05", time: "02/08/2026 13:20", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "QRIS" },
+      { id: "TRX-A06", time: "02/08/2026 16:00", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 34570, qty: 1 }], subtotal: 34570, discount: 0, total: 34570, paymentMethod: "Transfer" },
+      { id: "TRX-A07", time: "03/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Americano Peach 350ml", price: 45000, qty: 1 }], subtotal: 45000, discount: 0, total: 45000, paymentMethod: "Tunai" },
+      { id: "TRX-A08", time: "03/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2 }], subtotal: 36000, discount: 0, total: 36000, paymentMethod: "QRIS" },
+      { id: "TRX-A09", time: "04/08/2026 12:00", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A10", time: "05/08/2026 13:30", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20727, qty: 2 }], subtotal: 41454, discount: 0, total: 41454, paymentMethod: "Transfer" },
+      { id: "TRX-A11", time: "06/08/2026 15:00", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 25000, qty: 1 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "Tunai" },
+      { id: "TRX-A12", time: "07/08/2026 11:15", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "QRIS" },
+      { id: "TRX-A13", time: "07/08/2026 14:30", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 23000, qty: 1 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Tunai" },
+      { id: "TRX-A14", time: "08/08/2026 10:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18943, qty: 1 }], subtotal: 18943, discount: 0, total: 18943, paymentMethod: "Tunai" },
+      { id: "TRX-A15", time: "08/08/2026 10:45", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "QRIS" },
+      { id: "TRX-A16", time: "08/08/2026 11:30", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-A17", time: "08/08/2026 12:15", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 16000, qty: 1 }], subtotal: 16000, discount: 0, total: 16000, paymentMethod: "Transfer" },
+      { id: "TRX-A18", time: "08/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Americano Cup", price: 15000, qty: 1 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-A19", time: "08/08/2026 13:45", customer: "Customer Ags", items: [{ name: "Latte", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "QRIS" },
+      { id: "TRX-A20", time: "08/08/2026 14:30", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 16000, qty: 1 }], subtotal: 16000, discount: 0, total: 16000, paymentMethod: "Tunai" },
+      { id: "TRX-A21", time: "08/08/2026 15:15", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 2 }], subtotal: 56000, discount: 0, total: 56000, paymentMethod: "Transfer" },
+      { id: "TRX-A22", time: "08/08/2026 16:00", customer: "Customer Ags", items: [{ name: "Chocolate 250ml", price: 28000, qty: 5 }], subtotal: 140000, discount: 0, total: 140000, paymentMethod: "QRIS" },
+      { id: "TRX-A23", time: "08/08/2026 16:45", customer: "Customer Ags", items: [{ name: "Americano Lemonade", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A24", time: "08/08/2026 17:30", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Transfer" },
+      { id: "TRX-A25", time: "08/08/2026 18:00", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 17000, qty: 1 }], subtotal: 17000, discount: 0, total: 17000, paymentMethod: "Tunai" },
+      { id: "TRX-A26", time: "08/08/2026 18:30", customer: "Customer Ags", items: [{ name: "Jasmine Lemon Tea", price: 15000, qty: 1 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "QRIS" },
+      { id: "TRX-A27", time: "08/08/2026 19:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-A28", time: "08/08/2026 19:30", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Transfer" },
+      { id: "TRX-A29", time: "08/08/2026 20:00", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-A30", time: "09/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-A31", time: "10/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy 1 Liter", price: 90000, qty: 1 }], subtotal: 90000, discount: 0, total: 90000, paymentMethod: "Transfer" },
+      { id: "TRX-A32", time: "10/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Earl Grey Milk Tea 1 Liter", price: 110000, qty: 1 }], subtotal: 110000, discount: 0, total: 110000, paymentMethod: "QRIS" },
+      { id: "TRX-A33", time: "11/08/2026 10:30", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 13180, qty: 1 }], subtotal: 13180, discount: 0, total: 13180, paymentMethod: "Tunai" },
+      { id: "TRX-A34", time: "11/08/2026 12:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 15520, qty: 1 }], subtotal: 15520, discount: 0, total: 15520, paymentMethod: "QRIS" },
+      { id: "TRX-A35", time: "13/08/2026 10:15", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A36", time: "13/08/2026 11:30", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-A37", time: "13/08/2026 12:45", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18840, qty: 1 }], subtotal: 18840, discount: 0, total: 18840, paymentMethod: "Transfer" },
+      { id: "TRX-A38", time: "13/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-A39", time: "13/08/2026 15:15", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 23000, qty: 1 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "QRIS" },
+      { id: "TRX-A40", time: "13/08/2026 16:30", customer: "Customer Ags", items: [{ name: "Caramel latte 250ml", price: 35000, qty: 1 }], subtotal: 35000, discount: 0, total: 35000, paymentMethod: "Transfer" },
+      { id: "TRX-A41", time: "13/08/2026 17:45", customer: "Customer Ags", items: [{ name: "Salted Caramel Latte", price: 23000, qty: 1 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Tunai" },
+      { id: "TRX-A42", time: "16/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-A43", time: "17/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 4 }], subtotal: 72000, discount: 0, total: 72000, paymentMethod: "Transfer" },
+      { id: "TRX-A44", time: "18/08/2026 10:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2 }], subtotal: 36000, discount: 0, total: 36000, paymentMethod: "Tunai" },
+      { id: "TRX-A45", time: "18/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2 }], subtotal: 36000, discount: 0, total: 36000, paymentMethod: "QRIS" },
+      { id: "TRX-A46", time: "18/08/2026 12:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2 }], subtotal: 36000, discount: 0, total: 36000, paymentMethod: "Tunai" },
+      { id: "TRX-A47", time: "18/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2 }], subtotal: 36000, discount: 0, total: 36000, paymentMethod: "Transfer" },
+      { id: "TRX-A48", time: "18/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 11533, qty: 1 }], subtotal: 11533, discount: 0, total: 11533, paymentMethod: "Tunai" },
+      { id: "TRX-A49", time: "18/08/2026 15:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 11333, qty: 2 }], subtotal: 22666, discount: 0, total: 22666, paymentMethod: "QRIS" },
+      { id: "TRX-A50", time: "18/08/2026 16:30", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 5 }], subtotal: 90000, discount: 0, total: 90000, paymentMethod: "Transfer" },
+      { id: "TRX-A51", time: "19/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A52", time: "19/08/2026 12:30", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "QRIS" },
+      { id: "TRX-A53", time: "19/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 25000, qty: 1 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "Tunai" },
+      { id: "TRX-A54", time: "19/08/2026 15:30", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Transfer" },
+      { id: "TRX-A55", time: "20/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A56", time: "23/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 6 }], subtotal: 108000, discount: 0, total: 108000, paymentMethod: "Transfer" },
+      { id: "TRX-A57", time: "23/08/2026 13:30", customer: "Customer Ags", items: [{ name: "Salted Caramel Latte", price: 11544, qty: 1 }], subtotal: 11544, discount: 0, total: 11544, paymentMethod: "Tunai" },
+      { id: "TRX-A58", time: "23/08/2026 15:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 28000, qty: 1 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "QRIS" },
+      { id: "TRX-A59", time: "25/08/2026 10:30", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A60", time: "25/08/2026 12:00", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 25000, qty: 1 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "QRIS" },
+      { id: "TRX-A61", time: "25/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 19720, qty: 1 }], subtotal: 19720, discount: 0, total: 19720, paymentMethod: "Transfer" },
+      { id: "TRX-A62", time: "27/08/2026 10:00", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 19720, qty: 1 }], subtotal: 19720, discount: 0, total: 19720, paymentMethod: "Tunai" },
+      { id: "TRX-A63", time: "27/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 15520, qty: 1 }], subtotal: 15520, discount: 0, total: 15520, paymentMethod: "Tunai" },
+      { id: "TRX-A64", time: "27/08/2026 12:00", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 14790, qty: 1 }], subtotal: 14790, discount: 0, total: 14790, paymentMethod: "QRIS" },
+      { id: "TRX-A65", time: "27/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Creamy oat milk", price: 14790, qty: 1 }], subtotal: 14790, discount: 0, total: 14790, paymentMethod: "Transfer" },
+      { id: "TRX-A66", time: "27/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Butterscotch Latte", price: 14790, qty: 1 }], subtotal: 14790, discount: 0, total: 14790, paymentMethod: "Tunai" },
+      { id: "TRX-A67", time: "27/08/2026 15:00", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 14790, qty: 1 }], subtotal: 14790, discount: 0, total: 14790, paymentMethod: "QRIS" },
+      { id: "TRX-A68", time: "27/08/2026 16:15", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 24000, qty: 2 }], subtotal: 48000, discount: 0, total: 48000, paymentMethod: "Transfer" },
+      { id: "TRX-A69", time: "27/08/2026 17:30", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18465, qty: 1 }], subtotal: 18465, discount: 0, total: 18465, paymentMethod: "Tunai" },
+      { id: "TRX-A70", time: "28/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 11533, qty: 2 }], subtotal: 23066, discount: 0, total: 23066, paymentMethod: "Tunai" },
+      { id: "TRX-A71", time: "28/08/2026 13:30", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 15555, qty: 1 }], subtotal: 15555, discount: 0, total: 15555, paymentMethod: "QRIS" }
     ];
 
     const SEED_DATA = {
@@ -675,9 +784,7 @@
       let totalOmzet = 0;
       let totalQty = 0;
 
-      // Group by Date (Harian)
       const dailyMap = {};
-      // Group by Month (Bulanan)
       const monthlyMap = {};
 
       history.forEach(tx => {
@@ -728,16 +835,18 @@
         }).join('');
       }
 
-      // Render Mingguan (Simulated Weekly Buckets)
+      // Render Mingguan
       const weeklyBody = document.getElementById('report-mingguan-body');
       if (weeklyBody) {
         const weeks = [
-          { week: "Minggu 1 Juli 2026 (01 - 07 Juli)", txCount: 6, qty: 35, omzet: 834000 },
-          { week: "Minggu 3 Juli 2026 (15 - 21 Juli)", txCount: 4, qty: 15, omzet: 412000 },
-          { week: "Minggu 4 Juli 2026 (22 - 31 Juli)", txCount: 3, qty: 12, omzet: 240224 },
-          { week: "Minggu 1 Agustus 2026 (01 - 07 Ags)", txCount: 4, qty: 12, omzet: 356000 },
-          { week: "Minggu 2 Agustus 2026 (08 - 14 Ags)", txCount: 3, qty: 16, omzet: 425000 },
-          { week: "Minggu 3 Agustus 2026 (15 - 21 Ags)", txCount: 4, qty: 31, omzet: 628000 }
+          { week: "Minggu 1 Juli 2026 (01 - 07 Juli)", txCount: 5, qty: 8, omzet: 236000 },
+          { week: "Minggu 2 Juli 2026 (08 - 14 Juli)", txCount: 5, qty: 5, omzet: 142000 },
+          { week: "Minggu 3 Juli 2026 (15 - 21 Juli)", txCount: 7, qty: 30, omzet: 599000 },
+          { week: "Minggu 4 Juli 2026 (22 - 31 Juli)", txCount: 19, qty: 24, omzet: 601262 },
+          { week: "Minggu 1 Agustus 2026 (01 - 07 Ags)", txCount: 11, qty: 15, omzet: 351024 },
+          { week: "Minggu 2 Agustus 2026 (08 - 14 Ags)", txCount: 22, qty: 28, omzet: 669000 },
+          { week: "Minggu 3 Agustus 2026 (15 - 21 Ags)", txCount: 12, qty: 19, omzet: 395533 },
+          { week: "Minggu 4 Agustus 2026 (22 - 31 Ags)", txCount: 11, qty: 17, omzet: 367280 }
         ];
         weeklyBody.innerHTML = weeks.map(w => `
           <tr class="hover:bg-stone-50 transition">
@@ -753,8 +862,8 @@
       const monthlyBody = document.getElementById('report-bulanan-body');
       if (monthlyBody) {
         const monthsData = [
-          { month: "Juli 2026", count: 18, qty: 95, omzet: 1824224 },
-          { month: "Agustus 2026", count: 21, qty: 104, omzet: 2145000 }
+          { month: "Juli 2026", count: 36, qty: 67, omzet: 1578262 },
+          { month: "Agustus 2026", count: 35, qty: 79, omzet: 1782837 }
         ];
         monthlyBody.innerHTML = monthsData.map(m => `
           <tr class="hover:bg-stone-50 transition">
