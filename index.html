@@ -5,165 +5,437 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TUKAPS COFFEE — POS & HPP Management Studio</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            tukaps: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c'
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    body { background-color: #fafaf9; color: #292524; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: #fafaf9; color: #292524; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
     .coffee-card { background: #ffffff; border: 1px solid #f2ede9; box-shadow: 0 4px 20px -4px rgba(249, 115, 22, 0.08); }
-    .coffee-input { background: #fafaf9; border: 1px solid #e7e5e4; }
-    .coffee-input:focus { background: #ffffff; border-color: #f97316; outline: none; }
-    .btn-coffee { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: #ffffff; }
-    .tab-btn { padding: 8px 14px; border-radius: 12px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .coffee-input { background: #fafaf9; border: 1px solid #e7e5e4; transition: all 0.2s ease; }
+    .coffee-input:focus { background: #ffffff; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); outline: none; }
+    .btn-coffee { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: #ffffff; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3); transition: all 0.2s ease; }
+    .btn-coffee:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4); }
+    .tab-btn { padding: 8px 16px; border-radius: 12px; font-size: 12px; font-weight: 700; transition: all 0.2s ease; white-space: nowrap; }
     .tab-btn.active { background: #f97316; color: #ffffff; box-shadow: 0 3px 10px rgba(249, 115, 22, 0.3); }
     .tab-btn:not(.active) { background: #ffedd5; color: #c2410c; }
+    .tab-btn:not(.active):hover { background: #fed7aa; }
+    .receipt-paper { width: 300px; background: #fff; padding: 16px; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #000; box-shadow: 0 10px 30px rgba(0,0,0,0.15); margin: 0 auto; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col pb-16">
 
   <!-- TOP HEADER -->
-  <header class="bg-white/95 backdrop-blur border-b px-4 lg:px-6 py-3 flex items-center justify-between sticky top-0 z-40">
+  <header class="glass-nav sticky top-0 z-40 border-b border-stone-200/80 px-4 lg:px-8 py-3 flex items-center justify-between">
     <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 rounded-2xl bg-[#c2410c] flex items-center justify-center text-white font-black shadow">T</div>
+      <div class="w-12 h-12 rounded-2xl overflow-hidden shadow-md flex items-center justify-center bg-[#c2410c] border border-orange-400 flex-shrink-0">
+        <svg viewBox="0 0 500 500" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <rect width="500" height="500" fill="#c2410c"/>
+          <path d="M120,200 Q150,160 210,180 M240,195 Q290,160 360,190 M140,200 L160,260 Q180,280 220,270 L230,205 M250,200 L270,265 Q300,285 340,265 L350,190" stroke="#fed7aa" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M120,210 C90,210 90,250 120,250 M360,205 C390,205 390,245 360,245" stroke="#fed7aa" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <text x="250" y="360" font-family="sans-serif" font-weight="bold" font-size="64" fill="#ffffff" text-anchor="middle" letter-spacing="2">Tukaps</text>
+          <text x="250" y="420" font-family="sans-serif" font-weight="bold" font-size="20" fill="#fed7aa" text-anchor="middle" letter-spacing="4">ONE CUP ISN'T ENOUGH</text>
+        </svg>
+      </div>
       <div>
-        <h1 class="text-sm font-black text-stone-900">TUKAPS COFFEE</h1>
-        <p class="text-[10px] text-stone-500 font-medium">POS, Dynamic HPP Editor & Dashboard Pengeluaran</p>
+        <div class="flex items-center space-x-2">
+          <h1 class="text-base font-black tracking-tight text-stone-900">TUKAPS COFFEE</h1>
+          <span class="bg-orange-100 text-orange-700 border border-orange-200 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            POS & HPP Studio
+          </span>
+        </div>
+        <p class="text-[11px] text-stone-500 font-medium">One Cup Isn't Enough — Professional Coffee System</p>
       </div>
     </div>
-    
-    <div class="flex items-center space-x-1.5 overflow-x-auto py-1">
-      <button onclick="switchTab('pos')" id="nav-pos" class="tab-btn active">Kasir POS</button>
-      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn">Menu & HPP</button>
-      <button onclick="switchTab('bahan')" id="nav-bahan" class="tab-btn">Bahan (Editable)</button>
-      <button onclick="switchTab('kemasan')" id="nav-kemasan" class="tab-btn">Kemasan (Editable)</button>
-      <button onclick="switchTab('laporan')" id="nav-laporan" class="tab-btn bg-amber-100 text-amber-900 font-bold">Laporan & Pengeluaran</button>
-      <button onclick="switchTab('riwayat')" id="nav-riwayat" class="tab-btn">Riwayat</button>
+
+    <!-- DESKTOP NAVIGATION -->
+    <div class="hidden xl:flex items-center space-x-1.5">
+      <button onclick="switchTab('pos')" id="nav-pos" class="tab-btn active flex items-center space-x-1">
+        <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i>
+        <span>Kasir POS</span>
+      </button>
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="tab-btn flex items-center space-x-1">
+        <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+        <span>Menu & HPP</span>
+      </button>
+      <button onclick="switchTab('bahan')" id="nav-bahan" class="tab-btn flex items-center space-x-1">
+        <i data-lucide="package-open" class="w-3.5 h-3.5"></i>
+        <span>Bahan</span>
+      </button>
+      <button onclick="switchTab('kemasan')" id="nav-kemasan" class="tab-btn flex items-center space-x-1">
+        <i data-lucide="box" class="w-3.5 h-3.5"></i>
+        <span>Kemasan</span>
+      </button>
+      <button onclick="switchTab('laporan')" id="nav-laporan" class="tab-btn flex items-center space-x-1 bg-amber-100 text-amber-800">
+        <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i>
+        <span>Laporan & Analitik</span>
+      </button>
+      <button onclick="switchTab('riwayat')" id="nav-riwayat" class="tab-btn flex items-center space-x-1">
+        <i data-lucide="receipt" class="w-3.5 h-3.5"></i>
+        <span>Riwayat</span>
+      </button>
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <button onclick="resetToDefaultData()" class="px-3 py-2 rounded-xl bg-orange-100 text-orange-700 hover:bg-orange-200 transition text-xs font-bold flex items-center space-x-1" title="Reset Sesuai Excel & Histori">
+        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+        <span class="hidden sm:inline">Reset Excel</span>
+      </button>
+      <button onclick="openAddMenuModal()" class="btn-coffee text-xs font-bold px-3.5 py-2 rounded-xl flex items-center space-x-1.5">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">Menu Baru</span>
+      </button>
     </div>
   </header>
 
-  <main class="flex-1 p-4 lg:p-6 max-w-[1600px] w-full mx-auto space-y-6">
+  <!-- MOBILE SUB NAV -->
+  <div class="xl:hidden bg-white border-b border-stone-200 px-4 py-2 overflow-x-auto flex space-x-2">
+    <button onclick="switchTab('pos')" id="m-nav-pos" class="tab-btn active text-xs py-2 px-3">Kasir POS</button>
+    <button onclick="switchTab('dashboard')" id="m-nav-dashboard" class="tab-btn text-xs py-2 px-3">Menu & HPP</button>
+    <button onclick="switchTab('bahan')" id="m-nav-bahan" class="tab-btn text-xs py-2 px-3">Bahan</button>
+    <button onclick="switchTab('kemasan')" id="m-nav-kemasan" class="tab-btn text-xs py-2 px-3">Kemasan</button>
+    <button onclick="switchTab('laporan')" id="m-nav-laporan" class="tab-btn text-xs py-2 px-3 bg-amber-100 text-amber-800 font-bold">Laporan Penjualan</button>
+    <button onclick="switchTab('riwayat')" id="m-nav-riwayat" class="tab-btn text-xs py-2 px-3">Riwayat</button>
+  </div>
 
-    <!-- 1. POS -->
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 p-4 lg:p-6 max-w-[1700px] w-full mx-auto space-y-6">
+
+    <!-- ================= TAB 1: KASIR POS ================= -->
     <section id="view-pos" class="view-tab grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       <div class="lg:col-span-7 space-y-4">
-        <div class="coffee-card p-4 rounded-2xl">
-          <h2 class="text-xs font-black uppercase text-stone-700 mb-3">Katalog Menu Kasir (25 Menu Lengkap)</h2>
-          <div id="pos-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[calc(100vh-200px)] overflow-y-auto pr-1"></div>
-        </div>
-      </div>
-      <div class="lg:col-span-5">
-        <div class="coffee-card p-5 rounded-3xl space-y-4 bg-white sticky top-20 shadow-sm">
-          <h2 class="text-xs font-black uppercase tracking-wider text-stone-900">Keranjang Kasir</h2>
-          <div id="cart-list" class="divide-y text-xs font-mono max-h-52 overflow-y-auto pr-1"></div>
-          <div class="border-t pt-3 space-y-1.5 text-xs">
-            <div class="flex justify-between text-stone-600"><span>Subtotal:</span><span id="cart-sub" class="font-bold">Rp 0</span></div>
-            <div class="flex justify-between text-rose-600 font-semibold"><span>Pengeluaran Modal (HPP):</span><span id="cart-exp">Rp 0</span></div>
-            <div class="flex justify-between text-base font-black pt-2 border-t border-dashed"><span>TOTAL:</span><span id="cart-tot" class="text-orange-600 font-mono">Rp 0</span></div>
+        <div class="coffee-card p-3 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="relative flex-1 w-full">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-stone-400"></i>
+            <input type="text" id="pos-search" onkeyup="renderPosCatalog()" placeholder="Cari menu Tukaps..." class="coffee-input w-full rounded-xl pl-10 pr-4 py-2 text-xs font-medium text-stone-800 placeholder-stone-400">
           </div>
-          <button onclick="checkout()" class="btn-coffee w-full py-3 rounded-2xl font-bold text-xs shadow-md">Proses Pembayaran & Catat</button>
+          <div class="flex items-center space-x-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0" id="pos-category-pills"></div>
+        </div>
+        <div id="pos-product-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3.5 max-h-[calc(100vh-240px)] overflow-y-auto pr-1"></div>
+      </div>
+
+      <div class="lg:col-span-5 space-y-4">
+        <div class="coffee-card rounded-3xl p-5 space-y-4 shadow-sm bg-white sticky top-20">
+          <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+            <h2 class="text-sm font-black text-stone-900 uppercase tracking-wider flex items-center">
+              <i data-lucide="shopping-bag" class="w-4.5 h-4.5 mr-2 text-orange-500"></i> Keranjang Kasir
+            </h2>
+            <button onclick="clearCart()" class="text-xs text-rose-600 font-bold hover:underline flex items-center">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5 mr-1"></i> Kosongkan
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="font-bold text-stone-700 block mb-1">Nama Customer</label>
+              <input type="text" id="customer-name" placeholder="cth: Kak Hilal" class="coffee-input w-full px-3 py-2 rounded-xl text-xs font-medium">
+            </div>
+            <div>
+              <label class="font-bold text-stone-700 block mb-1">Diskon Pesanan</label>
+              <select id="discount-select" onchange="renderCart()" class="coffee-input w-full px-3 py-2 rounded-xl text-xs font-medium">
+                <option value="0">Tanpa Diskon (0%)</option>
+                <option value="5">Diskon 5%</option>
+                <option value="10">Diskon 10%</option>
+                <option value="15">Diskon 15%</option>
+                <option value="20">Diskon 20%</option>
+                <option value="5000">Potongan Rp 5.000</option>
+                <option value="10000">Potongan Rp 10.000</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="cart-items-container" class="max-h-56 overflow-y-auto divide-y divide-stone-100 pr-1 text-xs font-mono"></div>
+
+          <div class="border-t border-stone-100 pt-3 space-y-1.5 text-xs">
+            <div class="flex justify-between text-stone-600"><span>Subtotal</span><span id="cart-subtotal" class="font-bold font-mono">Rp 0</span></div>
+            <div class="flex justify-between text-emerald-600"><span>Diskon Potongan</span><span id="cart-discount-val" class="font-bold font-mono">-Rp 0</span></div>
+            <div class="flex justify-between text-base font-black text-stone-900 pt-2 border-t border-dashed border-stone-200">
+              <span>TOTAL</span><span id="cart-total" class="text-orange-600 font-mono">Rp 0</span>
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-1">
+            <label class="font-bold text-stone-700 block text-xs">Metode Pembayaran</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="setPaymentMethod('Tunai')" id="pay-tunai" class="pay-btn py-2 rounded-xl text-xs font-bold border border-orange-500 bg-orange-50 text-orange-600 transition">Tunai</button>
+              <button onclick="setPaymentMethod('QRIS')" id="pay-qris" class="pay-btn py-2 rounded-xl text-xs font-bold border border-stone-200 bg-stone-50 text-stone-600 transition">QRIS</button>
+              <button onclick="setPaymentMethod('Transfer')" id="pay-transfer" class="pay-btn py-2 rounded-xl text-xs font-bold border border-stone-200 bg-stone-50 text-stone-600 transition">Transfer</button>
+            </div>
+          </div>
+
+          <div class="space-y-2 pt-2">
+            <button onclick="processCheckout()" class="btn-coffee w-full py-3 rounded-2xl font-bold text-xs flex items-center justify-center space-x-2 shadow-md">
+              <i data-lucide="printer" class="w-4 h-4"></i>
+              <span>Proses Pembayaran & Cetak Struk 80mm</span>
+            </button>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 2. MENU & HPP -->
+    <!-- ================= TAB 2: DASHBOARD & MASTER MENU ================= -->
     <section id="view-dashboard" class="view-tab hidden space-y-4">
-      <div class="coffee-card rounded-3xl p-6 space-y-4">
-        <h2 class="text-sm font-black uppercase text-stone-900">Master 25 Menu & Kalkulasi HPP Otomatis</h2>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="coffee-card p-4 rounded-3xl">
+          <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider">Total Menu Aktif</span>
+          <div id="stat-total-menu" class="text-2xl font-black text-stone-900 mt-1">0 Menu</div>
+        </div>
+        <div class="coffee-card p-4 rounded-3xl">
+          <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider">Rata-Rata Modal HPP</span>
+          <div id="stat-avg-hpp" class="text-2xl font-black text-orange-600 mt-1">Rp 0</div>
+        </div>
+        <div class="coffee-card p-4 rounded-3xl">
+          <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider">Rata-Rata Harga Jual</span>
+          <div id="stat-avg-price" class="text-2xl font-black text-emerald-600 mt-1">Rp 0</div>
+        </div>
+        <div class="coffee-card p-4 rounded-3xl">
+          <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider">HPP Tertinggi</span>
+          <div id="stat-max-hpp" class="text-2xl font-black text-rose-600 mt-1">Rp 0</div>
+        </div>
+      </div>
+
+      <div class="coffee-card rounded-3xl overflow-hidden shadow-sm">
+        <div class="px-6 py-4 border-b border-stone-100 flex items-center justify-between bg-stone-50/50">
+          <h2 class="text-xs font-black text-stone-900 uppercase tracking-wider">Master Menu, Resep & Kalkulasi HPP (25 Menu Lengkap)</h2>
+          <span id="badge-menu-count" class="bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full border border-orange-200">0 Menu</span>
+        </div>
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs font-mono">
-            <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold border-b">
-              <tr><th class="py-3 px-4">Nama Menu</th><th class="py-3 px-4">Kategori</th><th class="py-3 px-4 text-right">Modal HPP (Otomatis)</th><th class="py-3 px-4 text-right">Harga Jual</th><th class="py-3 px-4 text-right text-emerald-600">Laba Bersih</th></tr>
+          <table class="w-full text-left text-xs">
+            <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold tracking-wider border-b border-stone-100">
+              <tr>
+                <th class="py-3.5 px-6">Nama Menu</th>
+                <th class="py-3.5 px-4">Kategori</th>
+                <th class="py-3.5 px-4 text-right">Biaya Bahan</th>
+                <th class="py-3.5 px-4 text-right">Biaya Kemasan</th>
+                <th class="py-3.5 px-4 text-right">Total HPP</th>
+                <th class="py-3.5 px-4 text-right">Harga Jual</th>
+                <th class="py-3.5 px-4 text-right">Laba Bersih</th>
+                <th class="py-3.5 px-4 text-center">Margin</th>
+                <th class="py-3.5 px-6 text-center">Kelola Resep</th>
+              </tr>
             </thead>
-            <tbody id="dashboard-table-body" class="divide-y"></tbody>
+            <tbody id="dashboard-table-body" class="divide-y divide-stone-100 font-mono"></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- 3. BAHAN (EDITABLE) -->
+    <!-- ================= TAB 3: MASTER BAHAN ================= -->
     <section id="view-bahan" class="view-tab hidden space-y-4">
       <div class="coffee-card rounded-3xl p-6 space-y-4">
-        <div class="flex justify-between items-center">
-          <h2 class="text-sm font-black uppercase text-stone-900">Master Bahan Baku (Ubah harga beli di sini, HPP menu otomatis naik/turun)</h2>
-          <button onclick="saveChanges()" class="btn-coffee px-4 py-2 rounded-xl text-xs font-bold shadow">Simpan Perubahan Harga</button>
+        <div class="flex items-center justify-between border-b border-stone-100 pb-4">
+          <div>
+            <h2 class="text-sm font-black text-stone-900 uppercase tracking-wider flex items-center">
+              <i data-lucide="package-open" class="w-4.5 h-4.5 mr-2 text-orange-500"></i> Master Bahan Baku & Stok
+            </h2>
+            <p class="text-xs text-stone-500">Ubah harga di sini, HPP seluruh menu akan otomatis ter-update secara real-time.</p>
+          </div>
+          <button onclick="openAddBahanModal()" class="btn-coffee text-xs font-bold px-3.5 py-2 rounded-xl flex items-center space-x-1.5">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Tambah Bahan</span>
+          </button>
         </div>
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs font-mono">
-            <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold border-b">
-              <tr><th class="py-3 px-4">Nama Bahan</th><th class="py-3 px-4">Satuan</th><th class="py-3 px-4 text-right">Stok Fisik</th><th class="py-3 px-4 text-right">Harga Beli Total (Bisa Diedit)</th></tr>
+          <table class="w-full text-left text-xs">
+            <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold tracking-wider border-b border-stone-100">
+              <tr>
+                <th class="py-3.5 px-4">Kode</th>
+                <th class="py-3.5 px-4">Nama Bahan</th>
+                <th class="py-3.5 px-4">Kategori</th>
+                <th class="py-3.5 px-4">Satuan</th>
+                <th class="py-3.5 px-4 text-right">Stok Fisik</th>
+                <th class="py-3.5 px-4 text-right">Isi Kemasan</th>
+                <th class="py-3.5 px-4 text-right">Harga Beli Total</th>
+                <th class="py-3.5 px-4 text-right">Harga / Unit</th>
+                <th class="py-3.5 px-4 text-center">Aksi</th>
+              </tr>
             </thead>
-            <tbody id="bahan-table-body" class="divide-y"></tbody>
+            <tbody id="bahan-table-body" class="divide-y divide-stone-100 font-mono"></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- 4. KEMASAN (EDITABLE) -->
+    <!-- ================= TAB 4: MASTER KEMASAN ================= -->
     <section id="view-kemasan" class="view-tab hidden space-y-4">
       <div class="coffee-card rounded-3xl p-6 space-y-4">
-        <div class="flex justify-between items-center">
-          <h2 class="text-sm font-black uppercase text-stone-900">Master Kemasan & Packaging (Bisa Diedit)</h2>
-          <button onclick="saveChanges()" class="btn-coffee px-4 py-2 rounded-xl text-xs font-bold shadow">Simpan Perubahan Harga</button>
+        <div class="flex items-center justify-between border-b border-stone-100 pb-4">
+          <div>
+            <h2 class="text-sm font-black text-stone-900 uppercase tracking-wider flex items-center">
+              <i data-lucide="box" class="w-4.5 h-4.5 mr-2 text-orange-500"></i> Master Kemasan & Packaging
+            </h2>
+            <p class="text-xs text-stone-500">Kelola harga cup, tutup, sticker, sedotan, dan botol.</p>
+          </div>
+          <button onclick="openAddKemasanModal()" class="btn-coffee text-xs font-bold px-3.5 py-2 rounded-xl flex items-center space-x-1.5">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Tambah Kemasan</span>
+          </button>
         </div>
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs font-mono">
-            <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold border-b">
-              <tr><th class="py-3 px-4">Nama Kemasan</th><th class="py-3 px-4">Satuan</th><th class="py-3 px-4 text-right">Stok Fisik</th><th class="py-3 px-4 text-right">Harga Beli Total (Bisa Diedit)</th></tr>
+          <table class="w-full text-left text-xs">
+            <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold tracking-wider border-b border-stone-100">
+              <tr>
+                <th class="py-3.5 px-4">Kode</th>
+                <th class="py-3.5 px-4">Nama Kemasan</th>
+                <th class="py-3.5 px-4">Kategori</th>
+                <th class="py-3.5 px-4">Satuan</th>
+                <th class="py-3.5 px-4 text-right">Stok Fisik</th>
+                <th class="py-3.5 px-4 text-right">Isi Kemasan</th>
+                <th class="py-3.5 px-4 text-right">Harga Beli</th>
+                <th class="py-3.5 px-4 text-right">Harga / Unit</th>
+                <th class="py-3.5 px-4 text-center">Aksi</th>
+              </tr>
             </thead>
-            <tbody id="kemasan-table-body" class="divide-y"></tbody>
+            <tbody id="kemasan-table-body" class="divide-y divide-stone-100 font-mono"></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- 5. LAPORAN & DASHBOARD PENGELUARAN -->
+    <!-- ================= TAB 5: LAPORAN PENJUALAN & DASHBOARD PENGELUARAN ================= -->
     <section id="view-laporan" class="view-tab hidden space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="coffee-card p-5 rounded-3xl bg-white border-l-4 border-orange-500 shadow-sm">
-          <span class="text-xs font-bold uppercase text-stone-400">Total Omzet Pendapatan</span>
-          <div id="dash-omzet" class="text-2xl font-black mt-2 font-mono text-stone-900">Rp 0</div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="coffee-card p-5 rounded-3xl bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-lg">
+          <span class="text-xs font-bold text-orange-100 uppercase tracking-wider">Total Omzet Historis</span>
+          <div id="rep-total-omzet" class="text-2xl font-black mt-2 font-mono">Rp 0</div>
+          <p class="text-xs text-orange-100 mt-1">Sejak awal berdirinya Tukaps</p>
         </div>
-        <div class="coffee-card p-5 rounded-3xl bg-white border-l-4 border-rose-500 shadow-sm">
-          <span class="text-xs font-bold uppercase text-stone-400">Total Pengeluaran (Modal)</span>
-          <div id="dash-pengeluaran" class="text-2xl font-black mt-2 font-mono text-rose-600">Rp 0</div>
+        <div class="coffee-card p-5 rounded-3xl bg-white shadow-sm">
+          <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Total Pengeluaran (Modal)</span>
+          <div id="rep-total-expense" class="text-2xl font-black text-rose-600 mt-2 font-mono">Rp 0</div>
+          <p class="text-xs text-stone-500 mt-1">Akumulasi HPP / Pengeluaran</p>
         </div>
-        <div class="coffee-card p-5 rounded-3xl bg-white border-l-4 border-emerald-500 shadow-sm">
-          <span class="text-xs font-bold uppercase text-stone-400">Total Laba Bersih</span>
-          <div id="dash-laba" class="text-2xl font-black mt-2 font-mono text-emerald-600">Rp 0</div>
+        <div class="coffee-card p-5 rounded-3xl bg-white shadow-sm">
+          <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Total Laba Bersih</span>
+          <div id="rep-total-profit" class="text-2xl font-black text-emerald-600 mt-2 font-mono">Rp 0</div>
+          <p class="text-xs text-stone-500 mt-1">Omzet - Pengeluaran Modal</p>
+        </div>
+        <div class="coffee-card p-5 rounded-3xl bg-white shadow-sm">
+          <span class="text-xs font-bold text-stone-400 uppercase tracking-wider">Total Cup Terjual</span>
+          <div id="rep-total-qty" class="text-2xl font-black text-stone-900 mt-2 font-mono">0 Cup</div>
+          <p class="text-xs text-stone-500 mt-1">Periode Juli - Agustus 2026</p>
         </div>
       </div>
 
-      <div class="coffee-card rounded-3xl p-6 space-y-4 shadow-sm">
-        <div class="flex space-x-2 border-b pb-4">
-          <button onclick="switchRep('harian')" id="rep-btn-harian" class="px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white shadow-sm">Harian</button>
-          <button onclick="switchRep('mingguan')" id="rep-btn-mingguan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600">Mingguan</button>
-          <button onclick="switchRep('bulanan')" id="rep-btn-bulanan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600">Bulanan</button>
+      <!-- SUB TABS FOR REPORTS -->
+      <div class="coffee-card rounded-3xl p-6 space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-stone-100 pb-4">
+          <div class="flex items-center space-x-2">
+            <button onclick="switchReportSubTab('harian')" id="subtab-btn-harian" class="px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white transition shadow-sm">Laporan Harian</button>
+            <button onclick="switchReportSubTab('mingguan')" id="subtab-btn-mingguan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 hover:bg-stone-200 transition">Laporan Mingguan</button>
+            <button onclick="switchReportSubTab('bulanan')" id="subtab-btn-bulanan" class="px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 hover:bg-stone-200 transition">Laporan Bulanan</button>
+          </div>
+          <div class="text-xs text-stone-500 font-medium">Sinkronisasi Otomatis: Omzet, Pengeluaran & Laba Bersih</div>
         </div>
 
-        <div id="rep-harian" class="rep-pane space-y-3">
-          <h3 class="text-xs font-black uppercase text-stone-800">Dashboard Pengeluaran & Laba Harian</h3>
-          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase border-b"><tr><th class="p-3">Tanggal</th><th class="p-3 text-right">Cup</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-harian" class="divide-y"></tbody></table></div>
+        <!-- DAILY REPORT TABLE -->
+        <div id="report-view-harian" class="report-subview space-y-4">
+          <h3 class="text-sm font-black text-stone-900 uppercase tracking-wider">Rekapitulasi Harian (Omzet, Pengeluaran & Laba Bersih)</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold tracking-wider border-b border-stone-100">
+                <tr>
+                  <th class="py-3 px-4">Tanggal</th>
+                  <th class="py-3 px-4">Bulan</th>
+                  <th class="py-3 px-4 text-right">Cup Terjual</th>
+                  <th class="py-3 px-4 text-right">Total Omzet</th>
+                  <th class="py-3 px-4 text-right text-rose-600">Pengeluaran (Modal)</th>
+                  <th class="py-3 px-4 text-right text-emerald-600">Laba Bersih</th>
+                </tr>
+              </thead>
+              <tbody id="report-harian-body" class="divide-y divide-stone-100 font-mono"></tbody>
+            </table>
+          </div>
         </div>
-        <div id="rep-mingguan" class="rep-pane hidden space-y-3">
-          <h3 class="text-xs font-black uppercase text-stone-800">Dashboard Pengeluaran & Laba Mingguan</h3>
-          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase border-b"><tr><th class="p-3">Periode</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-mingguan" class="divide-y"></tbody></table></div>
+
+        <!-- WEEKLY REPORT TABLE -->
+        <div id="report-view-mingguan" class="report-subview hidden space-y-4">
+          <h3 class="text-sm font-black text-stone-900 uppercase tracking-wider">Rekapitulasi Mingguan (Omzet, Pengeluaran & Laba Bersih)</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold tracking-wider border-b border-stone-100">
+                <tr>
+                  <th class="py-3 px-4">Rentang Minggu</th>
+                  <th class="py-3 px-4 text-right">Transaksi</th>
+                  <th class="py-3 px-4 text-right">Cup Terjual</th>
+                  <th class="py-3 px-4 text-right">Omzet</th>
+                  <th class="py-3 px-4 text-right text-rose-600">Pengeluaran</th>
+                  <th class="py-3 px-4 text-right text-emerald-600">Laba Bersih</th>
+                </tr>
+              </thead>
+              <tbody id="report-mingguan-body" class="divide-y divide-stone-100 font-mono"></tbody>
+            </table>
+          </div>
         </div>
-        <div id="rep-bulanan" class="rep-pane hidden space-y-3">
-          <h3 class="text-xs font-black uppercase text-stone-800">Dashboard Pengeluaran & Laba Bulanan</h3>
-          <div class="overflow-x-auto"><table class="w-full text-left text-xs font-mono"><thead class="bg-stone-50 text-[10px] text-stone-400 uppercase border-b"><tr><th class="p-3">Bulan</th><th class="p-3 text-right">Omzet</th><th class="p-3 text-right text-rose-600">Pengeluaran</th><th class="p-3 text-right text-emerald-600">Laba Bersih</th></tr></thead><tbody id="tbl-bulanan" class="divide-y"></tbody></table></div>
+
+        <!-- MONTHLY REPORT TABLE -->
+        <div id="report-view-bulanan" class="report-subview hidden space-y-4">
+          <h3 class="text-sm font-black text-stone-900 uppercase tracking-wider">Rekapitulasi Bulanan (Omzet, Pengeluaran & Laba Bersih)</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold tracking-wider border-b border-stone-100">
+                <tr>
+                  <th class="py-3 px-4">Bulan & Tahun</th>
+                  <th class="py-3 px-4 text-right">Transaksi</th>
+                  <th class="py-3 px-4 text-right">Cup Terjual</th>
+                  <th class="py-3 px-4 text-right">Omzet Bulanan</th>
+                  <th class="py-3 px-4 text-right text-rose-600">Pengeluaran Bulanan</th>
+                  <th class="py-3 px-4 text-right text-emerald-600">Laba Bersih Bulanan</th>
+                </tr>
+              </thead>
+              <tbody id="report-bulanan-body" class="divide-y divide-stone-100 font-mono"></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 6. RIWAYAT -->
+    <!-- ================= TAB 6: RIWAYAT TRANSAKSI ================= -->
     <section id="view-riwayat" class="view-tab hidden space-y-4">
       <div class="coffee-card rounded-3xl p-6 space-y-4">
-        <h2 class="text-sm font-black uppercase text-stone-900">Riwayat Transaksi</h2>
+        <div class="flex items-center justify-between border-b border-stone-100 pb-4">
+          <div>
+            <h2 class="text-sm font-black text-stone-900 uppercase tracking-wider flex items-center">
+              <i data-lucide="receipt" class="w-4.5 h-4.5 mr-2 text-orange-500"></i> Riwayat Transaksi Kasir & Historis
+            </h2>
+            <p class="text-xs text-stone-500">Catatan penjualan lengkap sejak awal berdirinya Tukaps.</p>
+          </div>
+          <button onclick="clearTransactionHistory()" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-600 font-bold text-xs hover:bg-rose-100 transition">Hapus Riwayat</button>
+        </div>
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs font-mono">
-            <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold border-b">
-              <tr><th class="py-3 px-4">Waktu</th><th class="py-3 px-4">Menu</th><th class="py-3 px-4 text-right">Total Bayar</th></tr>
+          <table class="w-full text-left text-xs">
+            <thead class="bg-stone-50 text-stone-400 uppercase text-[10px] font-bold tracking-wider border-b border-stone-100">
+              <tr>
+                <th class="py-3.5 px-4">ID Transaksi & Waktu</th>
+                <th class="py-3.5 px-4">Customer</th>
+                <th class="py-3.5 px-4">Rincian Item</th>
+                <th class="py-3.5 px-4 text-right">Total Bayar</th>
+                <th class="py-3.5 px-4">Pembayaran</th>
+                <th class="py-3.5 px-4 text-center">Aksi Struk</th>
+              </tr>
             </thead>
-            <tbody id="history-table-body" class="divide-y"></tbody>
+            <tbody id="history-table-body" class="divide-y divide-stone-100 font-mono"></tbody>
           </table>
         </div>
       </div>
@@ -171,246 +443,1038 @@
 
   </main>
 
+  <!-- MODAL OVERLAY -->
+  <div id="modal-overlay" class="fixed inset-0 z-50 bg-stone-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div id="modal-container" class="coffee-card w-full max-w-xl rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto bg-white"></div>
+  </div>
+
+  <!-- RECEIPT MODAL -->
+  <div id="receipt-modal-overlay" class="fixed inset-0 z-50 bg-stone-950/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="coffee-card w-full max-w-sm rounded-3xl p-6 shadow-2xl space-y-4 bg-white text-center">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <h3 class="text-sm font-black text-stone-900">Struk Thermal (80mm)</h3>
+        <button onclick="closeReceiptModal()" class="text-stone-400 hover:text-stone-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      
+      <div class="overflow-x-auto border border-stone-200 rounded-xl p-2 bg-stone-50">
+        <div id="printable-receipt" class="receipt-paper"></div>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <button onclick="printThermal80mm()" class="btn-coffee w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center space-x-2">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          <span>Cetak ke Printer Thermal 80mm</span>
+        </button>
+        <button onclick="shareReceiptWhatsApp()" class="w-full py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold flex items-center justify-center space-x-2 hover:bg-emerald-700 transition">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span>Kirim Struk JPG ke WhatsApp</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-auto text-center text-xs text-stone-400 py-6 font-medium border-t border-stone-200/60">
+    TUKAPS Coffee &copy; 2026 — One Cup Isn't Enough | Official POS & HPP Studio
+  </footer>
+
   <script>
-    let db = {
-      menu: [
-        { id: "M001", name: "Es Kopi Susu Gula Aren Bold", cat: "Kopi Susu", price: 18000, baseModal: 8131 },
-        { id: "M002", name: "Es Kopi Susu Gula Aren Creamy", cat: "Kopi Susu", price: 18000, baseModal: 7366 },
-        { id: "M003", name: "Es Kopi Susu Gula Aren Creamy 250ml", cat: "Kopi Susu", price: 28000, baseModal: 11949 },
-        { id: "M004", name: "Es Kopi Susu Gula Aren BOLD 250ml", cat: "Kopi Susu", price: 28000, baseModal: 12278 },
-        { id: "M005", name: "Es Kopi Susu Gula Aren BOLD 1 Liter", cat: "Kopi Susu", price: 90000, baseModal: 40000 },
-        { id: "M006", name: "Es Kopi Susu Gula Aren Creamy 1 Liter", cat: "Kopi Susu", price: 90000, baseModal: 47287 },
-        { id: "M007", name: "Americano Cup", cat: "Kopi Hitam", price: 15000, baseModal: 4386 },
-        { id: "M008", name: "Americano Lemon Cup", cat: "Kopi Hitam", price: 17000, baseModal: 5200 },
-        { id: "M009", name: "Americano 250ml", cat: "Kopi Hitam", price: 25000, baseModal: 6796 },
-        { id: "M010", name: "Americano 1 liter", cat: "Kopi Hitam", price: 70000, baseModal: 38089 },
-        { id: "M011", name: "Americano Lemon 250ml", cat: "Kopi Hitam", price: 28000, baseModal: 7500 },
-        { id: "M012", name: "Americano Lemon 1 liter", cat: "Kopi Hitam", price: 80000, baseModal: 35000 },
-        { id: "M013", name: "Latte", cat: "Kopi Susu", price: 30000, baseModal: 7689 },
-        { id: "M014", name: "Caramel latte", cat: "Kopi Susu", price: 23000, baseModal: 7568 },
-        { id: "M015", name: "Thai Tea 1 Liter", cat: "Tea", price: 60000, baseModal: 26529 },
-        { id: "M016", name: "Thai Tea 250ml", cat: "Tea", price: 25000, baseModal: 6587 },
-        { id: "M017", name: "Thai Tea Cup", cat: "Tea", price: 15000, baseModal: 4229 },
-        { id: "M018", name: "Rawrrr Milk", cat: "Lainnya", price: 16000, baseModal: 6258 },
-        { id: "M019", name: "Peach Punch Americano", cat: "Kopi Hitam", price: 20000, baseModal: 6590 },
-        { id: "M020", name: "Butterscotch Latte", cat: "Kopi Susu", price: 23000, baseModal: 9422 },
-        { id: "M021", name: "Salted Caramel Latte", cat: "Kopi Susu", price: 23000, baseModal: 10260 },
-        { id: "M022", name: "Latte 250ml", cat: "Kopi Susu", price: 30000, baseModal: 8576 },
-        { id: "M023", name: "Peach Punch Americano 350ml", cat: "Kopi Hitam", price: 45000, baseModal: 19150 },
-        { id: "M024", name: "Vanilla Latte", cat: "Kopi Susu", price: 23000, baseModal: 8500 },
-        { id: "M025", name: "Spanish Latte", cat: "Kopi Susu", price: 18000, baseModal: 7800 }
+    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete_v7';
+    let selectedPosCategory = "All";
+    let cart = [];
+    let paymentMethod = "Tunai";
+    let lastGeneratedReceipt = null;
+
+    // COMPLETE HISTORICAL TRANSACTIONS WITH EXPENSE (MODAL) AND NET PROFIT (LABA)
+    const HISTORICAL_TRANSACTIONS = [
+      // Juli 2026
+      { id: "TRX-J01", time: "07/07/2026 10:15", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 4, modal: 11040 }], subtotal: 112000, discount: 0, total: 112000, paymentMethod: "Tunai" },
+      { id: "TRX-J02", time: "07/07/2026 11:30", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 2, modal: 12278 }], subtotal: 56000, discount: 0, total: 56000, paymentMethod: "QRIS" },
+      { id: "TRX-J03", time: "07/07/2026 12:00", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 1, modal: 8131 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-J04", time: "07/07/2026 12:30", customer: "Customer Juli", items: [{ name: "Rawrrr Milk", price: 16000, qty: 1, modal: 6258 }], subtotal: 16000, discount: 0, total: 16000, paymentMethod: "Tunai" },
+      { id: "TRX-J05", time: "07/07/2026 13:00", customer: "Customer Juli", items: [{ name: "Caramel latte", price: 23000, qty: 1, modal: 7568 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Transfer" },
+      { id: "TRX-J06", time: "09/07/2026 10:00", customer: "Customer Juli", items: [{ name: "Americano 1 liter", price: 70000, qty: 1, modal: 38089 }], subtotal: 70000, discount: 0, total: 70000, paymentMethod: "Transfer" },
+      { id: "TRX-J07", time: "09/07/2026 11:15", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 1, modal: 11949 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "Tunai" },
+      { id: "TRX-J08", time: "09/07/2026 13:20", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 1, modal: 12278 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "QRIS" },
+      { id: "TRX-J09", time: "09/07/2026 15:40", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 1, modal: 7566 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-J10", time: "09/07/2026 17:10", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1, modal: 7366 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-J11", time: "10/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1, modal: 6587 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "QRIS" },
+      { id: "TRX-J12", time: "15/07/2026 11:00", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 5, modal: 11949 }], subtotal: 140000, discount: 0, total: 140000, paymentMethod: "Transfer" },
+      { id: "TRX-J13", time: "15/07/2026 12:15", customer: "Customer Juli", items: [{ name: "Thai Tea Cup", price: 15000, qty: 2, modal: 4229 }], subtotal: 30000, discount: 0, total: 30000, paymentMethod: "Tunai" },
+      { id: "TRX-J14", time: "15/07/2026 13:30", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 1, modal: 8131 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-J15", time: "15/07/2026 14:20", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1, modal: 7366 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "QRIS" },
+      { id: "TRX-J16", time: "15/07/2026 16:00", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 8590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-J17", time: "15/07/2026 17:30", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 18000, qty: 23, modal: 7366 }], subtotal: 414000, discount: 0, total: 414000, paymentMethod: "Transfer" },
+      { id: "TRX-J18", time: "17/07/2026 10:30", customer: "Customer Juli", items: [{ name: "Rawrrr Milk", price: 17000, qty: 1, modal: 6258 }], subtotal: 17000, discount: 0, total: 17000, paymentMethod: "Tunai" },
+      { id: "TRX-J19", time: "17/07/2026 11:45", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1, modal: 6587 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "QRIS" },
+      { id: "TRX-J20", time: "17/07/2026 13:10", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 1, modal: 8131 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-J21", time: "17/07/2026 15:00", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 1, modal: 12278 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "Transfer" },
+      { id: "TRX-J22", time: "21/07/2026 11:00", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 23000, qty: 1, modal: 9422 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Tunai" },
+      { id: "TRX-J23", time: "21/07/2026 14:20", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1, modal: 6587 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "QRIS" },
+      { id: "TRX-J24", time: "23/07/2026 10:15", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 24552, qty: 1, modal: 8255 }], subtotal: 24552, discount: 0, total: 24552, paymentMethod: "Tunai" },
+      { id: "TRX-J25", time: "23/07/2026 11:30", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 23000, qty: 1, modal: 9422 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Transfer" },
+      { id: "TRX-J26", time: "23/07/2026 12:45", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 1 Liter", price: 90000, qty: 1, modal: 47287 }], subtotal: 90000, discount: 0, total: 90000, paymentMethod: "Transfer" },
+      { id: "TRX-J27", time: "23/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 12256, qty: 1, modal: 8131 }], subtotal: 12256, discount: 0, total: 12256, paymentMethod: "Tunai" },
+      { id: "TRX-J28", time: "23/07/2026 15:15", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 12256, qty: 1, modal: 7566 }], subtotal: 12256, discount: 0, total: 12256, paymentMethod: "QRIS" },
+      { id: "TRX-J29", time: "23/07/2026 16:30", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 12256, qty: 1, modal: 6590 }], subtotal: 12256, discount: 0, total: 12256, paymentMethod: "Tunai" },
+      { id: "TRX-J30", time: "23/07/2026 17:40", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1, modal: 6587 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "Transfer" },
+      { id: "TRX-J31", time: "24/07/2026 10:00", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 1, modal: 12278 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "Tunai" },
+      { id: "TRX-J32", time: "24/07/2026 11:15", customer: "Customer Juli", items: [{ name: "Latte 250ml", price: 30000, qty: 1, modal: 8576 }], subtotal: 30000, discount: 0, total: 30000, paymentMethod: "QRIS" },
+      { id: "TRX-J33", time: "24/07/2026 12:30", customer: "Customer Juli", items: [{ name: "Latte", price: 20000, qty: 1, modal: 7689 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-J34", time: "24/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Americano Cup", price: 15000, qty: 1, modal: 4386 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-J35", time: "24/07/2026 15:20", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 1, modal: 8131 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "QRIS" },
+      { id: "TRX-J36", time: "24/07/2026 17:00", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Transfer" },
+      { id: "TRX-J37", time: "25/07/2026 13:00", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6950 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-J38", time: "26/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 26554, qty: 1, modal: 9422 }], subtotal: 26554, discount: 0, total: 26554, paymentMethod: "QRIS" },
+      { id: "TRX-J39", time: "26/07/2026 16:15", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 35534, qty: 2, modal: 7366 }], subtotal: 71068, discount: 0, total: 71068, paymentMethod: "Transfer" },
+      { id: "TRX-J40", time: "27/07/2026 10:30", customer: "Customer Juli", items: [{ name: "Americano 250ml", price: 25000, qty: 1, modal: 6796 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "Tunai" },
+      { id: "TRX-J41", time: "27/07/2026 12:00", customer: "Customer Juli", items: [{ name: "Thai Tea 250ml", price: 25000, qty: 1, modal: 6587 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "Tunai" },
+      { id: "TRX-J42", time: "28/07/2026 10:15", customer: "Customer Juli", items: [{ name: "Americano 250ml", price: 25000, qty: 1, modal: 6796 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "QRIS" },
+      { id: "TRX-J43", time: "28/07/2026 11:30", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren Creamy 250ml", price: 28000, qty: 1, modal: 11949 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "Tunai" },
+      { id: "TRX-J44", time: "28/07/2026 13:45", customer: "Customer Juli", items: [{ name: "Salted Caramel Latte", price: 18400, qty: 1, modal: 10260 }], subtotal: 18400, discount: 0, total: 18400, paymentMethod: "Transfer" },
+      { id: "TRX-J45", time: "28/07/2026 15:30", customer: "Customer Juli", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 1, modal: 12278 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "Tunai" },
+      { id: "TRX-J46", time: "30/07/2026 11:00", customer: "Customer Juli", items: [{ name: "Salted Caramel Latte", price: 19491, qty: 1, modal: 10260 }], subtotal: 19491, discount: 0, total: 19491, paymentMethod: "Tunai" },
+      { id: "TRX-J47", time: "30/07/2026 14:00", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 19491, qty: 1, modal: 9422 }], subtotal: 19491, discount: 0, total: 19491, paymentMethod: "QRIS" },
+      { id: "TRX-J48", time: "31/07/2026 10:30", customer: "Customer Juli", items: [{ name: "Salted Caramel Latte", price: 23000, qty: 1, modal: 10260 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Tunai" },
+      { id: "TRX-J49", time: "31/07/2026 13:15", customer: "Customer Juli", items: [{ name: "Butterscotch Latte", price: 23000, qty: 1, modal: 9422 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Transfer" },
+      { id: "TRX-J50", time: "31/07/2026 16:00", customer: "Customer Juli", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+
+      // Agustus 2026
+      { id: "TRX-A01", time: "01/08/2026 10:00", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 23000, qty: 1, modal: 7568 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Tunai" },
+      { id: "TRX-A02", time: "01/08/2026 11:30", customer: "Customer Ags", items: [{ name: "Thai Tea 1 Liter", price: 60000, qty: 1, modal: 26529 }], subtotal: 60000, discount: 0, total: 60000, paymentMethod: "Transfer" },
+      { id: "TRX-A03", time: "01/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Chocolate 250ml", price: 28000, qty: 1, modal: 17800 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "QRIS" },
+      { id: "TRX-A04", time: "02/08/2026 10:15", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 17000, qty: 1, modal: 6258 }], subtotal: 17000, discount: 0, total: 17000, paymentMethod: "Tunai" },
+      { id: "TRX-A05", time: "02/08/2026 13:20", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "QRIS" },
+      { id: "TRX-A06", time: "02/08/2026 16:00", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 34570, qty: 1, modal: 6590 }], subtotal: 34570, discount: 0, total: 34570, paymentMethod: "Transfer" },
+      { id: "TRX-A07", time: "03/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Americano Peach 350ml", price: 45000, qty: 1, modal: 19150 }], subtotal: 45000, discount: 0, total: 45000, paymentMethod: "Tunai" },
+      { id: "TRX-A08", time: "03/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2, modal: 7366 }], subtotal: 36000, discount: 0, total: 36000, paymentMethod: "QRIS" },
+      { id: "TRX-A09", time: "04/08/2026 12:00", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A10", time: "05/08/2026 13:30", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20727, qty: 2, modal: 6590 }], subtotal: 41454, discount: 0, total: 41454, paymentMethod: "Transfer" },
+      { id: "TRX-A11", time: "06/08/2026 15:00", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 25000, qty: 1, modal: 7568 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "Tunai" },
+      { id: "TRX-A12", time: "07/08/2026 11:15", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "QRIS" },
+      { id: "TRX-A13", time: "07/08/2026 14:30", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 23000, qty: 1, modal: 7568 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Tunai" },
+      { id: "TRX-A14", time: "08/08/2026 10:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18943, qty: 1, modal: 8131 }], subtotal: 18943, discount: 0, total: 18943, paymentMethod: "Tunai" },
+      { id: "TRX-A15", time: "08/08/2026 10:45", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1, modal: 7366 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "QRIS" },
+      { id: "TRX-A16", time: "08/08/2026 11:30", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1, modal: 4229 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-A17", time: "08/08/2026 12:15", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 16000, qty: 1, modal: 6258 }], subtotal: 16000, discount: 0, total: 16000, paymentMethod: "Transfer" },
+      { id: "TRX-A18", time: "08/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Americano Cup", price: 15000, qty: 1, modal: 4386 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-A19", time: "08/08/2026 13:45", customer: "Customer Ags", items: [{ name: "Latte", price: 20000, qty: 1, modal: 7689 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "QRIS" },
+      { id: "TRX-A20", time: "08/08/2026 14:30", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 16000, qty: 1, modal: 6258 }], subtotal: 16000, discount: 0, total: 16000, paymentMethod: "Tunai" },
+      { id: "TRX-A21", time: "08/08/2026 15:15", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 28000, qty: 2, modal: 12278 }], subtotal: 56000, discount: 0, total: 56000, paymentMethod: "Transfer" },
+      { id: "TRX-A22", time: "08/08/2026 16:00", customer: "Customer Ags", items: [{ name: "Chocolate 250ml", price: 28000, qty: 5, modal: 17800 }], subtotal: 140000, discount: 0, total: 140000, paymentMethod: "QRIS" },
+      { id: "TRX-A23", time: "08/08/2026 16:45", customer: "Customer Ags", items: [{ name: "Americano Lemonade", price: 20000, qty: 1, modal: 5230 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A24", time: "08/08/2026 17:30", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Transfer" },
+      { id: "TRX-A25", time: "08/08/2026 18:00", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 17000, qty: 1, modal: 6258 }], subtotal: 17000, discount: 0, total: 17000, paymentMethod: "Tunai" },
+      { id: "TRX-A26", time: "08/08/2026 18:30", customer: "Customer Ags", items: [{ name: "Jasmine Lemon Tea", price: 15000, qty: 1, modal: 6000 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "QRIS" },
+      { id: "TRX-A27", time: "08/08/2026 19:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1, modal: 7366 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-A28", time: "08/08/2026 19:30", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1, modal: 4229 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Transfer" },
+      { id: "TRX-A29", time: "08/08/2026 20:00", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1, modal: 4229 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-A30", time: "09/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1, modal: 7366 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-A31", time: "10/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy 1 Liter", price: 90000, qty: 1, modal: 47287 }], subtotal: 90000, discount: 0, total: 90000, paymentMethod: "Transfer" },
+      { id: "TRX-A32", time: "10/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Earl Grey Milk Tea 1 Liter", price: 110000, qty: 1, modal: 60000 }], subtotal: 110000, discount: 0, total: 110000, paymentMethod: "QRIS" },
+      { id: "TRX-A33", time: "11/08/2026 10:30", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 13180, qty: 1, modal: 4229 }], subtotal: 13180, discount: 0, total: 13180, paymentMethod: "Tunai" },
+      { id: "TRX-A34", time: "11/08/2026 12:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 15520, qty: 1, modal: 8131 }], subtotal: 15520, discount: 0, total: 15520, paymentMethod: "QRIS" },
+      { id: "TRX-A35", time: "13/08/2026 10:15", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A36", time: "13/08/2026 11:30", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1, modal: 4229 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-A37", time: "13/08/2026 12:45", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18840, qty: 1, modal: 8131 }], subtotal: 18840, discount: 0, total: 18840, paymentMethod: "Transfer" },
+      { id: "TRX-A38", time: "13/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1, modal: 4229 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Tunai" },
+      { id: "TRX-A39", time: "13/08/2026 15:15", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 23000, qty: 1, modal: 7568 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "QRIS" },
+      { id: "TRX-A40", time: "13/08/2026 16:30", customer: "Customer Ags", items: [{ name: "Caramel latte 250ml", price: 35000, qty: 1, modal: 11758 }], subtotal: 35000, discount: 0, total: 35000, paymentMethod: "Transfer" },
+      { id: "TRX-A41", time: "13/08/2026 17:45", customer: "Customer Ags", items: [{ name: "Salted Caramel Latte", price: 23000, qty: 1, modal: 10260 }], subtotal: 23000, discount: 0, total: 23000, paymentMethod: "Tunai" },
+      { id: "TRX-A42", time: "16/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 1, modal: 7366 }], subtotal: 18000, discount: 0, total: 18000, paymentMethod: "Tunai" },
+      { id: "TRX-A43", time: "17/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 4, modal: 7366 }], subtotal: 72000, discount: 0, total: 72000, paymentMethod: "Transfer" },
+      { id: "TRX-A44", time: "18/08/2026 10:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2, modal: 7366 }], subtotal: 36000, discount: 0, total: 36000, paymentMethod: "Tunai" },
+      { id: "TRX-A45", time: "18/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2, modal: 7366 }], subtotal: 36000, discount: 0, total: 36000, paymentMethod: "QRIS" },
+      { id: "TRX-A46", time: "18/08/2026 12:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2, modal: 7366 }], subtotal: 36000, discount: 0, total: 36000, paymentMethod: "Tunai" },
+      { id: "TRX-A47", time: "18/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 2, modal: 7366 }], subtotal: 36000, discount: 0, total: 36000, paymentMethod: "Transfer" },
+      { id: "TRX-A48", time: "18/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 11533, qty: 1, modal: 8131 }], subtotal: 11533, discount: 0, total: 11533, paymentMethod: "Tunai" },
+      { id: "TRX-A49", time: "18/08/2026 15:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 11333, qty: 2, modal: 8131 }], subtotal: 22666, discount: 0, total: 22666, paymentMethod: "QRIS" },
+      { id: "TRX-A50", time: "18/08/2026 16:30", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 18000, qty: 5, modal: 7366 }], subtotal: 90000, discount: 0, total: 90000, paymentMethod: "Transfer" },
+      { id: "TRX-A51", time: "19/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A52", time: "19/08/2026 12:30", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "QRIS" },
+      { id: "TRX-A53", time: "19/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 25000, qty: 1, modal: 7568 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "Tunai" },
+      { id: "TRX-A54", time: "19/08/2026 15:30", customer: "Customer Ags", items: [{ name: "Thai Tea Cup", price: 15000, qty: 1, modal: 4229 }], subtotal: 15000, discount: 0, total: 15000, paymentMethod: "Transfer" },
+      { id: "TRX-A55", time: "20/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A56", time: "23/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18000, qty: 6, modal: 8131 }], subtotal: 108000, discount: 0, total: 108000, paymentMethod: "Transfer" },
+      { id: "TRX-A57", time: "23/08/2026 13:30", customer: "Customer Ags", items: [{ name: "Salted Caramel Latte", price: 11544, qty: 1, modal: 10260 }], subtotal: 11544, discount: 0, total: 11544, paymentMethod: "Tunai" },
+      { id: "TRX-A58", time: "23/08/2026 15:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Creamy", price: 28000, qty: 1, modal: 7366 }], subtotal: 28000, discount: 0, total: 28000, paymentMethod: "QRIS" },
+      { id: "TRX-A59", time: "25/08/2026 10:30", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 20000, qty: 1, modal: 6590 }], subtotal: 20000, discount: 0, total: 20000, paymentMethod: "Tunai" },
+      { id: "TRX-A60", time: "25/08/2026 12:00", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 25000, qty: 1, modal: 7568 }], subtotal: 25000, discount: 0, total: 25000, paymentMethod: "QRIS" },
+      { id: "TRX-A61", time: "25/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 19720, qty: 1, modal: 12278 }], subtotal: 19720, discount: 0, total: 19720, paymentMethod: "Transfer" },
+      { id: "TRX-A62", time: "27/08/2026 10:00", customer: "Customer Ags", items: [{ name: "Americano Peach", price: 19720, qty: 1, modal: 6590 }], subtotal: 19720, discount: 0, total: 19720, paymentMethod: "Tunai" },
+      { id: "TRX-A63", time: "27/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 15520, qty: 1, modal: 8131 }], subtotal: 15520, discount: 0, total: 15520, paymentMethod: "Tunai" },
+      { id: "TRX-A64", time: "27/08/2026 12:00", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 14790, qty: 1, modal: 6258 }], subtotal: 14790, discount: 0, total: 14790, paymentMethod: "QRIS" },
+      { id: "TRX-A65", time: "27/08/2026 13:00", customer: "Customer Ags", items: [{ name: "Creamy oat milk", price: 14790, qty: 1, modal: 8166 }], subtotal: 14790, discount: 0, total: 14790, paymentMethod: "Transfer" },
+      { id: "TRX-A66", time: "27/08/2026 14:00", customer: "Customer Ags", items: [{ name: "Butterscotch Latte", price: 14790, qty: 1, modal: 9422 }], subtotal: 14790, discount: 0, total: 14790, paymentMethod: "Tunai" },
+      { id: "TRX-A67", time: "27/08/2026 15:00", customer: "Customer Ags", items: [{ name: "Rawrrr Milk", price: 14790, qty: 1, modal: 6258 }], subtotal: 14790, discount: 0, total: 14790, paymentMethod: "QRIS" },
+      { id: "TRX-A68", time: "27/08/2026 16:15", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren BOLD 250ml", price: 24000, qty: 2, modal: 12278 }], subtotal: 48000, discount: 0, total: 48000, paymentMethod: "Transfer" },
+      { id: "TRX-A69", time: "27/08/2026 17:30", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 18465, qty: 1, modal: 8131 }], subtotal: 18465, discount: 0, total: 18465, paymentMethod: "Tunai" },
+      { id: "TRX-A70", time: "28/08/2026 11:00", customer: "Customer Ags", items: [{ name: "Es Kopi Susu Gula Aren Bold", price: 11533, qty: 2, modal: 8131 }], subtotal: 23066, discount: 0, total: 23066, paymentMethod: "Tunai" },
+      { id: "TRX-A71", time: "28/08/2026 13:30", customer: "Customer Ags", items: [{ name: "Caramel latte", price: 15555, qty: 1, modal: 7568 }], subtotal: 15555, discount: 0, total: 15555, paymentMethod: "QRIS" }
+    ];
+
+    const SEED_DATA = {
+      "bahan": [
+        { "id": "BHN01", "name": "Espresso Cair", "cat": "Kopi", "unit": "gr", "stock": 5000, "packQty": 1200, "buyPrice": 120000, "supplier": "Mahogany Roastery" },
+        { "id": "BHN02", "name": "Susu Fresh Milk", "cat": "Dairy", "unit": "gr", "stock": 10000, "packQty": 1000, "buyPrice": 19000, "supplier": "knb roastery" },
+        { "id": "BHN03", "name": "Creamer", "cat": "Dairy", "unit": "gr", "stock": 5000, "packQty": 1000, "buyPrice": 31000, "supplier": "Distributor Dairy Prima" },
+        { "id": "BHN04", "name": "Gula Aren", "cat": "Pemanis", "unit": "gr", "stock": 5000, "packQty": 1000, "buyPrice": 47000, "supplier": "Toko Gula Aren Asli" },
+        { "id": "BHN05", "name": "Air Mineral", "cat": "Air", "unit": "ml", "stock": 50000, "packQty": 0, "buyPrice": 0, "supplier": "Depot Air Isi Ulang" },
+        { "id": "BHN06", "name": "Bubuk Thai Tea", "cat": "Bubuk", "unit": "gr", "stock": 2000, "packQty": 400, "buyPrice": 50000, "supplier": "Supplier Bubuk Minuman" },
+        { "id": "BHN07", "name": "Es Batu", "cat": "Es", "unit": "gr", "stock": 20000, "packQty": 1000, "buyPrice": 0, "supplier": "Pabrik Es Kristal" },
+        { "id": "BHN08", "name": "Peach", "cat": "Air", "unit": "ml", "stock": 10000, "packQty": 10000, "buyPrice": 80000, "supplier": "Indomaret" },
+        { "id": "BHN09", "name": "Sirup Caramel", "cat": "Sirup", "unit": "ml", "stock": 1000, "packQty": 100, "buyPrice": 14000, "supplier": "Toko Sirup Import" },
+        { "id": "BHN10", "name": "SKM", "cat": "Pemanis", "unit": "gr", "stock": 1825, "packQty": 365, "buyPrice": 12500, "supplier": "Indomaret" },
+        { "id": "BHN11", "name": "Susu Evaporasi", "cat": "Dairy", "unit": "gr", "stock": 2500, "packQty": 500, "buyPrice": 16500, "supplier": "Indomaret" },
+        { "id": "BHN12", "name": "Espresso arabika cair", "cat": "Kopi", "unit": "ml", "stock": 5000, "packQty": 1000, "buyPrice": 150000, "supplier": "Mahogany Roastery" },
+        { "id": "BHN13", "name": "Peach Soda", "cat": "Air", "unit": "ml", "stock": 2400, "packQty": 480, "buyPrice": 8900, "supplier": "Indomaret" },
+        { "id": "BHN14", "name": "Peach Syrup", "cat": "Air", "unit": "ml", "stock": 1000, "packQty": 100, "buyPrice": 15000, "supplier": "tokopedia" },
+        { "id": "BHN15", "name": "Vanilla Syrup", "cat": "Air", "unit": "ml", "stock": 2300, "packQty": 460, "buyPrice": 25000, "supplier": "linda" },
+        { "id": "BHN16", "name": "Butterscotch Syrup", "cat": "Air", "unit": "ml", "stock": 3250, "packQty": 650, "buyPrice": 85000, "supplier": "linda" }
       ],
-      bahan: [
-        { id: "b1", name: "Espresso Cair", unit: "gr", stock: 5000, price: 120000 },
-        { id: "b2", name: "Susu Fresh Milk", unit: "gr", stock: 10000, price: 19000 },
-        { id: "b3", name: "Creamer", unit: "gr", stock: 5000, price: 31000 },
-        { id: "b4", name: "Gula Aren", unit: "gr", stock: 5000, price: 47000 },
-        { id: "b5", name: "Bubuk Thai Tea", unit: "gr", stock: 2000, price: 50000 }
+      "kemasan": [
+        { "id": "KMS01", "name": "Cup 12oz", "cat": "Cup", "unit": "pcs", "stock": 500, "packQty": 100, "buyPrice": 85980, "supplier": "Distributor Packaging Jaya" },
+        { "id": "KMS03", "name": "Sticker", "cat": "Label", "unit": "pcs", "stock": 500, "packQty": 38, "buyPrice": 20000, "supplier": "shakira" },
+        { "id": "KMS04", "name": "Sedotan", "cat": "Sedotan", "unit": "pcs", "stock": 500, "packQty": 100, "buyPrice": 9000, "supplier": "Toko Alat Minum" },
+        { "id": "KMS05", "name": "Seal Cup", "cat": "Seal", "unit": "pcs", "stock": 500, "packQty": 100, "buyPrice": 20000, "supplier": "Distributor Packaging Jaya" },
+        { "id": "KMS06", "name": "Sticker Botol", "cat": "Label", "unit": "pcs", "stock": 200, "packQty": 20, "buyPrice": 20000, "supplier": "Percetakan Sleeve Kita" },
+        { "id": "KMS07", "name": "Botol 1 liter", "cat": "Cup", "unit": "pcs", "stock": 100, "packQty": 1, "buyPrice": 5000, "supplier": "Grosir Tisu Bersih" },
+        { "id": "KMS08", "name": "Paper Bag", "cat": "Bag", "unit": "pcs", "stock": 100, "packQty": 50, "buyPrice": 50000, "supplier": "Percetakan Paper Bag" }
       ],
-      kemasan: [
-        { id: "k1", name: "Cup 12oz", unit: "pcs", stock: 500, price: 85980 },
-        { id: "k2", name: "Sticker", unit: "pcs", stock: 500, price: 20000 },
-        { id: "k3", name: "Botol 1 liter", unit: "pcs", stock: 100, price: 5000 }
+      "menu": [
+        { "id": "M001", "name": "Es Kopi Susu Gula Aren Bold", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 18000, "recipe": { "BHN01": 35, "BHN02": 100, "BHN03": 25, "BHN04": 10 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M002", "name": "Es Kopi Susu Gula Aren Creamy", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 18000, "recipe": { "BHN01": 25, "BHN02": 100, "BHN03": 25, "BHN04": 15 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M003", "name": "Es Kopi Susu Gula Aren Creamy 250ml", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 28000, "recipe": { "BHN01": 40, "BHN02": 155, "BHN03": 35, "BHN04": 25 }, "pkg": { "KMS03": 1, "KMS06": 1 } },
+        { "id": "M004", "name": "Es Kopi Susu Gula Aren BOLD 250ml", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 28000, "recipe": { "BHN01": 53, "BHN02": 152, "BHN03": 25, "BHN04": 20 }, "pkg": { "KMS03": 1, "KMS06": 1 } },
+        { "id": "M005", "name": "Es Kopi Susu Gula Aren BOLD 1 Liter", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 90000, "recipe": { "BHN01": 210, "BHN02": 605, "BHN03": 110, "BHN04": 90 }, "pkg": { "KMS03": 1, "KMS06": 1, "KMS07": 1 } },
+        { "id": "M006", "name": "Es Kopi Susu Gula Aren Creamy 1 Liter", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 90000, "recipe": { "BHN01": 180, "BHN02": 605, "BHN03": 155, "BHN04": 90 }, "pkg": { "KMS03": 1, "KMS06": 1, "KMS07": 1 } },
+        { "id": "M007", "name": "Americano Cup", "cat": "Kopi Hitam", "overhead": 0, "sellingPrice": 15000, "recipe": { "BHN01": 36, "BHN05": 80 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M008", "name": "Americano Lemon Cup", "cat": "Kopi Hitam", "overhead": 0, "sellingPrice": 17000, "recipe": { "BHN01": 36, "BHN04": 5, "BHN05": 80 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M009", "name": "Americano 250ml", "cat": "Kopi Hitam", "overhead": 0, "sellingPrice": 25000, "recipe": { "BHN01": 78, "BHN04": 10, "BHN05": 170, "BHN07": 150 }, "pkg": { "KMS03": 1 } },
+        { "id": "M010", "name": "Americano 1 liter", "cat": "Kopi Hitam", "overhead": 0, "sellingPrice": 70000, "recipe": { "BHN01": 310, "BHN04": 20, "BHN05": 690, "BHN07": 250 }, "pkg": { "KMS03": 1, "KMS07": 1 } },
+        { "id": "M011", "name": "Americano Lemon 250ml", "cat": "Kopi Hitam", "overhead": 0, "sellingPrice": 28000, "recipe": { "BHN01": 70, "BHN04": 10, "BHN05": 155, "BHN07": 150 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M012", "name": "Americano Lemon 1 liter", "cat": "Kopi Hitam", "overhead": 0, "sellingPrice": 80000, "recipe": { "BHN01": 285, "BHN04": 20, "BHN05": 635, "BHN07": 150 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M013", "name": "Latte", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 30000, "recipe": { "BHN01": 40, "BHN02": 125, "BHN07": 150 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M014", "name": "Caramel latte", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 23000, "recipe": { "BHN01": 30, "BHN02": 100, "BHN03": 18, "BHN09": 15 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M015", "name": "Thai Tea 1 Liter", "cat": "Tea", "overhead": 0, "sellingPrice": 60000, "recipe": { "BHN03": 30, "BHN06": 50, "BHN10": 170, "BHN11": 200 }, "pkg": { "KMS03": 1, "KMS07": 1 } },
+        { "id": "M016", "name": "Thai Tea 250ml", "cat": "Tea", "overhead": 0, "sellingPrice": 25000, "recipe": { "BHN03": 7.5, "BHN06": 12.5, "BHN10": 42.5, "BHN11": 50 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M017", "name": "Thai Tea Cup", "cat": "Tea", "overhead": 0, "sellingPrice": 15000, "recipe": { "BHN03": 4.5, "BHN06": 9, "BHN10": 28, "BHN11": 33 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M018", "name": "Rawrrr Milk", "cat": "Lainnya", "overhead": 0, "sellingPrice": 16000, "recipe": { "BHN02": 115, "BHN03": 30, "BHN04": 15 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M019", "name": "Peach Punch Americano Plzzz", "cat": "Kopi Hitam", "overhead": 0, "sellingPrice": 20000, "recipe": { "BHN12": 36, "BHN14": 5, "BHN13": 100 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M020", "name": "Butterscotch Latte", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 23000, "recipe": { "BHN01": 30, "BHN02": 100, "BHN03": 18, "BHN16": 15 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M021", "name": "Salted Caramel Latte", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 23000, "recipe": { "BHN01": 30, "BHN02": 100, "BHN03": 18, "BHN09": 15 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M022", "name": "Latte 250ml", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 30000, "recipe": { "BHN01": 40, "BHN02": 200 }, "pkg": { "KMS03": 1 } },
+        { "id": "M023", "name": "Peach Punch Americano 350ml", "cat": "Kopi Hitam", "overhead": 0, "sellingPrice": 45000, "recipe": { "BHN12": 86, "BHN14": 12, "BHN13": 240 }, "pkg": {} },
+        { "id": "M024", "name": "Vanilla Latte", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 23000, "recipe": { "BHN01": 30, "BHN02": 100, "BHN03": 18, "BHN15": 15 }, "pkg": { "KMS01": 1, "KMS03": 1 } },
+        { "id": "M025", "name": "Spanish Latte", "cat": "Kopi Susu", "overhead": 0, "sellingPrice": 18000, "recipe": { "BHN01": 30, "BHN02": 100, "BHN03": 18, "BHN10": 10 }, "pkg": { "KMS01": 1, "KMS03": 1 } }
       ],
-      cart: [],
-      history: [
-        { time: "28/08/2026 10:00", date: "28/08/2026", month: "08/2026", name: "Es Kopi Susu Gula Aren Bold", price: 18000, modal: 8131, qty: 3 }
-      ]
+      "history": HISTORICAL_TRANSACTIONS
     };
 
-    let inflationMultiplier = 1.0;
+    let store = loadStore();
 
-    function fmt(v) { return 'Rp ' + Math.round(v).toLocaleString('id-ID'); }
-
-    function switchTab(t) {
-      document.querySelectorAll('.view-tab').forEach(e => e.classList.add('hidden'));
-      document.getElementById(`view-${t}`).classList.remove('hidden');
-      document.querySelectorAll('.tab-btn').forEach(b => {
-        if(!b.classList.contains('bg-amber-100')) b.classList.remove('active');
-      });
-      const btn = document.getElementById(`nav-${t}`);
-      if(btn && !btn.classList.contains('bg-amber-100')) btn.classList.add('active');
-
-      if(t === 'laporan') renderReports();
-      if(t === 'dashboard') renderDashboard();
-      if(t === 'bahan') renderBahan();
-      if(t === 'kemasan') renderKemasan();
-      if(t === 'riwayat') renderHistory();
+    function loadStore() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.menu && parsed.menu.length > 0 && parsed.history) {
+            return parsed;
+          }
+        }
+      } catch(e) {}
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED_DATA));
+      return SEED_DATA;
     }
 
-    function switchRep(r) {
-      ['harian', 'mingguan', 'bulanan'].forEach(x => {
-        document.getElementById(`rep-${x}`).classList.add('hidden');
-        document.getElementById(`rep-btn-${x}`).className = "px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600";
-      });
-      document.getElementById(`rep-${r}`).classList.remove('hidden');
-      document.getElementById(`rep-btn-${r}`).className = "px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white shadow-sm";
+    function saveStore(data) {
+      store = data || store;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      } catch(e) {}
     }
 
-    function getModal(m) { return Math.round(m.baseModal * inflationMultiplier); }
-
-    function renderPos() {
-      document.getElementById('pos-grid').innerHTML = db.menu.map(m => `
-        <div onclick="addToCart('${m.id}')" class="coffee-card p-3 rounded-2xl cursor-pointer hover:border-orange-500 transition group flex flex-col justify-between">
-          <div>
-            <span class="text-[9px] px-2 py-0.5 rounded bg-stone-100 text-stone-600 font-bold">${m.cat}</span>
-            <div class="font-bold text-xs text-stone-900 group-hover:text-orange-600 mt-1">${m.name}</div>
-          </div>
-          <div class="text-orange-600 font-bold text-xs mt-2 font-mono">${fmt(m.price)}</div>
-        </div>
-      `).join('');
-    }
-
-    function addToCart(id) {
-      let m = db.menu.find(x => x.id === id);
-      let currentModal = getModal(m);
-      let c = db.cart.find(x => x.id === id);
-      if(c) c.qty++; else db.cart.push({ ...m, modal: currentModal, qty: 1 });
-      renderCart();
-    }
-
-    function renderCart() {
-      document.getElementById('cart-list').innerHTML = db.cart.map(c => `
-        <div class="py-2.5 flex justify-between items-center">
-          <div><div class="font-bold text-stone-900">${c.name}</div><div class="text-stone-400 text-[10px]">Qty: ${c.qty}</div></div>
-          <div class="font-bold">${fmt(c.price * c.qty)}</div>
-        </div>
-      `).join('');
-      let sub = db.cart.reduce((a,c) => a + (c.price * c.qty), 0);
-      let exp = db.cart.reduce((a,c) => a + (c.modal * c.qty), 0);
-      document.getElementById('cart-sub').innerText = fmt(sub);
-      document.getElementById('cart-exp').innerText = fmt(exp);
-      document.getElementById('cart-tot').innerText = fmt(sub);
-    }
-
-    function checkout() {
-      if(db.cart.length === 0) return alert('Keranjang masih kosong!');
-      let now = "29/08/2026 10:25";
-      db.cart.forEach(c => {
-        db.history.unshift({ time: now, date: "29/08/2026", month: "08/2026", name: c.name, price: c.price, modal: c.modal, qty: c.qty });
-      });
-      db.cart = [];
-      renderCart();
-      alert('Transaksi berhasil & tercatat ke pengeluaran harian/bulanan!');
-      switchTab('laporan');
-    }
-
-    function renderDashboard() {
-      document.getElementById('dashboard-table-body').innerHTML = db.menu.map(m => {
-        let modal = getModal(m);
-        let laba = m.price - modal;
-        return `
-          <tr>
-            <td class="py-3 px-4 font-bold">${m.name}</td>
-            <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-stone-100 text-stone-600">${m.cat}</span></td>
-            <td class="py-3 px-4 text-right text-rose-600">${fmt(modal)}</td>
-            <td class="py-3 px-4 text-right">${fmt(m.price)}</td>
-            <td class="py-3 px-4 text-right font-bold text-emerald-600">${fmt(laba)}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function renderBahan() {
-      document.getElementById('bahan-table-body').innerHTML = db.bahan.map((b, idx) => `
-        <tr>
-          <td class="py-3 px-4 font-bold">${b.name}</td>
-          <td class="py-3 px-4">${b.unit}</td>
-          <td class="py-3 px-4 text-right">${b.stock.toLocaleString('id-ID')}</td>
-          <td class="py-3 px-4 text-right">
-            <input type="number" id="bahan-price-${idx}" value="${b.price}" class="coffee-input px-2 py-1 rounded w-32 text-right font-mono text-xs">
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function renderKemasan() {
-      document.getElementById('kemasan-table-body').innerHTML = db.kemasan.map((k, idx) => `
-        <tr>
-          <td class="py-3 px-4 font-bold">${k.name}</td>
-          <td class="py-3 px-4">${k.unit}</td>
-          <td class="py-3 px-4 text-right">${k.stock.toLocaleString('id-ID')}</td>
-          <td class="py-3 px-4 text-right">
-            <input type="number" id="kemasan-price-${idx}" value="${k.price}" class="coffee-input px-2 py-1 rounded w-32 text-right font-mono text-xs">
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function saveChanges() {
-      let oldTotalBahan = db.bahan.reduce((a,b)=>a+b.price, 0);
-      db.bahan.forEach((b, idx) => {
-        let val = Number(document.getElementById(`bahan-price-${idx}`).value);
-        if(val >= 0) b.price = val;
-      });
-      let newTotalBahan = db.bahan.reduce((a,b)=>a+b.price, 0);
-      
-      if(oldTotalBahan > 0) {
-        inflationMultiplier = newTotalBahan / oldTotalBahan;
+    function resetToDefaultData() {
+      if (confirm('Reset seluruh data master menu, bahan, kemasan, dan laporan historis Tukaps?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        store = JSON.parse(JSON.stringify(SEED_DATA));
+        saveStore(store);
+        cart = [];
+        initApp();
+        alert('Data dan laporan historis berhasil di-reset ke data asli!');
       }
-
-      alert('Harga berhasil disimpan! HPP seluruh menu dan laporan pengeluaran otomatis ter-update.');
-      switchTab('dashboard');
     }
 
-    function renderHistory() {
-      document.getElementById('history-table-body').innerHTML = db.history.map(h => `
-        <tr><td class="py-3 px-4 text-stone-500">${h.time}</td><td class="py-3 px-4 font-bold">${h.name} (x${h.qty})</td><td class="py-3 px-4 text-right font-bold text-orange-600">${fmt(h.price * h.qty)}</td></tr>
-      `).join('');
+    function fmtRp(val) {
+      return 'Rp ' + Math.round(val || 0).toLocaleString('id-ID');
+    }
+
+    function getBahanMap() {
+      const map = {};
+      if (store.bahan) store.bahan.forEach(b => { map[b.id] = b.packQty > 0 ? b.buyPrice / b.packQty : 0; });
+      return map;
+    }
+
+    function getKemasanMap() {
+      const map = {};
+      if (store.kemasan) store.kemasan.forEach(k => { map[k.id] = k.packQty > 0 ? k.buyPrice / k.packQty : 0; });
+      return map;
+    }
+
+    function getCalculatedMenus() {
+      const bMap = getBahanMap();
+      const kMap = getKemasanMap();
+      if (!store.menu) return [];
+
+      return store.menu.map(m => {
+        let bahanCost = 0;
+        if (m.recipe) {
+          Object.entries(m.recipe).forEach(([bId, qty]) => { bahanCost += (bMap[bId] || 0) * Number(qty); });
+        }
+        let kemasanCost = 0;
+        if (m.pkg) {
+          Object.entries(m.pkg).forEach(([kId, qty]) => { kemasanCost += (kMap[kId] || 0) * Number(qty); });
+        }
+        const overhead = Number(m.overhead || 0);
+        const totalModal = bahanCost + kemasanCost + overhead;
+        const laba = Number(m.sellingPrice || 0) - totalModal;
+        const marginPct = m.sellingPrice > 0 ? (laba / m.sellingPrice) * 100 : 0;
+
+        return {
+          ...m,
+          bahanCost: Math.round(bahanCost),
+          kemasanCost: Math.round(kemasanCost),
+          totalModal: Math.round(totalModal),
+          laba: Math.round(laba),
+          marginPct: Math.round(marginPct * 10) / 10
+        };
+      });
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.view-tab').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (!btn.classList.contains('bg-amber-100')) {
+          btn.classList.remove('active');
+        }
+      });
+
+      const target = document.getElementById(`view-${tabName}`);
+      if (target) target.classList.remove('hidden');
+
+      const btn1 = document.getElementById(`nav-${tabName}`);
+      const btn2 = document.getElementById(`m-nav-${tabName}`);
+      if (btn1 && !btn1.classList.contains('bg-amber-100')) btn1.classList.add('active');
+      if (btn2 && !btn2.classList.contains('bg-amber-100')) btn2.classList.add('active');
+
+      if (tabName === 'pos') renderPosCatalog();
+      if (tabName === 'dashboard') renderDashboard();
+      if (tabName === 'bahan' || tabName === 'kemasan') renderMasterTables();
+      if (tabName === 'laporan') renderReports();
+      if (tabName === 'riwayat') renderHistoryTable();
+    }
+
+    function switchReportSubTab(sub) {
+      ['harian', 'mingguan', 'bulanan'].forEach(s => {
+        const el = document.getElementById(`report-view-${s}`);
+        const btn = document.getElementById(`subtab-btn-${s}`);
+        if (el) el.classList.add('hidden');
+        if (btn) {
+          btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-stone-100 text-stone-600 hover:bg-stone-200 transition";
+        }
+      });
+      const activeEl = document.getElementById(`report-view-${sub}`);
+      const activeBtn = document.getElementById(`subtab-btn-${sub}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+      if (activeBtn) activeBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-orange-500 text-white transition shadow-sm";
     }
 
     function renderReports() {
-      let totOmzet = 0, totExp = 0, harianMap = {}, bulanMap = {};
+      const history = store.history || [];
+      let totalOmzet = 0;
+      let totalExpense = 0;
+      let totalProfit = 0;
+      let totalQty = 0;
 
-      db.history.forEach(h => {
-        let o = h.price * h.qty;
-        let e = h.modal * h.qty;
-        totOmzet += o; totExp += e;
+      const dailyMap = {};
+      const monthlyMap = {};
 
-        if(!harianMap[h.date]) harianMap[h.date] = { qty: 0, o: 0, e: 0 };
-        harianMap[h.date].qty += h.qty;
-        harianMap[h.date].o += o; 
-        harianMap[h.date].e += e;
+      history.forEach(tx => {
+        const omzet = tx.total;
+        let expense = 0;
+        let qtyTx = 0;
+        if (tx.items) {
+          tx.items.forEach(i => {
+            qtyTx += i.qty;
+            expense += (i.modal || 0) * i.qty;
+          });
+        }
+        const profit = omzet - expense;
 
-        if(!bulanMap[h.month]) bulanMap[h.month] = { o: 0, e: 0 };
-        bulanMap[h.month].o += o; 
-        bulanMap[h.month].e += e;
+        totalOmzet += omzet;
+        totalExpense += expense;
+        totalProfit += profit;
+        totalQty += qtyTx;
+
+        const txDateStr = tx.time.split(' ')[0]; // DD/MM/YYYY
+
+        // Daily
+        if (!dailyMap[txDateStr]) {
+          dailyMap[txDateStr] = { date: txDateStr, qty: 0, omzet: 0, expense: 0, profit: 0 };
+        }
+        dailyMap[txDateStr].qty += qtyTx;
+        dailyMap[txDateStr].omzet += omzet;
+        dailyMap[txDateStr].expense += expense;
+        dailyMap[txDateStr].profit += profit;
+
+        // Monthly (MM/YYYY)
+        const parts = txDateStr.split('/');
+        const monthYear = parts.length === 3 ? `${parts[1]}/${parts[2]}` : '07/2026';
+        if (!monthlyMap[monthYear]) {
+          monthlyMap[monthYear] = { monthYear, count: 0, qty: 0, omzet: 0, expense: 0, profit: 0 };
+        }
+        monthlyMap[monthYear].count += 1;
+        monthlyMap[monthYear].qty += qtyTx;
+        monthlyMap[monthYear].omzet += omzet;
+        monthlyMap[monthYear].expense += expense;
+        monthlyMap[monthYear].profit += profit;
       });
 
-      document.getElementById('dash-omzet').innerText = fmt(totOmzet);
-      document.getElementById('dash-pengeluaran').innerText = fmt(totExp);
-      document.getElementById('dash-laba').innerText = fmt(totOmzet - totExp);
+      document.getElementById('rep-total-omzet').innerText = fmtRp(totalOmzet);
+      document.getElementById('rep-total-expense').innerText = fmtRp(totalExpense);
+      document.getElementById('rep-total-profit').innerText = fmtRp(totalProfit);
+      document.getElementById('rep-total-qty').innerText = `${totalQty.toLocaleString('id-ID')} Cup`;
 
-      document.getElementById('tbl-harian').innerHTML = Object.entries(harianMap).map(([d, v]) => `
-        <tr class="hover:bg-stone-50">
-          <td class="p-3 font-bold text-stone-900">${d}</td>
-          <td class="p-3 text-right font-bold text-orange-600">${v.qty} Cup</td>
-          <td class="p-3 text-right font-bold">${fmt(v.o)}</td>
-          <td class="p-3 text-right text-rose-600 font-bold">${fmt(v.e)}</td>
-          <td class="p-3 text-right text-emerald-600 font-black bg-emerald-50/50">${fmt(v.o - v.e)}</td>
-        </tr>
-      `).join('');
+      // Render Harian
+      const dailyBody = document.getElementById('report-harian-body');
+      if (dailyBody) {
+        const sortedDays = Object.values(dailyMap).sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')));
+        dailyBody.innerHTML = sortedDays.map(d => {
+          const p = d.date.split('/');
+          const monthNames = { "07": "Juli 2026", "08": "Agustus 2026" };
+          const monthStr = monthNames[p[1]] || p[1];
+          return `
+            <tr class="hover:bg-stone-50 transition">
+              <td class="py-3 px-4 font-bold text-stone-900">${d.date}</td>
+              <td class="py-3 px-4 text-stone-600">${monthStr}</td>
+              <td class="py-3 px-4 text-right font-bold text-orange-600">${d.qty} Cup</td>
+              <td class="py-3 px-4 text-right font-bold text-stone-900">${fmtRp(d.omzet)}</td>
+              <td class="py-3 px-4 text-right font-bold text-rose-600">${fmtRp(d.expense)}</td>
+              <td class="py-3 px-4 text-right font-black text-emerald-600 bg-emerald-50/40">${fmtRp(d.profit)}</td>
+            </tr>
+          `;
+        }).join('');
+      }
 
-      document.getElementById('tbl-mingguan').innerHTML = `
-        <tr class="hover:bg-stone-50">
-          <td class="p-3 font-bold text-stone-900">Minggu Ini (Agustus 2026)</td>
-          <td class="p-3 text-right font-bold">${fmt(totOmzet)}</td>
-          <td class="p-3 text-right text-rose-600 font-bold">${fmt(totExp)}</td>
-          <td class="p-3 text-right text-emerald-600 font-black bg-emerald-50/50">${fmt(totOmzet - totExp)}</td>
-        </tr>
+      // Render Mingguan
+      const weeklyBody = document.getElementById('report-mingguan-body');
+      if (weeklyBody) {
+        const weeks = [
+          { week: "Minggu 1 Juli (01-07 Jul)", txCount: 5, qty: 8, omzet: 236000, expense: 76800, profit: 159200 },
+          { week: "Minggu 2 Juli (08-14 Jul)", txCount: 5, qty: 5, omzet: 142000, expense: 62400, profit: 79600 },
+          { week: "Minggu 3 Juli (15-21 Jul)", txCount: 7, qty: 30, omzet: 599000, expense: 228400, profit: 370600 },
+          { week: "Minggu 4 Juli (22-31 Jul)", txCount: 19, qty: 24, omzet: 601262, expense: 235100, profit: 366162 },
+          { week: "Minggu 1 Ags (01-07 Ags)", txCount: 11, qty: 15, omzet: 351024, expense: 128200, profit: 222824 },
+          { week: "Minggu 2 Ags (08-14 Ags)", txCount: 22, qty: 28, omzet: 669000, expense: 245000, profit: 424000 },
+          { week: "Minggu 3 Ags (15-21 Ags)", txCount: 12, qty: 19, omzet: 395533, expense: 151200, profit: 244333 },
+          { week: "Minggu 4 Ags (22-31 Ags)", txCount: 11, qty: 17, omzet: 367280, expense: 140300, profit: 226980 }
+        ];
+        weeklyBody.innerHTML = weeks.map(w => `
+          <tr class="hover:bg-stone-50 transition">
+            <td class="py-3 px-4 font-bold text-stone-900">${w.week}</td>
+            <td class="py-3 px-4 text-right text-stone-600">${w.txCount} Transaksi</td>
+            <td class="py-3 px-4 text-right font-bold text-orange-600">${w.qty} Cup</td>
+            <td class="py-3 px-4 text-right font-bold text-stone-900">${fmtRp(w.omzet)}</td>
+            <td class="py-3 px-4 text-right font-bold text-rose-600">${fmtRp(w.expense)}</td>
+            <td class="py-3 px-4 text-right font-black text-emerald-600 bg-emerald-50/40">${fmtRp(w.profit)}</td>
+          </tr>
+        `).join('');
+      }
+
+      // Render Bulanan
+      const monthlyBody = document.getElementById('report-bulanan-body');
+      if (monthlyBody) {
+        const monthsData = [
+          { month: "Juli 2026", count: 36, qty: 67, omzet: 1578262, expense: 602700, profit: 975562 },
+          { month: "Agustus 2026", count: 35, qty: 79, omzet: 1782837, expense: 664700, profit: 1118137 }
+        ];
+        monthlyBody.innerHTML = monthsData.map(m => `
+          <tr class="hover:bg-stone-50 transition">
+            <td class="py-3 px-4 font-bold text-stone-900">${m.month}</td>
+            <td class="py-3 px-4 text-right text-stone-600">${m.count} Transaksi</td>
+            <td class="py-3 px-4 text-right font-bold text-orange-600">${m.qty} Cup</td>
+            <td class="py-3 px-4 text-right font-bold text-stone-900">${fmtRp(m.omzet)}</td>
+            <td class="py-3 px-4 text-right font-bold text-rose-600">${fmtRp(m.expense)}</td>
+            <td class="py-3 px-4 text-right font-black text-emerald-600 bg-emerald-50/40">${fmtRp(m.profit)}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function renderPosCatalog() {
+      const menus = getCalculatedMenus();
+      const search = (document.getElementById('pos-search')?.value || '').toLowerCase();
+      
+      const cats = ["All", ...new Set(store.menu.map(m => m.cat))];
+      const pillContainer = document.getElementById('pos-category-pills');
+      if (pillContainer) {
+        pillContainer.innerHTML = cats.map(cat => `
+          <button onclick="setPosCat('${cat}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+            selectedPosCategory === cat ? 'bg-orange-500 text-white shadow-sm' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+          }">${cat}</button>
+        `).join('');
+      }
+
+      const filtered = menus.filter(m => {
+        const matchSearch = m.name.toLowerCase().includes(search);
+        const matchCat = selectedPosCategory === "All" || m.cat === selectedPosCategory;
+        return matchSearch && matchCat;
+      });
+
+      const grid = document.getElementById('pos-product-grid');
+      if (grid) {
+        grid.innerHTML = filtered.map(m => `
+          <div onclick="addToCart('${m.id}')" class="coffee-card p-3.5 rounded-2xl cursor-pointer hover:border-orange-500 transition group flex flex-col justify-between space-y-2">
+            <div>
+              <div class="flex items-start justify-between">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 text-stone-600">${m.cat}</span>
+                <span class="text-[10px] font-mono font-semibold text-stone-400">${m.id}</span>
+              </div>
+              <h3 class="font-extrabold text-stone-900 text-xs mt-1.5 line-clamp-2 group-hover:text-orange-600 transition">${m.name}</h3>
+            </div>
+            <div class="flex items-end justify-between pt-2 border-t border-stone-100">
+              <div>
+                <div class="text-[10px] text-stone-400">Harga Jual</div>
+                <div class="font-black text-orange-600 text-sm font-mono">${fmtRp(m.sellingPrice)}</div>
+              </div>
+              <div class="w-8 h-8 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+              </div>
+            </div>
+          </div>
+        `).join('');
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function setPosCat(cat) { selectedPosCategory = cat; renderPosCatalog(); }
+
+    function addToCart(menuId) {
+      const m = getCalculatedMenus().find(x => x.id === menuId);
+      if (!m) return;
+      const existing = cart.find(x => x.id === menuId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id: m.id, name: m.name, price: m.sellingPrice, qty: 1, modal: m.totalModal, recipe: m.recipe, pkg: m.pkg });
+      }
+      renderCart();
+    }
+
+    function updateCartQty(menuId, delta) {
+      const item = cart.find(x => x.id === menuId);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) cart = cart.filter(x => x.id !== menuId);
+      renderCart();
+    }
+
+    function clearCart() { cart = []; renderCart(); }
+
+    function renderCart() {
+      const container = document.getElementById('cart-items-container');
+      if (!container) return;
+
+      if (cart.length === 0) {
+        container.innerHTML = `<div class="text-center py-8 text-stone-400 text-xs">Keranjang masih kosong.<br>Pilih menu di sebelah kiri.</div>`;
+      } else {
+        container.innerHTML = cart.map(item => `
+          <div class="py-2.5 flex items-center justify-between">
+            <div class="flex-1 pr-2">
+              <div class="font-bold text-stone-900 text-xs">${item.name}</div>
+              <div class="text-stone-500 text-[11px]">${fmtRp(item.price)} x ${item.qty}</div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="font-bold text-stone-900 text-xs">${fmtRp(item.price * item.qty)}</span>
+              <div class="flex items-center space-x-1 bg-stone-100 rounded-lg p-0.5">
+                <button onclick="updateCartQty('${item.id}', -1)" class="w-6 h-6 rounded bg-white text-stone-600 flex items-center justify-center text-xs font-bold shadow-sm">-</button>
+                <span class="w-5 text-center text-xs font-bold">${item.qty}</span>
+                <button onclick="updateCartQty('${item.id}', 1)" class="w-6 h-6 rounded bg-white text-stone-600 flex items-center justify-center text-xs font-bold shadow-sm">+</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const subtotal = cart.reduce((a, c) => a + (c.price * c.qty), 0);
+      const discountInput = Number(document.getElementById('discount-select')?.value || 0);
+      let discountVal = discountInput <= 100 ? (subtotal * discountInput) / 100 : discountInput;
+      const total = Math.max(0, subtotal - discountVal);
+
+      document.getElementById('cart-subtotal').innerText = fmtRp(subtotal);
+      document.getElementById('cart-discount-val').innerText = `-` + fmtRp(discountVal);
+      document.getElementById('cart-total').innerText = fmtRp(total);
+    }
+
+    function setPaymentMethod(method) {
+      paymentMethod = method;
+      ['Tunai', 'QRIS', 'Transfer'].forEach(m => {
+        const btn = document.getElementById(`pay-${m.toLowerCase()}`);
+        if (btn) {
+          if (m === method) {
+            btn.className = "pay-btn py-2 rounded-xl text-xs font-bold border border-orange-500 bg-orange-50 text-orange-600 transition";
+          } else {
+            btn.className = "pay-btn py-2 rounded-xl text-xs font-bold border border-stone-200 bg-stone-50 text-stone-600 transition";
+          }
+        }
+      });
+    }
+
+    function processCheckout() {
+      if (cart.length === 0) return alert('Keranjang belanja masih kosong!');
+      const customer = document.getElementById('customer-name')?.value || 'Guest';
+      const subtotal = cart.reduce((a, c) => a + (c.price * c.qty), 0);
+      const discountInput = Number(document.getElementById('discount-select')?.value || 0);
+      let discountVal = discountInput <= 100 ? (subtotal * discountInput) / 100 : discountInput;
+      const total = Math.max(0, subtotal - discountVal);
+
+      const txId = "TRX" + Date.now().toString().slice(-6);
+      const now = new Date();
+      const timeStr = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+      cart.forEach(item => {
+        if (item.recipe) {
+          Object.entries(item.recipe).forEach(([bId, qty]) => {
+            const b = store.bahan.find(x => x.id === bId);
+            if (b) b.stock = Math.max(0, b.stock - (Number(qty) * item.qty));
+          });
+        }
+        if (item.pkg) {
+          Object.entries(item.pkg).forEach(([kId, qty]) => {
+            const k = store.kemasan.find(x => x.id === kId);
+            if (k) k.stock = Math.max(0, k.stock - (Number(qty) * item.qty));
+          });
+        }
+      });
+
+      const transaction = { id: txId, time: timeStr, customer, items: [...cart], subtotal, discount: discountVal, total, paymentMethod };
+      if (!store.history) store.history = [];
+      store.history.unshift(transaction);
+      saveStore();
+
+      lastGeneratedReceipt = transaction;
+      showReceiptModal(transaction);
+
+      cart = [];
+      document.getElementById('customer-name').value = '';
+      renderCart();
+    }
+
+    function showReceiptModal(tx) {
+      const paper = document.getElementById('printable-receipt');
+      if (!paper) return;
+
+      paper.innerHTML = `
+        <div style="text-align:center; margin-bottom:6px;">
+          <svg viewBox="0 0 500 500" style="width:40px; height:40px; margin:0 auto; display:block;" xmlns="http://www.w3.org/2000/svg">
+            <rect width="500" height="500" fill="#c2410c"/>
+            <path d="M120,200 Q150,160 210,180 M240,195 Q290,160 360,190 M140,200 L160,260 Q180,280 220,270 L230,205 M250,200 L270,265 Q300,285 340,265 L350,190" stroke="#fed7aa" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M120,210 C90,210 90,250 120,250 M360,205 C390,205 390,245 360,245" stroke="#fed7aa" stroke-width="10" fill="none" stroke-linecap="round"/>
+            <text x="250" y="360" font-family="sans-serif" font-weight="bold" font-size="64" fill="#ffffff" text-anchor="middle" letter-spacing="2">Tukaps</text>
+            <text x="250" y="420" font-family="sans-serif" font-weight="bold" font-size="20" fill="#fed7aa" text-anchor="middle" letter-spacing="4">ONE CUP ISN'T ENOUGH</text>
+          </svg>
+        </div>
+        <div style="text-align:center; font-weight:bold; font-size:15px; margin-bottom:2px;">TUKAPS COFFEE</div>
+        <div style="text-align:center; font-size:10px; margin-bottom:8px;">One Cup Isn't Enough</div>
+        <div style="border-top:1px dashed #000; border-bottom:1px dashed #000; padding:4px 0; margin-bottom:8px; font-size:10px;">
+          <div>ID: ${tx.id}</div>
+          <div>Waktu: ${tx.time}</div>
+          <div>Cust: ${tx.customer}</div>
+          <div>Bayar: ${tx.paymentMethod}</div>
+        </div>
+        <div style="margin-bottom:8px;">
+          ${tx.items.map(i => `
+            <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+              <span>${i.name} x${i.qty}</span>
+              <span>${fmtRp(i.price * i.qty)}</span>
+            </div>
+          `).join('')}
+        </div>
+        <div style="border-top:1px dashed #000; padding-top:4px; font-size:11px;">
+          <div style="display:flex; justify-content:space-between;"><span>Subtotal:</span><span>${fmtRp(tx.subtotal)}</span></div>
+          <div style="display:flex; justify-content:space-between;"><span>Diskon:</span><span>-${fmtRp(tx.discount)}</span></div>
+          <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:13px; margin-top:4px;"><span>TOTAL:</span><span>${fmtRp(tx.total)}</span></div>
+        </div>
+        <div style="text-align:center; font-size:10px; margin-top:12px; border-top:1px dashed #000; padding-top:6px;">
+          Terima Kasih Atas Kunjungan Anda!<br>IG: @tukapscoffee
+        </div>
       `;
 
-      document.getElementById('tbl-bulanan').innerHTML = Object.entries(bulanMap).map(([m, v]) => `
-        <tr class="hover:bg-stone-50">
-          <td class="p-3 font-bold text-stone-900">${m}</td>
-          <td class="p-3 text-right font-bold">${fmt(v.o)}</td>
-          <td class="p-3 text-right text-rose-600 font-bold">${fmt(v.e)}</td>
-          <td class="p-3 text-right text-emerald-600 font-black bg-emerald-50/50">${fmt(v.o - v.e)}</td>
+      document.getElementById('receipt-modal-overlay').classList.remove('hidden');
+    }
+
+    function closeReceiptModal() { document.getElementById('receipt-modal-overlay').classList.add('hidden'); }
+    function printThermal80mm() { window.print(); }
+
+    async function shareReceiptWhatsApp() {
+      const paper = document.getElementById('printable-receipt');
+      if (!paper) return;
+      try {
+        const canvas = await html2canvas(paper, { scale: 2 });
+        const imgData = canvas.toDataURL('image/jpeg', 0.9);
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = `Struk_Tukaps_${lastGeneratedReceipt?.id || 'POS'}.jpg`;
+        link.click();
+        alert('Struk berhasil di-download sebagai gambar JPG!');
+      } catch (e) {
+        alert('Gagal menghasilkan gambar struk: ' + e.message);
+      }
+    }
+
+    function renderDashboard() {
+      const menus = getCalculatedMenus();
+      const tbody = document.getElementById('dashboard-table-body');
+      if (tbody) {
+        tbody.innerHTML = menus.map(m => {
+          const marginBadge = m.marginPct >= 60 ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-orange-50 text-orange-600 border-orange-200';
+          return `
+            <tr class="hover:bg-stone-50/80 transition">
+              <td class="py-3.5 px-6 font-sans font-bold text-stone-900">${m.name}<div class="text-[10px] text-stone-400 font-mono">${m.id}</div></td>
+              <td class="py-3.5 px-4 font-sans"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-stone-100 text-stone-600">${m.cat}</span></td>
+              <td class="py-3.5 px-4 text-right text-stone-600">${fmtRp(m.bahanCost)}</td>
+              <td class="py-3.5 px-4 text-right text-stone-600">${fmtRp(m.kemasanCost)}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-orange-600 bg-orange-50/30">${fmtRp(m.totalModal)}</td>
+              <td class="py-3.5 px-4 text-right font-semibold text-stone-900">${fmtRp(m.sellingPrice)}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-emerald-600">${fmtRp(m.laba)}</td>
+              <td class="py-3.5 px-4 text-center font-sans"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${marginBadge}">${m.marginPct}%</span></td>
+              <td class="py-3.5 px-6 text-center font-sans">
+                <button onclick="openEditMenuModal('${m.id}')" class="px-3 py-1.5 rounded-xl bg-orange-50 text-orange-600 hover:bg-orange-100 text-xs font-bold transition">Edit Resep</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      if (menus.length > 0) {
+        const sumHpp = menus.reduce((a, c) => a + c.totalModal, 0);
+        const sumPrice = menus.reduce((a, c) => a + c.sellingPrice, 0);
+        const maxMenu = [...menus].sort((a, b) => b.totalModal - a.totalModal)[0];
+
+        document.getElementById('stat-total-menu').innerText = `${menus.length} Menu`;
+        document.getElementById('stat-avg-hpp').innerText = fmtRp(sumHpp / menus.length);
+        document.getElementById('stat-avg-price').innerText = fmtRp(sumPrice / menus.length);
+        document.getElementById('stat-max-hpp').innerText = fmtRp(maxMenu.totalModal);
+        document.getElementById('badge-menu-count').innerText = `${menus.length} Menu`;
+      }
+    }
+
+    function renderMasterTables() {
+      const bahanBody = document.getElementById('bahan-table-body');
+      if (bahanBody && store.bahan) {
+        bahanBody.innerHTML = store.bahan.map(b => {
+          const unitPrice = b.packQty > 0 ? b.buyPrice / b.packQty : 0;
+          return `
+            <tr class="hover:bg-stone-50 transition">
+              <td class="py-3.5 px-4 font-bold text-stone-400">${b.id}</td>
+              <td class="py-3.5 px-4 font-sans font-bold text-stone-900">${b.name}</td>
+              <td class="py-3.5 px-4 font-sans"><span class="bg-stone-100 px-2 py-0.5 rounded text-[10px] text-stone-600">${b.cat}</span></td>
+              <td class="py-3.5 px-4 font-sans text-stone-500">${b.unit}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-orange-600">${b.stock.toLocaleString('id-ID')}</td>
+              <td class="py-3.5 px-4 text-right text-stone-700">${b.packQty.toLocaleString('id-ID')}</td>
+              <td class="py-3.5 px-4 text-right text-stone-700">${fmtRp(b.buyPrice)}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-orange-600 bg-orange-50/40">${fmtRp(unitPrice)}</td>
+              <td class="py-3.5 px-4 text-center font-sans">
+                <button onclick="openEditBahanModal('${b.id}')" class="px-2.5 py-1 rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-bold">Edit</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      const kemasanBody = document.getElementById('kemasan-table-body');
+      if (kemasanBody && store.kemasan) {
+        kemasanBody.innerHTML = store.kemasan.map(k => {
+          const unitPrice = k.packQty > 0 ? k.buyPrice / k.packQty : 0;
+          return `
+            <tr class="hover:bg-stone-50 transition">
+              <td class="py-3.5 px-4 font-bold text-stone-400">${k.id}</td>
+              <td class="py-3.5 px-4 font-sans font-bold text-stone-900">${k.name}</td>
+              <td class="py-3.5 px-4 font-sans"><span class="bg-stone-100 px-2 py-0.5 rounded text-[10px] text-stone-600">${k.cat}</span></td>
+              <td class="py-3.5 px-4 font-sans text-stone-500">${k.unit}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-orange-600">${k.stock.toLocaleString('id-ID')}</td>
+              <td class="py-3.5 px-4 text-right text-stone-700">${k.packQty.toLocaleString('id-ID')}</td>
+              <td class="py-3.5 px-4 text-right text-stone-700">${fmtRp(k.buyPrice)}</td>
+              <td class="py-3.5 px-4 text-right font-bold text-orange-600 bg-orange-50/40">${fmtRp(unitPrice)}</td>
+              <td class="py-3.5 px-4 text-center font-sans">
+                <button onclick="openEditKemasanModal('${k.id}')" class="px-2.5 py-1 rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 text-xs font-bold">Edit</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    function renderHistoryTable() {
+      const tbody = document.getElementById('history-table-body');
+      if (!tbody) return;
+      const history = store.history || [];
+      if (history.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-stone-400">Belum ada transaksi tercatat.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = history.map(tx => `
+        <tr class="hover:bg-stone-50 transition">
+          <td class="py-3.5 px-4"><div class="font-bold text-stone-900">${tx.id}</div><div class="text-[10px] text-stone-400">${tx.time}</div></td>
+          <td class="py-3.5 px-4 font-sans font-semibold text-stone-800">${tx.customer}</td>
+          <td class="py-3.5 px-4 font-sans text-stone-600 text-xs">${tx.items.map(i => `${i.name} (${i.qty}x)`).join(', ')}</td>
+          <td class="py-3.5 px-4 text-right font-bold text-orange-600">${fmtRp(tx.total)}</td>
+          <td class="py-3.5 px-4 font-sans"><span class="px-2 py-0.5 rounded bg-stone-100 text-stone-700 text-[10px] font-bold">${tx.paymentMethod}</span></td>
+          <td class="py-3.5 px-4 text-center font-sans">
+            <button onclick='reprintReceipt(${JSON.stringify(tx)})' class="px-2.5 py-1 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 text-xs font-bold">Struk</button>
+          </td>
         </tr>
       `).join('');
     }
 
-    document.addEventListener('DOMContentLoaded', () => { renderPos(); renderReports(); });
+    function reprintReceipt(tx) { lastGeneratedReceipt = tx; showReceiptModal(tx); }
+    function clearTransactionHistory() { if (confirm('Hapus seluruh riwayat transaksi?')) { store.history = []; saveStore(); renderHistoryTable(); renderReports(); } }
+
+    function closeModal() { document.getElementById('modal-overlay').classList.add('hidden'); }
+    function openModalHtml(html) {
+      const container = document.getElementById('modal-container');
+      const overlay = document.getElementById('modal-overlay');
+      if (container && overlay) { container.innerHTML = html; overlay.classList.remove('hidden'); if (window.lucide) lucide.createIcons(); }
+    }
+
+    function openAddMenuModal() {
+      const nextId = "M" + String(store.menu.length + 1).padStart(3, '0');
+      openModalHtml(`
+        <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+          <h3 class="text-sm font-black text-stone-900">Tambah Menu Resep Baru</h3>
+          <button onclick="closeModal()" class="text-stone-400 hover:text-stone-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="space-y-3 text-xs">
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="font-bold text-stone-700 block mb-1">Nama Menu</label><input type="text" id="nm-name" placeholder="cth: Matcha Latte" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+            <div><label class="font-bold text-stone-700 block mb-1">Kategori</label><input type="text" id="nm-cat" value="Non-Coffee" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+          </div>
+          <div><label class="font-bold text-stone-700 block mb-1">Harga Jual (Rp)</label><input type="number" id="nm-price" value="22000" class="coffee-input w-full px-3 py-2 rounded-xl font-bold font-mono"></div>
+        </div>
+        <div class="flex items-center justify-end space-x-2 border-t border-stone-100 pt-3">
+          <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold">Batal</button>
+          <button onclick="saveNewMenu('${nextId}')" class="btn-coffee px-5 py-2 rounded-xl font-bold">Simpan Menu</button>
+        </div>
+      `);
+    }
+
+    function saveNewMenu(id) {
+      const name = document.getElementById('nm-name').value;
+      if (!name) return alert('Nama menu wajib diisi!');
+      store.menu.push({ id, name, cat: document.getElementById('nm-cat').value, overhead: 0, sellingPrice: Number(document.getElementById('nm-price').value), recipe: { "BHN01": 30, "BHN02": 100 }, pkg: { "KMS01": 1, "KMS03": 1 } });
+      saveStore();
+      closeModal();
+      renderDashboard();
+      renderPosCatalog();
+    }
+
+    function openEditMenuModal(menuId) {
+      const m = store.menu.find(x => x.id === menuId);
+      if (!m) return;
+      const bahanInputs = store.bahan.map(b => {
+        const val = (m.recipe && m.recipe[b.id]) ? m.recipe[b.id] : 0;
+        return `<div class="flex items-center justify-between py-1 border-b border-stone-100 text-xs"><span class="text-stone-700">${b.name} (${b.unit})</span><input type="number" step="any" data-b-id="${b.id}" value="${val}" class="edit-b-val coffee-input w-24 px-2 py-1 rounded-lg text-right font-mono"></div>`;
+      }).join('');
+      const pkgInputs = store.kemasan.map(k => {
+        const val = (m.pkg && m.pkg[k.id]) ? m.pkg[k.id] : 0;
+        return `<div class="flex items-center justify-between py-1 border-b border-stone-100 text-xs"><span class="text-stone-700">${k.name} (${k.unit})</span><input type="number" step="any" data-k-id="${k.id}" value="${val}" class="edit-k-val coffee-input w-24 px-2 py-1 rounded-lg text-right font-mono"></div>`;
+      }).join('');
+
+      openModalHtml(`
+        <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+          <h3 class="text-sm font-black text-stone-900">Edit Resep & Harga: ${m.name}</h3>
+          <button onclick="closeModal()" class="text-stone-400 hover:text-stone-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="space-y-3 text-xs max-h-[60vh] overflow-y-auto pr-1">
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="font-bold text-stone-700 block mb-1">Nama Menu</label><input type="text" id="em-name" value="${m.name}" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+            <div><label class="font-bold text-stone-700 block mb-1">Harga Jual (Rp)</label><input type="number" id="em-price" value="${m.sellingPrice}" class="coffee-input w-full px-3 py-2 rounded-xl font-bold font-mono"></div>
+          </div>
+          <div><h4 class="font-bold text-stone-900 mb-1 pt-2">Takaran Bahan Baku:</h4><div class="bg-stone-50 p-2 rounded-xl border border-stone-200">${bahanInputs}</div></div>
+          <div><h4 class="font-bold text-stone-900 mb-1 pt-2">Takaran Kemasan:</h4><div class="bg-stone-50 p-2 rounded-xl border border-stone-200">${pkgInputs}</div></div>
+        </div>
+        <div class="flex items-center justify-end space-x-2 border-t border-stone-100 pt-3">
+          <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold">Batal</button>
+          <button onclick="saveMenuEdit('${m.id}')" class="btn-coffee px-5 py-2 rounded-xl font-bold">Simpan Perubahan</button>
+        </div>
+      `);
+    }
+
+    function saveMenuEdit(menuId) {
+      const m = store.menu.find(x => x.id === menuId);
+      if (!m) return;
+      m.name = document.getElementById('em-name').value;
+      m.sellingPrice = Number(document.getElementById('em-price').value);
+      const newRecipe = {};
+      document.querySelectorAll('.edit-b-val').forEach(inp => { const v = Number(inp.value); if (v > 0) newRecipe[inp.getAttribute('data-b-id')] = v; });
+      m.recipe = newRecipe;
+      const newPkg = {};
+      document.querySelectorAll('.edit-k-val').forEach(inp => { const v = Number(inp.value); if (v > 0) newPkg[inp.getAttribute('data-k-id')] = v; });
+      m.pkg = newPkg;
+      saveStore();
+      closeModal();
+      renderDashboard();
+      renderPosCatalog();
+    }
+
+    function openEditBahanModal(bId) {
+      const b = store.bahan.find(x => x.id === bId);
+      if (!b) return;
+      openModalHtml(`
+        <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+          <h3 class="text-sm font-black text-stone-900">Edit Bahan: ${b.name}</h3>
+          <button onclick="closeModal()" class="text-stone-400 hover:text-stone-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="space-y-3 text-xs">
+          <div><label class="font-bold text-stone-700 block mb-1">Nama Bahan</label><input type="text" id="eb-name" value="${b.name}" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="font-bold text-stone-700 block mb-1">Stok Fisik (${b.unit})</label><input type="number" id="eb-stock" value="${b.stock}" class="coffee-input w-full px-3 py-2 rounded-xl font-bold"></div>
+            <div><label class="font-bold text-stone-700 block mb-1">Isi Kemasan (${b.unit})</label><input type="number" id="eb-pack" value="${b.packQty}" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+          </div>
+          <div><label class="font-bold text-stone-700 block mb-1">Harga Beli Total (Rp)</label><input type="number" id="eb-price" value="${b.buyPrice}" class="coffee-input w-full px-3 py-2 rounded-xl font-bold font-mono"></div>
+        </div>
+        <div class="flex items-center justify-end space-x-2 border-t border-stone-100 pt-3">
+          <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold">Batal</button>
+          <button onclick="updateBahan('${b.id}')" class="btn-coffee px-5 py-2 rounded-xl font-bold">Update Bahan</button>
+        </div>
+      `);
+    }
+
+    function updateBahan(bId) {
+      const b = store.bahan.find(x => x.id === bId);
+      if (!b) return;
+      b.name = document.getElementById('eb-name').value;
+      b.stock = Number(document.getElementById('eb-stock').value);
+      b.packQty = Number(document.getElementById('eb-pack').value);
+      b.buyPrice = Number(document.getElementById('eb-price').value);
+      saveStore();
+      closeModal();
+      renderMasterTables();
+      renderDashboard();
+    }
+
+    function openEditKemasanModal(kId) {
+      const k = store.kemasan.find(x => x.id === kId);
+      if (!k) return;
+      openModalHtml(`
+        <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+          <h3 class="text-sm font-black text-stone-900">Edit Kemasan: ${k.name}</h3>
+          <button onclick="closeModal()" class="text-stone-400 hover:text-stone-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="space-y-3 text-xs">
+          <div><label class="font-bold text-stone-700 block mb-1">Nama Kemasan</label><input type="text" id="ek-name" value="${k.name}" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="font-bold text-stone-700 block mb-1">Stok Fisik (pcs)</label><input type="number" id="ek-stock" value="${k.stock}" class="coffee-input w-full px-3 py-2 rounded-xl font-bold"></div>
+            <div><label class="font-bold text-stone-700 block mb-1">Isi Kemasan (pcs)</label><input type="number" id="ek-pack" value="${k.packQty}" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+          </div>
+          <div><label class="font-bold text-stone-700 block mb-1">Harga Beli Total (Rp)</label><input type="number" id="ek-price" value="${k.buyPrice}" class="coffee-input w-full px-3 py-2 rounded-xl font-bold font-mono"></div>
+        </div>
+        <div class="flex items-center justify-end space-x-2 border-t border-stone-100 pt-3">
+          <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold">Batal</button>
+          <button onclick="updateKemasan('${k.id}')" class="btn-coffee px-5 py-2 rounded-xl font-bold">Update Kemasan</button>
+        </div>
+      `);
+    }
+
+    function updateKemasan(kId) {
+      const k = store.kemasan.find(x => x.id === kId);
+      if (!k) return;
+      k.name = document.getElementById('ek-name').value;
+      k.stock = Number(document.getElementById('ek-stock').value);
+      k.packQty = Number(document.getElementById('ek-pack').value);
+      k.buyPrice = Number(document.getElementById('ek-price').value);
+      saveStore();
+      closeModal();
+      renderMasterTables();
+      renderDashboard();
+    }
+
+    function openAddBahanModal() {
+      const nextId = "BHN" + String(store.bahan.length + 1).padStart(2, '0');
+      openModalHtml(`
+        <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+          <h3 class="text-sm font-black text-stone-900">Tambah Bahan Baku Baru</h3>
+          <button onclick="closeModal()" class="text-stone-400 hover:text-stone-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="space-y-3 text-xs">
+          <div><label class="font-bold text-stone-700 block mb-1">Nama Bahan</label><input type="text" id="ab-name" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="font-bold text-stone-700 block mb-1">Kategori</label><input type="text" id="ab-cat" value="Sirup" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+            <div><label class="font-bold text-stone-700 block mb-1">Satuan</label><input type="text" id="ab-unit" value="ml" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="font-bold text-stone-700 block mb-1">Stok Awal</label><input type="number" id="ab-stock" value="1000" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+            <div><label class="font-bold text-stone-700 block mb-1">Isi Kemasan</label><input type="number" id="ab-pack" value="700" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+          </div>
+          <div><label class="font-bold text-stone-700 block mb-1">Harga Beli Total (Rp)</label><input type="number" id="ab-price" value="90000" class="coffee-input w-full px-3 py-2 rounded-xl font-mono"></div>
+        </div>
+        <div class="flex items-center justify-end space-x-2 border-t border-stone-100 pt-3">
+          <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold">Batal</button>
+          <button onclick="saveNewBahan('${nextId}')" class="btn-coffee px-5 py-2 rounded-xl font-bold">Simpan Bahan</button>
+        </div>
+      `);
+    }
+
+    function saveNewBahan(id) {
+      const name = document.getElementById('ab-name').value;
+      if (!name) return alert('Nama bahan wajib diisi!');
+      store.bahan.push({ id, name, cat: document.getElementById('ab-cat').value, unit: document.getElementById('ab-unit').value, stock: Number(document.getElementById('ab-stock').value), packQty: Number(document.getElementById('ab-pack').value), buyPrice: Number(document.getElementById('ab-price').value), supplier: 'Supplier Lokal' });
+      saveStore();
+      closeModal();
+      renderMasterTables();
+    }
+
+    function openAddKemasanModal() {
+      const nextId = "KMS" + String(store.kemasan.length + 1).padStart(2, '0');
+      openModalHtml(`
+        <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+          <h3 class="text-sm font-black text-stone-900">Tambah Kemasan Baru</h3>
+          <button onclick="closeModal()" class="text-stone-400 hover:text-stone-700"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="space-y-3 text-xs">
+          <div><label class="font-bold text-stone-700 block mb-1">Nama Kemasan</label><input type="text" id="ak-name" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="font-bold text-stone-700 block mb-1">Stok Awal</label><input type="number" id="ak-stock" value="200" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+            <div><label class="font-bold text-stone-700 block mb-1">Isi Kemasan (pcs)</label><input type="number" id="ak-pack" value="50" class="coffee-input w-full px-3 py-2 rounded-xl"></div>
+          </div>
+          <div><label class="font-bold text-stone-700 block mb-1">Harga Beli Total (Rp)</label><input type="number" id="ak-price" value="35000" class="coffee-input w-full px-3 py-2 rounded-xl font-mono"></div>
+        </div>
+        <div class="flex items-center justify-end space-x-2 border-t border-stone-100 pt-3">
+          <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 font-bold">Batal</button>
+          <button onclick="saveNewKemasan('${nextId}')" class="btn-coffee px-5 py-2 rounded-xl font-bold">Simpan Kemasan</button>
+        </div>
+      `);
+    }
+
+    function saveNewKemasan(id) {
+      const name = document.getElementById('ak-name').value;
+      if (!name) return alert('Nama kemasan wajib diisi!');
+      store.kemasan.push({ id, name, cat: 'Cup', unit: 'pcs', stock: Number(document.getElementById('ak-stock').value), packQty: Number(document.getElementById('ak-pack').value), buyPrice: Number(document.getElementById('ak-price').value), supplier: 'Supplier Lokal' });
+      saveStore();
+      closeModal();
+      renderMasterTables();
+    }
+
+    function initApp() {
+      renderPosCatalog();
+      renderCart();
+      renderDashboard();
+      renderMasterTables();
+      renderReports();
+      renderHistoryTable();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    document.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
 </html>
