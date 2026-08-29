@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   body { background-color:#fafaf9; color:#292524; font-family:'Plus Jakarta Sans',sans-serif; }
   .coffee-card { background:#ffffff; border:1px solid #f2ede9; box-shadow:0 4px 20px -4px rgba(249,115,22,0.08); }
@@ -43,11 +44,22 @@
     </div>
   </div>
   <div class="flex items-center space-x-2">
+    <span id="sync-status" class="text-[10px] font-bold text-stone-400 hidden md:inline">Memuat...</span>
+    <button onclick="manualSync()" title="Sync Manual dari Cloud" class="w-9 h-9 rounded-xl bg-stone-100 flex items-center justify-center text-stone-500 hover:bg-stone-200">
+      <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+    </button>
     <button onclick="openBackupModal()" title="Backup / Restore Data" class="w-9 h-9 rounded-xl bg-stone-100 flex items-center justify-center text-stone-500 hover:bg-stone-200">
       <i data-lucide="database-backup" class="w-4 h-4"></i>
     </button>
   </div>
 </header>
+
+<div id="loading-overlay" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+  <div class="text-center space-y-2">
+    <div class="w-10 h-10 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mx-auto"></div>
+    <p class="text-xs font-bold text-stone-500">Menyinkronkan data...</p>
+  </div>
+</div>
 
 <nav class="bg-white border-b sticky top-[57px] z-30 overflow-x-auto no-scrollbar">
   <div class="flex gap-2 px-4 md:px-6 py-2 max-w-[1400px] mx-auto">
@@ -348,15 +360,89 @@ function defaultData(){
   };
 }
 
-let DB = load();
+// ============================================================
+// SUPABASE SYNC LAYER
+// ============================================================
+const SUPABASE_URL = 'https://xmquoxqmkdnyaihvwwbm.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtcXVveHFta2RueWFpaHZ3d2JtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5OTIzNDQsImV4cCI6MjEwMzU2ODM0NH0._ARDfMTxzNODZJRs2tnaRd8lal_dtxAqgvj8Ej_hh_M';
+const SUPABASE_ROW_ID = 'main';
+let supa = null;
+try{ supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }catch(e){ console.warn('Supabase client gagal dibuat, pakai LocalStorage saja.', e); }
+
+function setSyncStatus(text, ok){
+  const el = document.getElementById('sync-status');
+  if(!el) return;
+  el.innerText = text;
+  el.className = 'text-[10px] font-bold hidden md:inline ' + (ok===true ? 'text-emerald-500' : ok===false ? 'text-rose-500' : 'text-stone-400');
+}
+
+async function loadFromSupabase(){
+  if(!supa) return null;
+  try{
+    const { data, error } = await supa.from('tukaps_data').select('data').eq('id', SUPABASE_ROW_ID).maybeSingle();
+    if(error) throw error;
+    return data ? data.data : null;
+  }catch(e){
+    console.warn('Gagal ambil data dari Supabase:', e);
+    return null;
+  }
+}
+async function saveToSupabase(){
+  if(!supa) return false;
+  try{
+    const { error } = await supa.from('tukaps_data').upsert({ id: SUPABASE_ROW_ID, data: DB, updated_at: new Date().toISOString() });
+    if(error) throw error;
+    return true;
+  }catch(e){
+    console.warn('Gagal simpan ke Supabase:', e);
+    return false;
+  }
+}
+
+let DB = defaultData();
 function load(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
     if(raw) return JSON.parse(raw);
-  }catch(e){ console.error('Gagal load data, memakai default.', e); }
+  }catch(e){ console.error('Gagal load data lokal, memakai default.', e); }
   return defaultData();
 }
-function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(DB)); }
+function save(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
+  setSyncStatus('Menyimpan...', null);
+  saveToSupabase().then(ok=>{
+    setSyncStatus(ok ? 'Tersimpan ke cloud ✓' : 'Gagal sync (tersimpan lokal)', ok);
+  });
+}
+
+async function initData(){
+  setSyncStatus('Memuat dari cloud...', null);
+  const cloudData = await loadFromSupabase();
+  if(cloudData){
+    DB = cloudData;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
+    setSyncStatus('Tersinkron ✓', true);
+  }else{
+    DB = load();
+    setSyncStatus(supa ? 'Belum ada data cloud, memakai lokal' : 'Mode lokal saja', false);
+    saveToSupabase().then(ok=>{ if(ok) setSyncStatus('Tersinkron ✓', true); });
+  }
+}
+async function manualSync(){
+  setSyncStatus('Menyinkronkan...', null);
+  const cloudData = await loadFromSupabase();
+  if(cloudData){
+    DB = cloudData;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
+    setSyncStatus('Tersinkron ✓', true);
+    const activeBtn = document.querySelector('.tab-btn.active');
+    const activeTab = activeBtn ? activeBtn.id.replace('nav-','') : 'kasir';
+    switchTab(activeTab);
+  }else{
+    setSyncStatus('Gagal ambil data cloud', false);
+    alert('Tidak bisa mengambil data terbaru dari cloud. Cek koneksi internet Anda.');
+  }
+}
 
 let CART = [];
 
@@ -1071,12 +1157,15 @@ function importData(e){
 /* ============================================================
    INIT
 ============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('header-logo').src = LOGO_B64;
   const lastKasir = localStorage.getItem('tukaps_last_kasir');
   if(lastKasir) document.getElementById('input-kasir').value = lastKasir;
-  renderPos();
   safeLucide();
+  await initData();
+  renderPos();
+  const overlay = document.getElementById('loading-overlay');
+  if(overlay) overlay.style.display = 'none';
 });
 </script>
 </body>
