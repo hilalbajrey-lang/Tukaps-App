@@ -376,7 +376,7 @@
   </footer>
 
   <script>
-    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete_v3';
+    const STORAGE_KEY = 'tukaps_pos_hpp_v2026_complete_v4';
     let selectedPosCategory = "All";
     let cart = [];
     let paymentMethod = "Tunai";
@@ -443,22 +443,27 @@
     let store = loadStore();
 
     function loadStore() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
+      // Force load SEED_DATA directly to guarantee mobile devices instantly get data
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
           const parsed = JSON.parse(saved);
           if (parsed && parsed.menu && parsed.menu.length > 0 && parsed.bahan && parsed.bahan.length > 0) {
             return parsed;
           }
-        } catch(e) {}
-      }
-      saveStore(SEED_DATA);
+        }
+      } catch(e) {}
+      
+      // If nothing valid in localStorage, set and return SEED_DATA
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED_DATA));
       return SEED_DATA;
     }
 
     function saveStore(data) {
       store = data || store;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      } catch(e) {}
     }
 
     function resetToDefaultData() {
