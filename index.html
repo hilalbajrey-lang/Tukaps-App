@@ -485,7 +485,11 @@ function findKemasan(id){ return DB.kemasan.find(k=>k.id===id); }
 function findMenu(id){ return DB.menu.find(m=>m.id===id); }
 
 function hitungHpp(menuItem){
-  if(!menuItem || !menuItem.resep) return 0;
+  if(!menuItem) return 0;
+  if(menuItem.hppMode === 'manual'){
+    return menuItem.hppManual || 0;
+  }
+  if(!menuItem.resep) return 0;
   return menuItem.resep.reduce((sum,r)=>{
     const ref = r.tipe==='bahan' ? findBahan(r.refId) : findKemasan(r.refId);
     if(!ref) return sum;
@@ -695,10 +699,14 @@ function renderMenuTable(){
     const hpp = hitungHpp(m);
     const margin = m.hargaJual - hpp;
     const marginPct = m.hargaJual ? (margin/m.hargaJual*100).toFixed(1) : '0.0';
+    const isManual = m.hppMode === 'manual';
+    const hppCell = isManual
+      ? `<input type="number" min="0" step="100" value="${m.hppManual||0}" onchange="updateHppManual('${m.id}',this.value)" class="coffee-input w-24 rounded-lg px-2 py-1 text-xs text-right font-bold text-rose-600" title="HPP Manual">`
+      : `${fmt(hpp)}`;
     return `<tr>
-      <td class="p-3 font-bold">${m.nama}</td>
+      <td class="p-3 font-bold">${m.nama} ${isManual?'<span class="text-[9px] bg-stone-100 text-stone-500 px-1.5 py-0.5 rounded-full ml-1">Manual</span>':''}</td>
       <td class="p-3">${m.kategori||'-'}</td>
-      <td class="p-3 text-right text-rose-600">${fmt(hpp)}</td>
+      <td class="p-3 text-right text-rose-600">${hppCell}</td>
       <td class="p-3 text-right">
         <input type="number" min="0" step="100" value="${m.hargaJual}" onchange="updateHargaJual('${m.id}',this.value)" class="coffee-input w-24 rounded-lg px-2 py-1 text-xs text-right font-bold">
       </td>
@@ -717,16 +725,36 @@ function updateHargaJual(id, value){
   m.hargaJual = (!harga || harga<0) ? 0 : harga;
   save(); renderMenuTable();
 }
+function updateHppManual(id, value){
+  const m = findMenu(id);
+  const hpp = parseFloat(value);
+  if(!m) return;
+  m.hppManual = (!hpp || hpp<0) ? 0 : hpp;
+  save(); renderMenuTable();
+}
 
 function openMenuModal(id){
   const m = id ? findMenu(id) : null;
+  const mode = m ? (m.hppMode || 'resep') : 'resep';
   openModal(`
     <h3 class="text-sm font-black uppercase">${m?'Edit':'Tambah'} Menu</h3>
     <div class="space-y-3">
       <div><label class="text-xs font-bold text-stone-500">Nama Menu</label><input id="f-nama" value="${m?m.nama:''}" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1"></div>
       <div><label class="text-xs font-bold text-stone-500">Kategori</label><input id="f-kategori" value="${m?m.kategori:''}" placeholder="cth: White Series" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1"></div>
       <div><label class="text-xs font-bold text-stone-500">Harga Jual (Rp)</label><input id="f-harga" type="number" value="${m?m.hargaJual:''}" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1"></div>
-      <p class="text-[11px] text-stone-400">Resep/komposisi bahan diatur di tab <b>Resep</b> setelah menu disimpan.</p>
+      <div>
+        <label class="text-xs font-bold text-stone-500">Sumber HPP</label>
+        <select id="f-hppmode" onchange="toggleHppModeField()" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1">
+          <option value="resep" ${mode==='resep'?'selected':''}>Otomatis dari Resep (racikan sendiri)</option>
+          <option value="manual" ${mode==='manual'?'selected':''}>Input Manual (produk beli jadi dari supplier)</option>
+        </select>
+      </div>
+      <div id="f-hppmanual-wrap" class="${mode==='manual'?'':'hidden'}">
+        <label class="text-xs font-bold text-stone-500">HPP Manual (Rp per item)</label>
+        <input id="f-hppmanual" type="number" value="${m&&m.hppManual?m.hppManual:''}" placeholder="cth: harga beli dari supplier" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1">
+        <p class="text-[11px] text-stone-400 mt-1">Untuk produk yang dibeli langsung jadi (bukan diracik dari bahan/kemasan sendiri) — isi harga modal per item di sini.</p>
+      </div>
+      <p id="f-resep-note" class="text-[11px] text-stone-400 ${mode==='manual'?'hidden':''}">Resep/komposisi bahan diatur di tab <b>Resep</b> setelah menu disimpan.</p>
     </div>
     <div class="grid grid-cols-2 gap-2 pt-2">
       <button onclick="closeModal()" class="bg-stone-100 text-stone-600 py-2 rounded-xl text-xs font-bold">Batal</button>
@@ -734,15 +762,22 @@ function openMenuModal(id){
     </div>
   `);
 }
+function toggleHppModeField(){
+  const mode = document.getElementById('f-hppmode').value;
+  document.getElementById('f-hppmanual-wrap').classList.toggle('hidden', mode!=='manual');
+  document.getElementById('f-resep-note').classList.toggle('hidden', mode==='manual');
+}
 function saveMenu(id){
   const nama = document.getElementById('f-nama').value.trim();
   const kategori = document.getElementById('f-kategori').value.trim() || 'Lainnya';
   const harga = parseFloat(document.getElementById('f-harga').value) || 0;
+  const hppMode = document.getElementById('f-hppmode').value;
+  const hppManual = parseFloat(document.getElementById('f-hppmanual').value) || 0;
   if(!nama) return alert('Nama menu wajib diisi.');
   if(id){
-    const m = findMenu(id); m.nama = nama; m.kategori = kategori; m.hargaJual = harga;
+    const m = findMenu(id); m.nama = nama; m.kategori = kategori; m.hargaJual = harga; m.hppMode = hppMode; m.hppManual = hppManual;
   }else{
-    DB.menu.push({ id:uid('M'), nama, kategori, hargaJual:harga, resep:[] });
+    DB.menu.push({ id:uid('M'), nama, kategori, hargaJual:harga, hppMode, hppManual, resep:[] });
   }
   save(); closeModal(); renderMenuTable();
 }
@@ -760,14 +795,27 @@ function renderHppTable(){
     const hpp = hitungHpp(m);
     const margin = m.hargaJual - hpp;
     const marginPct = m.hargaJual ? (margin/m.hargaJual*100).toFixed(1) : '0.0';
+    const isManual = m.hppMode === 'manual';
+    const hppCell = isManual
+      ? `<input type="number" min="0" step="100" value="${m.hppManual||0}" onchange="updateHppManual('${m.id}',this.value)" class="coffee-input w-24 rounded-lg px-2 py-1 text-xs text-right font-bold text-rose-600" title="HPP Manual">`
+      : `${fmt(hpp)}`;
     return `<tr>
-      <td class="p-3 font-bold">${m.nama}</td>
-      <td class="p-3 text-right text-rose-600">${fmt(hpp)}</td>
-      <td class="p-3 text-right">${fmt(m.hargaJual)}</td>
+      <td class="p-3 font-bold">${m.nama} ${isManual?'<span class="text-[9px] bg-stone-100 text-stone-500 px-1.5 py-0.5 rounded-full ml-1">Manual</span>':''}</td>
+      <td class="p-3 text-right text-rose-600">${hppCell}</td>
+      <td class="p-3 text-right">
+        <input type="number" min="0" step="100" value="${m.hargaJual}" onchange="updateHargaJualHpp('${m.id}',this.value)" class="coffee-input w-24 rounded-lg px-2 py-1 text-xs text-right font-bold">
+      </td>
       <td class="p-3 text-right text-emerald-600">${fmt(margin)}</td>
       <td class="p-3 text-right font-bold ${marginPct<30?'text-rose-500':'text-emerald-600'}">${marginPct}%</td>
     </tr>`;
   }).join('') || `<tr><td colspan="5" class="p-6 text-center text-stone-400">Belum ada menu.</td></tr>`;
+}
+function updateHargaJualHpp(id, value){
+  const m = findMenu(id);
+  const harga = parseFloat(value);
+  if(!m) return;
+  m.hargaJual = (!harga || harga<0) ? 0 : harga;
+  save(); renderHppTable();
 }
 
 /* ============================================================
@@ -783,6 +831,16 @@ function renderResepEditor(){
   const m = findMenu(sel.value);
   const box = document.getElementById('resep-editor');
   if(!m){ box.innerHTML = '<p class="text-xs text-stone-400">Belum ada menu. Tambahkan menu terlebih dahulu.</p>'; return; }
+  if(m.hppMode === 'manual'){
+    box.innerHTML = `
+      <div class="coffee-card p-4 rounded-2xl space-y-3">
+        <p class="text-xs text-stone-600">Menu ini pakai <b>HPP Manual</b> (produk beli jadi dari supplier), jadi tidak pakai racikan bahan/kemasan di sini.</p>
+        <div class="flex justify-between text-xs font-black border-t pt-3"><span>HPP Manual Saat Ini</span><span class="text-rose-600">${fmt(hitungHpp(m))}</span></div>
+        <p class="text-[11px] text-stone-400">Untuk mengubah nilainya, edit lewat tab <b>Menu</b> atau <b>HPP Menu</b> → tombol Edit.</p>
+        <button onclick="switchResepMode('${m.id}')" class="btn-coffee w-full py-2 rounded-xl text-xs font-bold">Ganti ke Mode Resep (Racik Sendiri)</button>
+      </div>`;
+    return;
+  }
   const rows = (m.resep||[]).map((r,idx)=>{
     const ref = r.tipe==='bahan' ? findBahan(r.refId) : findKemasan(r.refId);
     const subtotal = ref ? hargaSatuan(ref) * r.qty : 0;
@@ -814,7 +872,14 @@ function renderResepEditor(){
       </div>
       <button onclick="addResepLine('${m.id}')" class="btn-coffee rounded-xl py-2 text-xs font-bold">+ Tambah</button>
     </div>
+    <p class="text-[11px] text-stone-400 mt-3">Menu ini pakai racikan bahan/kemasan sendiri. Kalau ini produk beli jadi dari supplier, ganti ke mode manual lewat tab <b>Menu</b> → tombol Edit.</p>
   `;
+}
+function switchResepMode(menuId){
+  const m = findMenu(menuId);
+  if(!confirm('Ganti menu ini ke mode Resep (racik sendiri)? HPP akan dihitung ulang dari komposisi bahan/kemasan.')) return;
+  m.hppMode = 'resep';
+  save(); renderResepEditor();
 }
 function addResepLine(menuId){
   const m = findMenu(menuId);
