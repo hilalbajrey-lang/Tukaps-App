@@ -593,6 +593,13 @@ function changeQty(id, delta){
   if(c.qty<=0) CART = CART.filter(x=>x.id!==id);
   renderCart();
 }
+function updateCartHarga(id, value){
+  const c = CART.find(x=>x.id===id);
+  if(!c) return;
+  const harga = parseFloat(value);
+  c.hargaJual = (!harga || harga<0) ? 0 : harga;
+  renderCart();
+}
 
 function hitungDiskon(subtotal){
   const tipe = document.getElementById('input-diskon-tipe').value;
@@ -604,8 +611,8 @@ function hitungDiskon(subtotal){
 
 function renderCart(){
   document.getElementById('cart-list').innerHTML = CART.map(c=>`
-    <div class="py-2 flex justify-between items-center">
-      <div>
+    <div class="py-2 flex justify-between items-center gap-2">
+      <div class="flex-1">
         <div>${c.nama}</div>
         <div class="flex items-center gap-2 mt-1 text-stone-400">
           <button onclick="changeQty('${c.id}',-1)" class="w-5 h-5 rounded bg-stone-100 text-stone-600">-</button>
@@ -613,7 +620,10 @@ function renderCart(){
           <button onclick="changeQty('${c.id}',1)" class="w-5 h-5 rounded bg-stone-100 text-stone-600">+</button>
         </div>
       </div>
-      <div class="font-bold">${fmt(c.hargaJual * c.qty)}</div>
+      <div class="text-right">
+        <input type="number" min="0" step="500" value="${c.hargaJual}" onchange="updateCartHarga('${c.id}',this.value)" class="coffee-input w-20 rounded-lg px-2 py-1 text-xs text-right font-bold">
+        <div class="font-bold mt-1">${fmt(c.hargaJual * c.qty)}</div>
+      </div>
     </div>
   `).join('') || `<p class="text-stone-400 text-center py-4">Keranjang kosong</p>`;
   const sub = CART.reduce((a,c)=>a+c.hargaJual*c.qty,0);
@@ -1070,30 +1080,66 @@ function groupTransaksi(keyFn, labelFn){
   const map = {};
   DB.transaksi.forEach(t=>{
     const key = keyFn(t.tanggal);
-    if(!map[key]) map[key] = { label:labelFn(t.tanggal), count:0, omzet:0, hpp:0, sortKey:key };
+    if(!map[key]) map[key] = { label:labelFn(t.tanggal), count:0, omzet:0, hpp:0, sortKey:key, list:[] };
     map[key].count += 1;
     map[key].omzet += t.totalOmzet;
     map[key].hpp += t.totalHpp;
+    map[key].list.push(t);
   });
   return Object.values(map).sort((a,b)=> b.sortKey.localeCompare(a.sortKey));
 }
+function jamLabel(iso){ return new Date(iso).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
 function renderLaporanPenjualan(){
   const harian = groupTransaksi(dateKey, dateLabel);
   const mingguan = groupTransaksi(weekKey, weekLabel);
   const bulanan = groupTransaksi(monthKey, monthLabel);
 
-  const rowsHtml = (rows) => rows.map(r=>`
-    <tr>
-      <td class="p-3 font-bold">${r.label}</td>
+  const detailRows = (list) => list
+    .slice().sort((a,b)=> new Date(b.tanggal) - new Date(a.tanggal))
+    .map(t=>{
+      const itemsStr = t.items.map(i=>`${i.nama} x${i.qty}`).join(', ');
+      return `<tr class="bg-stone-50">
+        <td class="p-2 pl-8 text-stone-500">${dateLabel(t.tanggal)} ${jamLabel(t.tanggal)}</td>
+        <td class="p-2">${t.customer || '-'}</td>
+        <td class="p-2">${t.kasir || '-'}</td>
+        <td class="p-2">${t.metode || '-'}</td>
+        <td class="p-2 text-stone-500 max-w-[220px] truncate" title="${itemsStr}">${itemsStr}</td>
+        <td class="p-2 text-right">${fmt(t.totalOmzet)}</td>
+        <td class="p-2 text-right text-rose-600">${fmt(t.totalHpp)}</td>
+        <td class="p-2 text-right text-emerald-600 font-bold">${fmt(t.totalOmzet - t.totalHpp)}</td>
+      </tr>`;
+    }).join('');
+
+  const rowsHtml = (rows, prefix) => rows.map((r,idx)=>{
+    const rid = prefix + '-' + idx;
+    return `<tr class="cursor-pointer hover:bg-stone-50" onclick="toggleDetail('${rid}')">
+      <td class="p-3 font-bold"><i data-lucide="chevron-right" class="w-3 h-3 inline-block mr-1 detail-chevron-${rid}"></i>${r.label}</td>
       <td class="p-3 text-right">${r.count}</td>
       <td class="p-3 text-right">${fmt(r.omzet)}</td>
       <td class="p-3 text-right text-rose-600">${fmt(r.hpp)}</td>
       <td class="p-3 text-right text-emerald-600 font-bold">${fmt(r.omzet - r.hpp)}</td>
-    </tr>`).join('') || `<tr><td colspan="5" class="p-6 text-center text-stone-400">Belum ada transaksi.</td></tr>`;
+    </tr>
+    <tr id="detail-${rid}" class="hidden">
+      <td colspan="5" class="p-0">
+        <table class="w-full text-left text-[11px] font-mono">
+          <thead class="bg-stone-100 text-[9px] text-stone-400 uppercase"><tr><th class="p-2 pl-8">Waktu</th><th class="p-2">Customer</th><th class="p-2">Kasir</th><th class="p-2">Metode</th><th class="p-2">Item</th><th class="p-2 text-right">Omzet</th><th class="p-2 text-right">HPP</th><th class="p-2 text-right">Laba</th></tr></thead>
+          <tbody class="divide-y divide-stone-100">${detailRows(r.list)}</tbody>
+        </table>
+      </td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="5" class="p-6 text-center text-stone-400">Belum ada transaksi.</td></tr>`;
 
-  document.getElementById('tbl-pj-harian').innerHTML = rowsHtml(harian);
-  document.getElementById('tbl-pj-mingguan').innerHTML = rowsHtml(mingguan);
-  document.getElementById('tbl-pj-bulanan').innerHTML = rowsHtml(bulanan);
+  document.getElementById('tbl-pj-harian').innerHTML = rowsHtml(harian, 'h');
+  document.getElementById('tbl-pj-mingguan').innerHTML = rowsHtml(mingguan, 'w');
+  document.getElementById('tbl-pj-bulanan').innerHTML = rowsHtml(bulanan, 'b');
+  safeLucide();
+}
+function toggleDetail(rid){
+  const row = document.getElementById('detail-'+rid);
+  if(!row) return;
+  row.classList.toggle('hidden');
+  const chevrons = document.querySelectorAll('.detail-chevron-'+rid);
+  chevrons.forEach(c=> c.style.transform = row.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(90deg)');
 }
 
 /* ============================================================
