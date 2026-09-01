@@ -242,8 +242,8 @@
     </div>
     <div class="coffee-card rounded-3xl overflow-x-auto">
       <h3 class="text-[10px] font-black uppercase text-stone-400 p-3">Riwayat Pencatatan</h3>
-      <table class="w-full text-left text-xs font-mono min-w-[600px]">
-        <thead class="bg-stone-50 text-[10px] text-stone-400 uppercase"><tr><th class="p-3">Tanggal</th><th class="p-3">Kategori</th><th class="p-3">Keterangan</th><th class="p-3 text-right">Jumlah</th><th class="p-3 text-center">Aksi</th></tr></thead>
+      <table class="w-full text-left text-xs font-mono min-w-[750px]">
+        <thead class="bg-stone-50 text-[10px] text-stone-400 uppercase"><tr><th class="p-3">Tanggal</th><th class="p-3">Kategori</th><th class="p-3">Keterangan</th><th class="p-3 text-right">Kuantiti</th><th class="p-3 text-right">Harga Satuan</th><th class="p-3 text-right">Total</th><th class="p-3 text-center">Aksi</th></tr></thead>
         <tbody id="tbl-pengeluaran-log" class="divide-y"></tbody>
       </table>
     </div>
@@ -1157,8 +1157,16 @@ function openPengeluaranModal(){
           <option value="Lain">Lain-lain (operasional, sewa, dll)</option>
         </select>
       </div>
-      <div><label class="text-xs font-bold text-stone-500">Keterangan</label><input id="f-ket" placeholder="cth: Belanja susu UHT 10 liter" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1"></div>
-      <div><label class="text-xs font-bold text-stone-500">Jumlah (Rp)</label><input id="f-jumlah" type="number" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1"></div>
+      <div><label class="text-xs font-bold text-stone-500">Nama Barang / Keterangan</label><input id="f-ket" placeholder="cth: Susu UHT 1 Liter" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1"></div>
+      <div class="grid grid-cols-2 gap-2">
+        <div><label class="text-xs font-bold text-stone-500">Kuantiti</label><input id="f-qty" type="number" min="0" step="any" value="1" oninput="previewTotalPengeluaran()" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1"></div>
+        <div><label class="text-xs font-bold text-stone-500">Satuan</label><input id="f-satuan" placeholder="liter / pcs / botol" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1"></div>
+      </div>
+      <div><label class="text-xs font-bold text-stone-500">Harga Satuan (Rp)</label><input id="f-hargasatuan" type="number" min="0" oninput="previewTotalPengeluaran()" class="coffee-input w-full rounded-xl px-3 py-2 text-sm mt-1" placeholder="cth: 19000"></div>
+      <p class="text-[11px] text-stone-400">Untuk pengeluaran satu kali tanpa rincian per satuan (cth: bayar listrik), isi Kuantiti = 1 dan Harga Satuan = jumlah totalnya.</p>
+      <div class="coffee-card p-3 rounded-xl flex justify-between text-xs font-bold">
+        <span>Total Pengeluaran (otomatis)</span><span id="preview-total-pengeluaran" class="text-rose-600">Rp 0</span>
+      </div>
     </div>
     <div class="grid grid-cols-2 gap-2 pt-2">
       <button onclick="closeModal()" class="bg-stone-100 text-stone-600 py-2 rounded-xl text-xs font-bold">Batal</button>
@@ -1166,13 +1174,21 @@ function openPengeluaranModal(){
     </div>
   `);
 }
+function previewTotalPengeluaran(){
+  const qty = parseFloat(document.getElementById('f-qty').value) || 0;
+  const harga = parseFloat(document.getElementById('f-hargasatuan').value) || 0;
+  document.getElementById('preview-total-pengeluaran').innerText = fmt(qty * harga);
+}
 function savePengeluaran(){
   const tanggal = document.getElementById('f-tanggal').value;
   const kategori = document.getElementById('f-kategori').value;
   const keterangan = document.getElementById('f-ket').value.trim();
-  const jumlah = parseFloat(document.getElementById('f-jumlah').value) || 0;
-  if(!tanggal || !keterangan || !jumlah) return alert('Semua field wajib diisi.');
-  DB.pengeluaran.push({ id:uid('PG'), tanggal:new Date(tanggal).toISOString(), kategori, keterangan, jumlah });
+  const qty = parseFloat(document.getElementById('f-qty').value) || 0;
+  const satuan = document.getElementById('f-satuan').value.trim();
+  const hargaSatuan = parseFloat(document.getElementById('f-hargasatuan').value) || 0;
+  const jumlah = qty * hargaSatuan;
+  if(!tanggal || !keterangan || !jumlah) return alert('Semua field wajib diisi (kuantiti & harga satuan harus lebih dari 0).');
+  DB.pengeluaran.push({ id:uid('PG'), tanggal:new Date(tanggal).toISOString(), kategori, keterangan, qty, satuan, hargaSatuan, jumlah });
   save(); closeModal(); renderLaporanPengeluaran();
 }
 function deletePengeluaran(id){
@@ -1199,14 +1215,18 @@ function renderLaporanPengeluaran(){
   document.getElementById('tbl-pg-bulanan').innerHTML = rowsHtml(bulanan);
 
   const sorted = [...DB.pengeluaran].sort((a,b)=> new Date(b.tanggal) - new Date(a.tanggal));
-  document.getElementById('tbl-pengeluaran-log').innerHTML = sorted.map(p=>`
-    <tr>
+  document.getElementById('tbl-pengeluaran-log').innerHTML = sorted.map(p=>{
+    const adaRincian = p.qty !== undefined && p.hargaSatuan !== undefined;
+    return `<tr>
       <td class="p-3">${dateLabel(p.tanggal)}</td>
       <td class="p-3">${p.kategori}</td>
       <td class="p-3">${p.keterangan}</td>
+      <td class="p-3 text-right">${adaRincian ? (p.qty + (p.satuan?(' '+p.satuan):'')) : '-'}</td>
+      <td class="p-3 text-right">${adaRincian ? fmt(p.hargaSatuan) : '-'}</td>
       <td class="p-3 text-right text-rose-600 font-bold">${fmt(p.jumlah)}</td>
       <td class="p-3 text-center"><button onclick="deletePengeluaran('${p.id}')" class="text-rose-500 font-bold">Hapus</button></td>
-    </tr>`).join('') || `<tr><td colspan="5" class="p-6 text-center text-stone-400">Belum ada catatan.</td></tr>`;
+    </tr>`;
+  }).join('') || `<tr><td colspan="7" class="p-6 text-center text-stone-400">Belum ada catatan.</td></tr>`;
 }
 
 /* ============================================================
